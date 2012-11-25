@@ -1,3 +1,3 @@
-[submodule "source/multipletau"]
-	path = source/multipletau
+[submodule "multipletau"]
+	path = multipletau
 	url = https://github.com/paulmueller/multipletau.git
