@@ -37,6 +37,8 @@ cp -R ${StartDir}${Progname}/src/* $WD
 cp -R ${StartDir}${Progname}/ChangeLog.txt $WD
 cp -R ${StartDir}${Progname}/multipletau/multipletauc.pyx $WD
 
+echo " *** Removing build directory *** "
+rm -R ${WD}/build
 
 echo " *** Removing *.pyc files! *** "
 find  $WD -iname "*.pyc" -exec rm -r -f {} \;
