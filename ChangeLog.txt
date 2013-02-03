@@ -1,5 +1,5 @@
 0.1.9
  - Code cleanup
- - moved to Python 2.7
+ - Moved to Python 2.7
 0.1.8
  - Initital GitHub commit
