@@ -30,13 +30,13 @@ For Windows XP or Windows 7, stand-alone binary executables are available from t
 \item \textbf{Linux}
 There are executable binaries for widely used distributions (e.g. Ubuntu).
 \item \textbf{Sources}
-The program is written in python 2.6. On any operating system, PyScanFCS can be from source. The following packages need to be installed:
+The program is written in python 2.7. On any operating system, PyScanFCS can be run from source. The following packages need to be installed:
 \texttt{\\
 cython ($\geq$ 0.1.6)\\
 python-matplotlib ($\geq$ 1.0.1) \\
-python-numpy ($\geq$ 1.5.1) \\
+python-numpy ($\geq$ 1.6.2) \\
 python-pyfits \\
-python-scipy ($\geq$ 0.8.0) \\
+python-scipy ($\geq$ 0.10.1) \\
 python-wxtools \\
 python-wxgtk2.8-dbg \\
 }
@@ -54,7 +54,7 @@ PyScanFCS needs Cython to perform some CPU intensive operations. Before running 
 python-dev} 
 \item[ ] \textbf{MacOS}. This should work with Apple's XCode, available from \url{http://developer.apple.com}. It has not been tested.
 \end{itemize}
-Cython can be obtained from \url{http://www.cython.org/}. After unpacking of the archive, Cython is installed by executing \texttt{python setup.py install} within the unpacked directory. Executing \texttt{python setup.py build{\_}ext --inplace} within the PyScanFCS directory will compile the \mytilde .pyx files (SFCSnumeric.pyx, multipletauc.pyx) to corresponding \mytilde .pyd (Windows) or \mytilde .so (Linux) files.
+Cython can be obtained from \url{http://www.cython.org/}. After unpacking of the archive, Cython is installed by executing \texttt{python setup.py install} within the unpacked directory\footnote{Cython can also be installed via PyPI (\url{http://pypi.python.org/pypi}).}. Executing \texttt{python compile\_cython.py build{\_}ext --inplace} within the PyScanFCS source directory will compile the \mytilde .pyx files (SFCSnumeric.pyx, multipletauc.pyx) to corresponding \mytilde .pyd (Windows) or \mytilde .so (Linux) files.
 
 For older version of Ubuntu, some of the above package versions are not listed in the package repository. To enable the use of PyScanFCS on those systems, the following tasks have to be performed:
 

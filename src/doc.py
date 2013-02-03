@@ -13,21 +13,44 @@ import os
 import platform
 import scipy
 import wx
+import multipletauc
 
 
 def description():
-    return """ScanFSC is a data displaying, fitting and processing
-tool, targeted at Scanning FCS utilizing 
+    return """ScanFSC is a data displaying and processing
+tool for perpendicular line scanning FCS utilizing 
 correlator.com correlators. FCSfit is written in Python."""
 
+def info(version):
+    """ Returns a little info about our program and what it can do.
+    """
+    textwin = u"""
+    Copyright 20011-2012 Paul Müller, Biotec - TU Dresden
+
+    Data processing for perpendicular line scanning FCS.
+    """
+    textlin = """
+    © 20011-2012 Paul Müller, Biotec - TU Dresden
+
+    Data processing for perpendicular line scanning FCS.
+    """
+    if platform.system() != 'Linux':
+        texta = textwin
+    else:
+        texta = textlin
+    one = "    PyScanFCS version "+version+"\n\n"
+    lizenz = ""
+    for line in licence().splitlines():
+        lizenz += "    "+line+"\n"
+    return one + lizenz + texta 
 
 def licence():
-    return """ScanFSC is free software: you can redistribute it and/or modify it
+    return """PyScanFSC is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published 
 by the Free Software Foundation, either version 2 of the License, 
 or (at your option) any later version.
 
-FCSfit is distributed in the hope that it will be useful,
+PyScanFSC is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
 See the GNU General Public License for more details. 
@@ -52,6 +75,7 @@ def SoftwareUsed():
            "\n\nModules:"+\
            "\n - csv "+csv.__version__+\
            "\n - matplotlib "+matplotlib.__version__+\
+           "\n - multipletauc "+multipletauc.__version__+\
            "\n - NumPy "+numpy.__version__+\
            "\n - os "+\
            "\n - platform "+platform.__version__+\
@@ -61,6 +85,17 @@ def SoftwareUsed():
            "\n - wxPython "+wx.__version__
            #"\n - yaml "+yaml.__version__
     if hasattr(sys, 'frozen'):
-        pyinst = "\n\nThis executable has been created using PyInstaller 1.5.1"
+        pyinst = "\n\nThis executable has been created using PyInstaller."
         text = text+pyinst
     return text
+
+# Changelog filename
+ChangeLog = "ChangeLog.txt"
+if hasattr(sys, 'frozen'):
+    StaticChangeLog = os.path.join(sys._MEIPASS, "doc/"+ChangeLog)
+else:
+    StaticChangeLog = os.path.join(os.path.dirname(sys.argv[0]), "../"+ChangeLog)
+
+clfile = open(StaticChangeLog, 'r')
+__version__ = clfile.readline().strip()
+clfile.close()     

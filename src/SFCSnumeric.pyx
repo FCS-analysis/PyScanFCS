@@ -265,3 +265,4 @@ def OpenDat(filename, dlg):
 
     del Data
     return system_clock, datData
+

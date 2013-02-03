@@ -2,7 +2,7 @@
 """ PyScanFCS
     Paul Mueller, Biotec - TU Dresden
 
-    Application for Scanning FCS.
+    Data processing for perpendicular line scanning FCS.
 """
 
 # Generic modules
@@ -50,13 +50,6 @@ import multipletauc
 # and it helped:
 reload(sys)
 sys.setdefaultencoding('utf-8')
-
-# ipshell for development
-import platform
-if platform.system() == 'Linux':
-    from IPython.Shell import IPythonShellEmbed
-    ipshell = IPythonShellEmbed()
-   #ipshell()
 
 import doc      # Documentation/some texts
 
@@ -545,7 +538,6 @@ class MyFrame(wx.Frame):
         # Calculate binned data
         self.intData = self.Bin_Photon_Events(n_events=n_events, t_bin=t_bin)
 
-        # Add to cache
         # Add to cache
         self.AddToCache(self.intData, self.filename)
 
@@ -1892,10 +1884,10 @@ class MyFrame(wx.Frame):
 
 
 ## VERSION
-version = "0.1.8"
+version = doc.__version__
+__version__ = version
 
-print "version "+version
-print __doc__
+print doc.info(version)
 
 
 ## Start gui

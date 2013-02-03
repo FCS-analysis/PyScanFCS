@@ -11,12 +11,6 @@ import numpy as np
 from wx.lib.agw import floatspin        # Float numbers in spin fields
 import wx 
 
-import platform
-if platform.system() == 'Linux':
-    from IPython.Shell import IPythonShellEmbed
-    ipshell = IPythonShellEmbed()
-   #ipshell()
-
 class FloatSpin(floatspin.FloatSpin):
     def __init__(self, parent, digits=10, increment=.01, value=1.0):
         floatspin.FloatSpin.__init__(self, parent, digits=digits,
