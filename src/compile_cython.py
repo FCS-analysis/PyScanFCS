@@ -1,5 +1,5 @@
 # This file is used to compile libraries from cython code.
-# Run "python setup.py build_ext --inplace" to create those
+# Run "python compile_cython.py build_ext --inplace" to create those
 # libraries.
 # For more information visit cython.org.
 
