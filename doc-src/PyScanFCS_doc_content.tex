@@ -9,6 +9,9 @@ The PyScanFCS software provided is free software: you can redistribute it and/or
 under the terms of the GNU General Public License as published 
 by the Free Software Foundation, either version 2 of the License, 
 or (at your option) any later version.
+\\
+\\
+An exemplary usage of PyScanFCS - delivering a proof of principle from calibration to data fitting - was shown in \cite{Mueller2013}.
 
 \subsection{Prerequisites}
 In order to use the PyScanFCS software, the following equipment is needed:
@@ -17,7 +20,7 @@ In order to use the PyScanFCS software, the following equipment is needed:
 \begin{itemize}
 \item A confocal laser scanning microscope (CLSM). For single-color one-focus SFCS, the CLSM should be capable of continuously scanning along a single line. For more sophisticated measurements, features like ``Multitrack mode'' for dual-color measurements and frame scanning for two-focus SFCS are required (LSM510, Zeiss, Germany).
 
-\item One or two avalanche photo diodes (APD) for single or dual color detection, respectively. In addition, matching filters and beam splitters. The detection channels are referred to as channels A and B throughout this documentation.
+\item One or two avalanche photo diodes (APD) for single or dual color detection. In addition, matching filters and beam splitters. The detection channels are referred to as channels A and B throughout this documentation.
 
 \item A photon stream recording device connected to the APDs. In the tested setup a Flex02-12D/B correlator from correlator.com\footnote{Note that for some reason the photon history recording mode does not work with the Flex02-01D/C correlator. Keep that in mind while troubleshooting your setup. When using a different device, the data has to be converted accordingly. The data format is described in \hyref{section}{sec:datformat}.} was used in photon history recording mode. The device creates two binary files A and B that contain the photon arrival times detected by the corresponding APDs.
 \end{itemize}
@@ -30,7 +33,7 @@ For Windows XP or Windows 7, stand-alone binary executables are available from t
 \item \textbf{Linux}
 There are executable binaries for widely used distributions (e.g. Ubuntu).
 \item \textbf{Sources}
-The program is written in python 2.7. On any operating system, PyScanFCS can be run from source. The following packages need to be installed:
+The program is written in python 2.7. On any operating system, PyScanFCS can be run from source. To obtain the latest source, visit PyScanFCS at GitHub (\url{https://github.com/paulmueller/PyScanFCS}). We give more information on the installation process there. In general, the following packages need to be available:
 \texttt{\\
 cython ($\geq$ 0.1.6)\\
 python-matplotlib ($\geq$ 1.0.1) \\
@@ -189,8 +192,8 @@ The bin shift parameter adds a number of empty bins to the beginning of the binn
 	\begin{itemize}
 	\item[-] Span: The trace is calculated from the maximum of each scanned line. This corrects for spacial fluctuations perpendicular to the surface of the probed membrane. If the binning is too fine, or the scan cycle time is not exactly correct, this number can be increased to include more neighboring bins for the calculation of the trace.
 	\item[-] No. of trace slices: Sometimes, dirt contaminates the trace. The trace can be split and the correlation curves can be calculated separately from each slice. \texttt{PyCorrFit} is able to average over user selected curves, yielding cleaner statistics.
-	\item[-] Bleach filter: Fits an exponential function to the selected trace and performs a bleaching correction according to \cite{Ries2009}.
-	
+	\item[-] Bleach filter: Fits an exponential function to the selected trace and performs a bleaching correction according to \cite{Ries2009}. Note that this bleaching correction is only valid for an approximately linear decay in the fluorescence signal.
+	\item[-] Countrate filter: Approximates the count rate of the fluorescence signal from the membrane. Because the laser focus is \textit{scanned} through the membrane, the average signal from the measurement does not equal the actual count rate within the membrane. The algorithm fits a Gaussian to the average intensity profile and uses the standard deviation to calculate the residence time of the focus inside the membrane.	This residence time is then used to calculate the approximate count rate.
 	\item[-] M.-$\tau$ parameter m: This is a parameter of the multiple-$\tau$ algorithm. $m$ is the number of points of the correlation curve that are calculated by the multiple-$\tau$ algorithm in the first loop. Afterwards, the intensity trace is binned by combining two neighboring bins. Then, sequentially $m/2$ data points are calculated after each binning of the trace. A thorough description is given in \cite{Wohland2001}. $m=16$ is a good measure.
 
 	\end{itemize}
