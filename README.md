@@ -16,6 +16,11 @@ Install [Cython](http://wiki.cython.org/InstallingOnWindows) and [MinGW](http://
     C:\Python27\Scripts  
     C:\MinGW\bin
   
+Tell Cython to use MinGW by creating (or editing) the file *C:\Python27\Lib\distutils\distutils.cfg* with the content:
+
+    [build]
+    compiler=mingw32
+
 Depending on the version of MinGW, all occurences of *-mno-cygwin* have to be removed from the file
 
     C:\Python27\Lib\distutils\cygwinccompiler.py
