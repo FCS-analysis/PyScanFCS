@@ -10,6 +10,16 @@ import tempfile
 import zipfile
 import csv
 import sys
+
+## On Windows XP I had problems with the unicode Characters.
+# I found this at 
+# http://stackoverflow.com/questions/5419/python-unicode-and-the-windows-console
+# and it helped (needs to be done before import of matplotlib):
+import platform
+if platform.system() == 'Windows':
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
+
 import os
 import wx                               # GUI interface wxPython
 import wx.lib.agw.pyprogress as PBusy   # Busy Dialog
@@ -44,12 +54,7 @@ from scipy import optimize
 import SFCSnumeric
 import multipletauc
 
-## On Windows XP I had problems with the unicode Characters.
-# I found this at 
-# http://stackoverflow.com/questions/5419/python-unicode-and-the-windows-console
-# and it helped:
-reload(sys)
-sys.setdefaultencoding('utf-8')
+
 
 import doc      # Documentation/some texts
 
