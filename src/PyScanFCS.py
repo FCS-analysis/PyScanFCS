@@ -1401,8 +1401,11 @@ class MyFrame(wx.Frame):
               wx.OPEN)
         # user cannot do anything until he clicks "OK"
         if dlg.ShowModal() == wx.ID_OK:
-            self.filename = dlg.GetFilename()
-            self.dirname = dlg.GetDirectory()
+        
+            # Workaround for Ubuntu 12.10 since 0.2.0
+            (self.dirname, self.filename) = os.path.split(dlg.GetPath())
+            #self.filename = dlg.GetFilename()
+            #self.dirname = dlg.GetDirectory()
      
             fits = pyfits.open(os.path.join(self.dirname, self.filename))
             series = fits[0]
@@ -1478,8 +1481,10 @@ class MyFrame(wx.Frame):
               wx.OPEN)
         # user cannot do anything until he clicks "OK"
         if dlg.ShowModal() == wx.ID_OK:
-            self.filename = dlg.GetFilename()
-            self.dirname = dlg.GetDirectory()
+            # Workaround for Ubuntu 12.10 since 0.2.0
+            (self.dirname, self.filename) = os.path.split(dlg.GetPath())
+            #self.filename = dlg.GetFilename()
+            #self.dirname = dlg.GetDirectory()
             filename = os.path.join(self.dirname, self.filename)
             style = wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME|wx.PD_CAN_ABORT
             dlg2 = wx.ProgressDialog("Processing file", "Finding 32 bit events..."
@@ -1511,8 +1516,10 @@ class MyFrame(wx.Frame):
            wx.SAVE|wx.FD_OVERWRITE_PROMPT)
         # user cannot do anything until he clicks "OK"
         if dlg.ShowModal() == wx.ID_OK:
-            newfilename = dlg.GetFilename()
-            self.dirname = dlg.GetDirectory()
+            # Workaround for Ubuntu 12.10 since 0.2.0
+            (self.dirname, newfilename) = os.path.split(dlg.GetPath())
+            #newfilename = dlg.GetFilename()
+            #self.dirname = dlg.GetDirectory()
             # Creating image array
             M = len(self.intData)
             Ny = self.bins_per_line 
@@ -1583,8 +1590,10 @@ class MyFrame(wx.Frame):
            wx.SAVE|wx.FD_OVERWRITE_PROMPT)
         # user cannot do anything until he clicks "OK"
         if dlg.ShowModal() == wx.ID_OK:
-            newfilename = dlg.GetFilename()
-            self.dirname = dlg.GetDirectory()
+            # Workaround for Ubuntu 12.10 since 0.2.0
+            (self.dirname, newfilename) = os.path.split(dlg.GetPath())
+            #newfilename = dlg.GetFilename()
+            #self.dirname = dlg.GetDirectory()
             NewFile = open(os.path.join(self.dirname, newfilename), 'wb')
             newformat = np.uint8(32)
             newclock = np.uint8(self.system_clock)
