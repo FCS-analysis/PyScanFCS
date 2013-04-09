@@ -11,12 +11,17 @@ For further information, please visit the PyScanFCS homepage at [http://fcstools
 
 ###Cython and Windows XP 32bit - Procedure
 
-Once Cython and MinGW are installed and the directories
+Install [Cython](http://wiki.cython.org/InstallingOnWindows) and [MinGW](http://sourceforge.net/projects/mingw/files/Installer/mingw-get-inst/). Make sure the Windows Path variable contains the following directories:
 
     C:\Python27\Scripts  
     C:\MinGW\bin
   
-are in the path variable, depending on the version of MinGW, all occurences of *-mno-cygwin* have to be removed from the file
+Tell Cython to use MinGW by creating (or editing) the file *C:\Python27\Lib\distutils\distutils.cfg* with the content:
+
+    [build]
+    compiler=mingw32
+
+Depending on the version of MinGW, all occurences of *-mno-cygwin* have to be removed from the file
 
     C:\Python27\Lib\distutils\cygwinccompiler.py
   
