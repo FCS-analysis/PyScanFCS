@@ -8,7 +8,7 @@ PyScanFCS interactively extracts the fluorecence fluctuation signal from such me
 
 It is possible to create test-data containing exponentially correlated data with [MakeTestDat_SFCS.py](https://github.com/paulmueller/multipletau/blob/master/MakeTestDat_SFCS.py). The obtained correlation curves can be fitted with [PyCorrFit](https://github.com/paulmueller/PyCorrFit) using the [appropriate model function](https://github.com/paulmueller/multipletau/blob/master/ExampleFunc_Exp_correlated_noise.txt).
 
-For further information, please visit the PyScanFCS homepage at [http:/pyscanfsc.craban.de](http:/pyscanfsc.craban.de).
+For further information, please visit the PyScanFCS homepage at [http://pyscanfsc.craban.de](http://pyscanfsc.craban.de).
 
 
 ###Cython and Windows XP 32bit - Procedure
