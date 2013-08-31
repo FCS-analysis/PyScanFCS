@@ -54,8 +54,6 @@ from scipy import optimize
 import SFCSnumeric
 import multipletauc
 
-
-
 import doc      # Documentation/some texts
 
 class plotarea(wx.Panel):
@@ -1201,30 +1199,27 @@ class MyFrame(wx.Frame):
         openedfile = open(csvfile, 'wb')
         openedfile.write('# This file was created using PyScanFCS v.'+\
                          self.version+"\r\n")
-        openedfile.write("# Source file: "+self.filename+"\r\n")
-        openedfile.write("# Source slice: "+str(num)+" of "+str(num_traces)+"\r\n")
-        openedfile.write('# Channel (tau [s])'+" \t," 
-                                         'Correlation function'+" \r\n")
+        openedfile.write("# Source file \t"+self.filename+"\r\n")
+        openedfile.write("# Source slice \t"+str(num)+" of "+str(num_traces)+"\r\n")
+        openedfile.write('# Channel (tau [s]) \t Correlation function \r\n')
         if Type[:2] == "CC":
-            openedfile.write("# Data type: Cross-correlation "+Type[2:]+"\r\n")
+            openedfile.write("# Type AC/CC \t Cross-correlation "+Type[2:]+"\r\n")
         else:
-            openedfile.write("# Data type: Autocorrelation "+Type[2:]+"\r\n")
+            openedfile.write("# Type AC/CC \t Autocorrelation "+Type[2:]+"\r\n")
         dataWriter = csv.writer(openedfile, delimiter=',')
         for i in np.arange(len(G)):
             dataWriter.writerow([str(G[i,0])+" \t", str(G[i,1])])
         openedfile.write('# BEGIN TRACE \r\n')
-        openedfile.write('# Time ([s])'+" \t," 
-                                         'Intensity Trace [kHz]'+" \r\n")
+        openedfile.write('# Time ([s]) \t Intensity Trace [kHz] \r\n')
         for i in np.arange(len(trace)):
-            dataWriter.writerow([str(trace[i,0])+" \t", str(trace[i,1])])
+            dataWriter.writerow([ str("%.10e")%trace[i,0]), str("%.10e")%trace[i,1] ])
 
         if secondtrace is not None:
             openedfile.write('#\r\n# BEGIN SECOND TRACE \r\n')
-            openedfile.write('# Time ([s])'+" \t," 
-                                             'Intensity Trace [kHz]'+" \r\n")
+            openedfile.write('# Time ([s]) \t Intensity Trace [kHz] \r\n')
             for i in np.arange(len(trace)):
-                dataWriter.writerow([str(secondtrace[i,0])+" \t", 
-                                     str(secondtrace[i,1])])   
+                dataWriter.writerow([ str("%.10e")%secondtrace[i,0], 
+                                      str("%.10e")%secondtrace[i,1] ])   
 
         openedfile.close()
 

@@ -72,8 +72,6 @@ def BinPhotonEvents(np.ndarray[DTYPEuint32_t] data, double t_bin, filename, dtyp
         
     TempTrace = list()
 
-
-    
     for j in range(100):
         percent = str(j)
         if dlg.Update(j+1, "Counting photon events...")[0] == False:
@@ -93,11 +91,7 @@ def BinPhotonEvents(np.ndarray[DTYPEuint32_t] data, double t_bin, filename, dtyp
                 phot_c = 0
                 # Empty bins between this and next event:
                 emptybins = int(time_c/t_bin)
-                #NewFile.write(dtype(np.zeros(emptybins)))
-                for bin in np.arange(emptybins):
-                    # Does not matter if emptybins is "0"
-                    #NewFile.write(dtype(0))
-                    TempTrace.append(0)
+                TempTrace += emptybins*[0]
                 time_c -=  emptybins*t_bin
                 # Equivalent to:
                 # time_c = int(time_c)%int(t_bin)
@@ -118,11 +112,7 @@ def BinPhotonEvents(np.ndarray[DTYPEuint32_t] data, double t_bin, filename, dtyp
             phot_c = 0
             # Empty bins between this and next event:
             emptybins = int(time_c/t_bin)
-           # NewFile.write(dtype(np.zeros(emptybins)))
-            for bin in range(emptybins):
-                # Does not matter if emptybins is "0"
-                #NewFile.write(dtype(0))
-                TempTrace.append(0)
+            TempTrace += emptybins*[0]
             time_c -=  emptybins*t_bin
             # Equivalent to:
             # time_c = int(time_c)%int(t_bin)
@@ -244,11 +234,7 @@ def OpenDat(filename, dlg):
         return
     # Make a 32 bit array
     datData = np.uint32(Data)
-
-    for i in occurences:
-        # The following two events represent the actual event
-        # Convert 2*16bit uint to 1*32bit uint:
-        datData[i] = np.uint32(Data[i+1]) + np.uint32(Data[i+2])*65536
+    datData[occurences] = np.uint32(Data[occurences+1]) + np.uint32(Data[occurences+2])*65536
 
     if dlg.Pulse("Added new 32 bit array. Finishing...") == False:
         # Stop and end import of data
@@ -257,9 +243,8 @@ def OpenDat(filename, dlg):
 
     # Now delete the zeros
     zeroids = np.zeros(N*2)
-    for i in range(N):
-        zeroids[i*2] = occurences[i]+1
-        zeroids[i*2+1] = occurences[i]+2
+    zeroids[::2] = occurences + 1
+    zeroids[1::2] = occurences + 2
     
     datData = np.delete(datData, zeroids)
 
