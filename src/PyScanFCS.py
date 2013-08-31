@@ -953,10 +953,12 @@ class MyFrame(wx.Frame):
 
         # Define zip file name
         # filenamedummy is a non-wildcard filename
-        filenamedummy = self.filename.strip("A.dat")
-        filenamedummy = filenamedummy.strip(".dat")
-        filenamedummy = filenamedummy.strip("A.fits")
-        filenamedummy = filenamedummy.strip(".fits")
+        wildcards = ["A.dat", ".dat", "A.fits", ".fits"]
+        filenamedummy = self.filename
+        for card in wildcards:
+            lwc = len(card)
+            if self.filename[-lwc:] == card:
+                filenamedummy = self.filename[:-lwc]
         zipfilename = os.path.join(self.dirname, filenamedummy)+".zip"
 
         OURMODE = self.ModeDropDown.GetSelection()
@@ -1212,7 +1214,7 @@ class MyFrame(wx.Frame):
         openedfile.write('# BEGIN TRACE \r\n')
         openedfile.write('# Time ([s]) \t Intensity Trace [kHz] \r\n')
         for i in np.arange(len(trace)):
-            dataWriter.writerow([ str("%.10e")%trace[i,0]), str("%.10e")%trace[i,1] ])
+            dataWriter.writerow([ str("%.10e")%trace[i,0], str("%.10e")%trace[i,1] ])
 
         if secondtrace is not None:
             openedfile.write('#\r\n# BEGIN SECOND TRACE \r\n')
