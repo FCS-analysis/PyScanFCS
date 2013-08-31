@@ -1205,10 +1205,10 @@ class MyFrame(wx.Frame):
         openedfile.write("# Source slice \t"+str(num)+" of "+str(num_traces)+"\r\n")
         openedfile.write('# Channel (tau [s]) \t Correlation function \r\n')
         if Type[:2] == "CC":
-            openedfile.write("# Type AC/CC \t Cross-correlation "+Type[2:]+"\r\n")
+            openedfile.write("# Type AC/CC \t Cross-Correlation "+Type[2:]+"\r\n")
         else:
             openedfile.write("# Type AC/CC \t Autocorrelation "+Type[2:]+"\r\n")
-        dataWriter = csv.writer(openedfile, delimiter=',')
+        dataWriter = csv.writer(openedfile, delimiter='\t')
         for i in np.arange(len(G)):
             dataWriter.writerow([str(G[i,0])+" \t", str(G[i,1])])
         openedfile.write('# BEGIN TRACE \r\n')
