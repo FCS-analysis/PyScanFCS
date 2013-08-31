@@ -835,7 +835,7 @@ class MyFrame(wx.Frame):
         info.SetVersion(self.version)
         info.SetDescription(description)
         info.SetCopyright('(C) 2012 Paul Müller')
-        info.SetWebSite('http://fcstools.dyndns.org/pyscanfcs/')
+        info.SetWebSite('http://pyscanfcs.craban.de')
         info.SetLicence(licence)
         info.AddDeveloper('Paul Müller')
         info.AddDocWriter('Paul Müller')

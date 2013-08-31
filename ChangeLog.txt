@@ -1,3 +1,8 @@
+0.2.0
+ - Code cleanup
+ - Considerable speed-up in binning of .dat files
+ - Secured compatibility with PyCorrFit (.csv files)
+ - Fixed small file-naming bug
 0.1.9
  - Code cleanup
  - Moved to Python 2.7
