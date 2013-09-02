@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" ScanFCS
+""" PyScanFCS
     Paul Müller, Biotec - TU Dresden
 
     Module doc
@@ -17,9 +17,9 @@ import multipletauc
 
 
 def description():
-    return """ScanFSC is a data displaying and processing
+    return """PyScanFCS is a data displaying and processing
 tool for perpendicular line scanning FCS utilizing 
-correlator.com correlators. FCSfit is written in Python."""
+correlator.com correlators. PyScanFCS is written in Python."""
 
 def info(version):
     """ Returns a little info about our program and what it can do.
@@ -45,12 +45,12 @@ def info(version):
     return one + lizenz + texta 
 
 def licence():
-    return """PyScanFSC is free software: you can redistribute it and/or modify it
+    return """PyScanFCS is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published 
 by the Free Software Foundation, either version 2 of the License, 
 or (at your option) any later version.
 
-PyScanFSC is distributed in the hope that it will be useful,
+PyScanFCS is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of 
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
 See the GNU General Public License for more details. 
