@@ -10,31 +10,6 @@ It is possible to create test-data containing exponentially correlated data with
 
 For further information, please visit the PyScanFCS homepage at [http://pyscanfcs.craban.de](http://pyscanfcs.craban.de).
 
-
-###Cython and Windows XP 32bit - Procedure
-
-Install [Cython](http://wiki.cython.org/InstallingOnWindows) and [MinGW](http://sourceforge.net/projects/mingw/files/Installer/mingw-get-inst/). Make sure the Windows Path variable contains the following directories:
-
-    C:\Python27\Scripts  
-    C:\MinGW\bin
-  
-Tell Cython to use MinGW by creating (or editing) the file *C:\Python27\Lib\distutils\distutils.cfg* with the content:
-
-    [build]
-    compiler=mingw32
-
-Depending on the version of MinGW, all occurences of *-mno-cygwin* have to be removed from the file
-
-    C:\Python27\Lib\distutils\cygwinccompiler.py
-  
-The numpy header files have to be included for cygwin. Copy
-
-    C:\Python27\Lib\site-packages\numpy-1.6.2-py2.7-win32.egg\numpy\core\include\numpy
-
-to
-
-    C:\Python27\include\
-    
-This should enable you to compile the ~.pyx files by running the following code in PyScanFCS/src/
-
-    python compile_cython.py build_ext --inplace
+- [Download the latest version](https://github.com/paulmueller/PyScanFCS/releases)
+- [Documentation](https://github.com/paulmueller/PyScanFCS/raw/master/PyScanFCS_doc.pdf)
+- [Using Cython on Windows XP](https://github.com/paulmueller/PyScanFCS/wiki/Using-Cython-on-Windows-XP)
