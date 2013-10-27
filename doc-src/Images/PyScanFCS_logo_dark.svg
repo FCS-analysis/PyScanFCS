@@ -9,15 +9,15 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="767.86157"
-   height="196.36554"
+   width="782.77252"
+   height="225.26022"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.3.1 r9886"
    sodipodi:docname="PyScanFCS_logo_dark.svg"
-   inkscape:export-filename="/home/paul/Arbeitsfläche/123.png"
-   inkscape:export-xdpi="82.285713"
-   inkscape:export-ydpi="82.285713">
+   inkscape:export-filename="/home/paul/repos/PyScanFCS/doc-src/Images/PyScanFCS_logo_dark.png"
+   inkscape:export-xdpi="23.572737"
+   inkscape:export-ydpi="23.572737">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -28,8 +28,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.49497475"
-     inkscape:cx="76.992492"
-     inkscape:cy="150.16398"
+     inkscape:cx="83.585687"
+     inkscape:cy="142.61103"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -39,8 +39,8 @@
      fit-margin-bottom="0"
      inkscape:window-width="1053"
      inkscape:window-height="751"
-     inkscape:window-x="163"
-     inkscape:window-y="68"
+     inkscape:window-x="69"
+     inkscape:window-y="75"
      inkscape:window-maximized="0"
      inkscape:snap-page="false" />
   <metadata
@@ -59,22 +59,22 @@
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-99.387897,-231.82393)">
+     transform="translate(-92.794702,-195.37628)">
     <text
        xml:space="preserve"
-       style="font-size:99.34378815px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:0.80473376;stroke:none;font-family:Sans"
-       x="337.98184"
-       y="364.08014"
-       id="text3793"
+       style="font-size:99.3436203px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:0.80473376;stroke:none;font-family:Sans"
+       x="346.30048"
+       y="348.86331"
+       id="text3793-9"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
-         id="tspan3795"
-         x="337.98184"
-         y="364.08014"
+         id="tspan3795-8"
+         x="346.30048"
+         y="348.86331"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:0.80473376;font-family:Monospace;-inkscape-font-specification:Monospace">PyScanFCS</tspan></text>
     <g
        id="g4450"
-       transform="matrix(-0.76673817,0,0,0.76673817,173.94812,53.12434)">
+       transform="matrix(-0.87956172,0,0,0.87956172,178.32627,-9.6184959)">
       <g
          transform="translate(-255.01365,16.713255)"
          id="g4129">
