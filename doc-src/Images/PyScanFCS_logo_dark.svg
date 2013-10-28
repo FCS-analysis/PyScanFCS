@@ -40,7 +40,7 @@
      inkscape:window-width="1053"
      inkscape:window-height="751"
      inkscape:window-x="69"
-     inkscape:window-y="75"
+     inkscape:window-y="24"
      inkscape:window-maximized="0"
      inkscape:snap-page="false" />
   <metadata
@@ -51,7 +51,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -71,7 +71,7 @@
          id="tspan3795-8"
          x="346.30048"
          y="348.86331"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:0.80473376;font-family:Monospace;-inkscape-font-specification:Monospace">PyScanFCS</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:0.80473375999999996;font-family:Courier New;-inkscape-font-specification:Courier New">PyScanFCS</tspan></text>
     <g
        id="g4450"
        transform="matrix(-0.87956172,0,0,0.87956172,178.32627,-9.6184959)">
