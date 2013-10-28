@@ -9,15 +9,15 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="782.77252"
+   width="780.68671"
    height="225.26022"
    id="svg2"
    version="1.1"
    inkscape:version="0.48.3.1 r9886"
    sodipodi:docname="PyScanFCS_logo_dark.svg"
    inkscape:export-filename="/home/paul/repos/PyScanFCS/doc-src/Images/PyScanFCS_logo_dark.png"
-   inkscape:export-xdpi="23.914993"
-   inkscape:export-ydpi="23.914993">
+   inkscape:export-xdpi="23.978889"
+   inkscape:export-ydpi="23.978889">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -27,9 +27,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.7"
-     inkscape:cx="119.22645"
-     inkscape:cy="122.47161"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="374.09863"
+     inkscape:cy="378.53931"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -59,45 +59,37 @@
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-92.794702,-195.37628)">
-    <g
-       id="g4129"
-       transform="matrix(-0.87956172,0,0,0.87956172,402.62651,5.0818434)">
-      <path
-         inkscape:connector-curvature="0"
-         id="path3251"
-         d="M 113.05452,276.87916 219.67127,383.49591"
-         style="fill:#008000;fill-opacity:1;stroke:#008000;stroke-width:7;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-      <path
-         transform="matrix(0.39772727,0.39772727,-0.48611113,0.48611113,356.59844,108.15484)"
-         d="m 206.07112,424.0473 c 0,20.08411 -19.89947,36.36549 -44.44672,36.36549 -24.54724,0 -44.44671,-16.28138 -44.44671,-36.36549 0,-20.0841 19.89947,-36.36549 44.44671,-36.36549 24.54725,0 44.44672,16.28139 44.44672,36.36549 z"
-         sodipodi:ry="36.36549"
-         sodipodi:rx="44.446712"
-         sodipodi:cy="424.0473"
-         sodipodi:cx="161.6244"
-         id="path2985-1-2"
-         style="fill:#303dc7;fill-opacity:1;stroke:#008000;stroke-width:11.25699711;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-         sodipodi:type="arc" />
-    </g>
-    <g
-       id="g4133"
-       transform="matrix(-0.87956172,0,0,0.87956172,404.26168,-1.977651)">
-      <path
-         inkscape:connector-curvature="0"
-         id="path3251-2"
-         d="M 144.62162,247.76723 251.23837,354.38398"
-         style="fill:#008000;fill-opacity:1;stroke:#008000;stroke-width:7;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-      <path
-         transform="matrix(0.39772727,0.39772727,-0.48611113,0.48611113,291.61139,-17.511233)"
-         d="m 206.07112,424.0473 c 0,20.08411 -19.89947,36.36549 -44.44672,36.36549 -24.54724,0 -44.44671,-16.28138 -44.44671,-36.36549 0,-20.0841 19.89947,-36.36549 44.44671,-36.36549 24.54725,0 44.44672,16.28139 44.44672,36.36549 z"
-         sodipodi:ry="36.36549"
-         sodipodi:rx="44.446712"
-         sodipodi:cy="424.0473"
-         sodipodi:cx="161.6244"
-         id="path2985-39"
-         style="fill:#c48d0a;fill-opacity:1;stroke:#008000;stroke-width:11.25699711;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-         sodipodi:type="arc" />
-    </g>
+     transform="translate(-92.794698,-195.37628)">
+    <path
+       style="fill:#008000;fill-opacity:1;stroke:#008000;stroke-width:6.15693188000000013;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 303.18808,248.61415 -93.77601,93.77602"
+       id="path3251"
+       inkscape:connector-curvature="0" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#303dc7;fill-opacity:1;stroke:#008000;stroke-width:11.25699711;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="path2985-1-2"
+       sodipodi:cx="161.6244"
+       sodipodi:cy="424.0473"
+       sodipodi:rx="44.446712"
+       sodipodi:ry="36.36549"
+       d="m 206.07112,424.0473 a 44.446712,36.36549 0 1 1 -88.89343,0 44.446712,36.36549 0 1 1 88.89343,0 z"
+       transform="matrix(-0.34982568,0.34982568,0.42756474,0.42756474,88.976173,100.2107)" />
+    <path
+       style="fill:#008000;fill-opacity:1;stroke:#008000;stroke-width:6.15700000000000003;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 277.05804,215.94892 -93.77601,93.77601"
+       id="path3251-2"
+       inkscape:connector-curvature="0" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#c48d0a;fill-opacity:1;stroke:#008000;stroke-width:11.25699711;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="path2985-39"
+       sodipodi:cx="161.6244"
+       sodipodi:cy="424.0473"
+       sodipodi:rx="44.446712"
+       sodipodi:ry="36.36549"
+       d="m 206.07112,424.0473 a 44.446712,36.36549 0 1 1 -88.89343,0 44.446712,36.36549 0 1 1 88.89343,0 z"
+       transform="matrix(-0.34982568,0.34982568,0.42756474,0.42756474,147.77146,-17.379861)" />
     <text
        xml:space="preserve"
        style="font-size:99.3436203px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:0.80473376;stroke:none;font-family:Sans"
@@ -109,7 +101,7 @@
          id="tspan3795-8"
          x="346.30048"
          y="348.86331"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:0.80473375999999996;font-family:Courier New;-inkscape-font-specification:Courier New">PyScanFCS</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:0.80473376;font-family:Courier New;-inkscape-font-specification:Courier New">PyScanFCS</tspan></text>
     <g
        id="g4141"
        transform="matrix(-0.99635309,0,0,0.99635309,416.0769,-20.49882)">
