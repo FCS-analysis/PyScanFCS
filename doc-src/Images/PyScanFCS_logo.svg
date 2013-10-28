@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="782.77252"
+   height="225.26022"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="PyScanFCS_logo.svg"
+   inkscape:export-filename="/home/paul/repos/PyScanFCS/doc-src/Images/PyScanFCS_logo_dark.png"
+   inkscape:export-xdpi="23.914993"
+   inkscape:export-ydpi="23.914993">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="210.95552"
+     inkscape:cy="-143.05933"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1053"
+     inkscape:window-height="751"
+     inkscape:window-x="69"
+     inkscape:window-y="24"
+     inkscape:window-maximized="0"
+     inkscape:snap-page="false" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-92.794702,-195.37628)">
+    <path
+       style="fill:#008000;fill-opacity:1;stroke:#008000;stroke-width:6.15693188000000013;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 303.18808,248.61415 -93.77601,93.77602"
+       id="path3251"
+       inkscape:connector-curvature="0" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#303dc7;fill-opacity:1;stroke:#008000;stroke-width:11.25699711;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="path2985-1-2"
+       sodipodi:cx="161.6244"
+       sodipodi:cy="424.0473"
+       sodipodi:rx="44.446712"
+       sodipodi:ry="36.36549"
+       d="m 206.07112,424.0473 a 44.446712,36.36549 0 1 1 -88.89343,0 44.446712,36.36549 0 1 1 88.89343,0 z"
+       transform="matrix(-0.34982568,0.34982568,0.42756474,0.42756474,88.976173,100.2107)" />
+    <path
+       style="fill:#008000;fill-opacity:1;stroke:#008000;stroke-width:6.15700000000000003;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 277.05804,215.94892 -93.77601,93.77601"
+       id="path3251-2"
+       inkscape:connector-curvature="0" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#c48d0a;fill-opacity:1;stroke:#008000;stroke-width:11.25699711;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="path2985-39"
+       sodipodi:cx="161.6244"
+       sodipodi:cy="424.0473"
+       sodipodi:rx="44.446712"
+       sodipodi:ry="36.36549"
+       d="m 206.07112,424.0473 a 44.446712,36.36549 0 1 1 -88.89343,0 44.446712,36.36549 0 1 1 88.89343,0 z"
+       transform="matrix(-0.34982568,0.34982568,0.42756474,0.42756474,147.77146,-17.379861)" />
+    <text
+       xml:space="preserve"
+       style="font-size:99.34362029999999777px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:0.80392158;stroke:none;font-family:Sans"
+       x="346.30048"
+       y="348.86331"
+       id="text3793-9"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3795-8"
+         x="346.30048"
+         y="348.86331"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#ffffff;fill-opacity:0.80392158;font-family:Courier New;-inkscape-font-specification:Courier New">PyScanFCS</tspan></text>
+    <path
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#ffffff;stroke-width:9.54805183000000035;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:0;stroke-opacity:0.44705883;stroke-dasharray:none"
+       d="m 280.54573,420.62665 c 0,-103.65336 -84.02765,-187.681 -187.681,-187.681"
+       id="path3820-53-8"
+       sodipodi:nodetypes="cc" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#ffffff;fill-opacity:0.17254902;stroke:none"
+       id="path3820-53"
+       sodipodi:cx="112.14286"
+       sodipodi:cy="46.627132"
+       sodipodi:rx="125"
+       sodipodi:ry="125.71429"
+       d="m 23.754512,135.52056 a 125,125.71429 0 0 1 -10e-7,-177.786851 l 88.388349,88.893423 z"
+       transform="matrix(-1.0616841,1.0616841,1.0556517,1.0556517,162.66933,252.30221)"
+       sodipodi:start="2.3561945"
+       sodipodi:end="3.9269908" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#008000;fill-opacity:1;stroke:#008000;stroke-width:11.25699711;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="path2985-3-0"
+       sodipodi:cx="161.6244"
+       sodipodi:cy="424.0473"
+       sodipodi:rx="44.446712"
+       sodipodi:ry="36.36549"
+       d="m 130.19583,449.76159 a 44.446712,36.36549 0 0 1 0,-51.42857 l 31.42857,25.71428 z"
+       transform="matrix(-0.39627679,0.39627679,0.48433833,0.48433833,-45.01607,147.66691)"
+       sodipodi:start="2.3561945"
+       sodipodi:end="3.9269908" />
+  </g>
+</svg>

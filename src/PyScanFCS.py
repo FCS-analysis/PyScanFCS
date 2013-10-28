@@ -163,6 +163,12 @@ maximum. \n The data achieved will automatically be updated within the main prog
         self.ymin = np.min(self.ampl)
         self.interval = [0, 0]
         self.red = False
+        # Set window icon
+        try:
+          self.MainIcon = doc.getMainIcon()
+          wx.Frame.SetIcon(self, self.MainIcon)
+        except:
+          self.MainIcon = None
 
 
     def on_pick(self, event):
@@ -326,6 +332,12 @@ class MyFrame(wx.Frame):
         # cachetest["linetime"] = self.t_linescan
         # cachetest["data"] = self.intData
         self.Update()
+        # Set window icon
+        try:
+          self.MainIcon = doc.getMainIcon()
+          wx.Frame.SetIcon(self, self.MainIcon)
+        except:
+          self.MainIcon = None
 
     def AddToCache(self, Data, cachename, background=False):
         if self.cache.keys().count(cachename) == 0:

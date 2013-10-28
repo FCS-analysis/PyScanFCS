@@ -5,14 +5,18 @@
     Module doc
     *doc* is the documentation. Functions for various text output point here.
 """
-import sys
 import csv
 import matplotlib
 import numpy
 import os
 import platform
 import scipy
+import sys
 import wx
+
+# The icon file was created with
+# img2py -i -n Main PyScanFCS_icon.png icon.py
+import icon
 import multipletauc
 
 
@@ -21,16 +25,17 @@ def description():
 tool for perpendicular line scanning FCS utilizing 
 correlator.com correlators. PyScanFCS is written in Python."""
 
+
 def info(version):
     """ Returns a little info about our program and what it can do.
     """
     textwin = u"""
-    Copyright 20011-2012 Paul Müller, Biotec - TU Dresden
+    Copyright 2011-2012 Paul Müller, Biotec - TU Dresden
 
     Data processing for perpendicular line scanning FCS.
     """
-    textlin = """
-    © 20011-2012 Paul Müller, Biotec - TU Dresden
+    textlin = u"""
+    © 2011-2012 Paul Müller, Biotec - TU Dresden
 
     Data processing for perpendicular line scanning FCS.
     """
@@ -43,6 +48,19 @@ def info(version):
     for line in licence().splitlines():
         lizenz += "    "+line+"\n"
     return one + lizenz + texta 
+
+
+def getMainIcon(pxlength=32):
+    """ *pxlength* is the side length in pixels of the icon """
+    # Set window icon
+    iconBMP = icon.getMainBitmap()
+    # scale
+    image = wx.ImageFromBitmap(iconBMP)
+    image = image.Scale(pxlength, pxlength, wx.IMAGE_QUALITY_HIGH)
+    iconBMP = wx.BitmapFromImage(image)
+    iconICO = wx.IconFromBitmap(iconBMP)
+    return iconICO
+
 
 def licence():
     return """PyScanFCS is free software: you can redistribute it and/or modify it
@@ -58,6 +76,7 @@ See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License 
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+
 
 def SoftwareUsed():
     """ Return some Information about the software used for this program """
@@ -88,6 +107,7 @@ def SoftwareUsed():
         pyinst = "\n\nThis executable has been created using PyInstaller."
         text = text+pyinst
     return text
+
 
 # Changelog filename
 ChangeLog = "ChangeLog.txt"
