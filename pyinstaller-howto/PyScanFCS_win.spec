@@ -14,6 +14,7 @@ exe = EXE(pyz,
           debug=False,
           strip=None,
           upx=True,
+          icon='C:\\Python27\\PyScanFCS\\pyinstaller-howto\\PyScanFCS.ico',
 #          console=False )
           console=True )
 
