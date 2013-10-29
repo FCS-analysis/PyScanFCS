@@ -41,14 +41,14 @@ color: #000000;
 }
 
 .citation, blockquote {
-	margin-left:25px;
-    margin-right:35px;
+	margin-left:20px;
+    margin-right:0px;
     background-color: #f9fdf9;
-    width: 800px;
+    width: 500px;
     border-style: dotted;
     border-width: 1px;
     border-color: #000000;
-    padding: 5px;
+    padding: 1px;
 }
 
 
