@@ -53,7 +53,7 @@ color: #000000;
 
 
 .wrapper {
-  width:750px;
+  width:800px;
   margin:0 auto;
 }
 
@@ -79,4 +79,5 @@ footer {
   bottom:50px;
 }
 
+img[alt=scrot] { width: 500px; }
 
