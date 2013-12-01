@@ -32,7 +32,8 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_wxagg import \
     FigureCanvasWxAgg as FigureCanvas, \
     NavigationToolbar2WxAgg as NavigationToolbar
-from matplotlib.widgets import RectangleSelector
+
+from matplotlib.widgets import RectangleSelector, Button
 from matplotlib.patches import Rectangle
 
 import matplotlib.pyplot as plt
@@ -1410,14 +1411,20 @@ class MyFrame(wx.Frame):
                        bintime, length=500)
 
             if self.MenuVerbose.IsChecked():
+                def view_bleach_data(e=None):
+                    print "peter2"
+                    #import IPython
+                    #IPython.embed()
                 # Show a plot
                 xexp = newtrace[:,0]
                 yexp = newtrace[:,1]*self.TraceCorrectionFactor
                 yfit = newtracefit[:,1]*self.TraceCorrectionFactor
                 ycorr = newtracecorr[:,1]*self.TraceCorrectionFactor
 
-                fig = plt.figure()
-                ax = plt.subplot(111)
+                #fig, ax = plt.figure()
+                #ax = plt.subplot(111)
+                fig, ax = plt.subplots()
+                plt.subplots_adjust(bottom=0.2)
                 plt.title(title + " - bleaching correction")
                 plt.xlabel("Measurement time t [s]")
                 plt.ylabel("approx. Intensity I [kHz]")
@@ -1432,8 +1439,14 @@ class MyFrame(wx.Frame):
                 text = "I = ({:.2e})*exp[-t / (2*({:.2e})) ]".format(f_0,t_0)
                 plt.text(xt,yt,text, size=12)
                 plt.legend()
+                # Add button for plot data
+                axgb = plt.axes([0.75, 0.05, 0.15, 0.05])
+                buttonbleach = Button(axgb, 'view data')
+                buttonbleach.on_clicked(view_bleach_data)
+                # IPython.embed does something that makes the button work...
+                import IPython
+                IPython.embed()
                 plt.show()
-
         return traceData
 
           
