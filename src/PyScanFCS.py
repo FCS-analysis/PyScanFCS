@@ -10,6 +10,7 @@ import tempfile
 import zipfile
 import csv
 import sys
+import webbrowser
 
 ## On Windows XP I had problems with the unicode Characters.
 # I found this at 
@@ -47,6 +48,7 @@ from scipy.fftpack import fftfreq
 import struct
 
 import edclasses
+import misc
 # SFCSnumeric needs scipy.optimize
 # We import it here, so that pyinstaller packs it into the executable.
 # Pyinstaller does not neccessarily know that SFCSnumeric needs it.
@@ -809,6 +811,14 @@ class MyFrame(wx.Frame):
         # Check by default
         self.MenuVerbose.Check()
 
+        menuDocu = helpmenu.Append(wx.ID_ANY, "&Documentation",
+                                    "PyCorrFit documentation")
+        menuWiki = helpmenu.Append(wx.ID_ANY, "&Wiki",
+                          "PyCorrFit wiki pages by users for users (online)")
+        menuUpdate = helpmenu.Append(wx.ID_ANY, "&Update",
+                                    "Check for new version"+
+                                     " (Web access required)")
+        helpmenu.AppendSeparator()
         menuSoftw = helpmenu.Append(wx.ID_ANY, "&Software used",
                                     "Information about software used by this program")
         menuAbout = helpmenu.Append(wx.ID_ABOUT, "&About",
@@ -832,8 +842,11 @@ class MyFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnSaveFits, self.menuSaveFits)
 
         # Help
-        self.Bind(wx.EVT_MENU, self.OnSoftware, menuSoftw)
         self.Bind(wx.EVT_MENU, self.OnAbout, menuAbout)
+        self.Bind(wx.EVT_MENU, self.OnUpdate, menuUpdate)
+        self.Bind(wx.EVT_MENU, self.OnSoftware, menuSoftw)
+        self.Bind(wx.EVT_MENU, self.OnDocumentation, menuDocu)
+        self.Bind(wx.EVT_MENU, self.OnWiki, menuWiki)
 
     
     #Help
@@ -852,6 +865,25 @@ class MyFrame(wx.Frame):
         info.AddDeveloper('Paul Müller')
         info.AddDocWriter('Paul Müller')
         wx.AboutBox(info)
+
+
+    def OnDocumentation(self, e=None):
+        """ Get the documentation and view it with browser"""
+        filename = doc.GetLocationOfDocumentation()
+        if filename is None:
+            # Now we have to tell the user that there is no documentation
+            self.StatusBar.SetStatusText("...documentation not found.")
+        else:
+            self.StatusBar.SetStatusText("...documentation: "+filename)
+            if platform.system().lower() == 'windows':
+                os.system("start /b "+filename)
+            elif platform.system().lower() == 'linux':
+                os.system("xdg-open "+filename+" &")
+            elif platform.system().lower() == 'darwin':
+                os.system("open "+filename+" &")
+            else:
+                # defaults to linux style:
+                os.system("xdg-open "+filename+" &")
 
 
     def OnExit(self,e):
@@ -1751,6 +1783,15 @@ class MyFrame(wx.Frame):
         text = doc.SoftwareUsed()
         dlg = wx.MessageBox(text, 'Software', 
             wx.OK | wx.ICON_INFORMATION)
+
+
+    def OnUpdate(self, event):
+        misc.Update(self)
+
+
+    def OnWiki(self, e=None):
+        """ Go to the GitHub Wiki page"""
+        webbrowser.open(doc.GitWiki)
 
 
     def PlotImage(self):

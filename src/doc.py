@@ -20,6 +20,58 @@ import icon
 import multipletauc
 
 
+def GetLocationOfChangeLog(filename = "ChangeLog.txt"):
+    locations = list()
+    fname1 = os.path.realpath(__file__)
+    # Try one directory up
+    dir1 = os.path.dirname(fname1)+"/../"
+    locations.append(os.path.realpath(dir1))
+    # In case of distribution with .egg files (pip, easy_install)
+    dir2 = os.path.dirname(fname1)+"/../pyscanfcs_doc/"
+    locations.append(os.path.realpath(dir2))
+    ## freezed binaries:
+    if hasattr(sys, 'frozen'):
+        try:
+            dir2 = sys._MEIPASS + "/doc/"
+        except:
+            dir2 = "./"
+        locations.append(os.path.realpath(dir2))
+    for loc in locations:
+        thechl = os.path.join(loc,filename)
+        if os.path.exists(thechl):
+            return thechl
+            break
+    # if this does not work:
+    return None
+
+
+def GetLocationOfDocumentation(filename = "PyScanFCS_doc.pdf"):
+    """ Returns the location of the documentation if there is any."""
+    ## running from source
+    locations = list()
+    fname1 = os.path.realpath(__file__)
+    # Documentation is usually one directory up
+    dir1 = os.path.dirname(fname1)+"/../"
+    locations.append(os.path.realpath(dir1))
+    # In case of distribution with .egg files (pip, easy_install)
+    dir2 = os.path.dirname(fname1)+"/../pyscanfcs_doc/"
+    locations.append(os.path.realpath(dir2))
+    ## freezed binaries:
+    if hasattr(sys, 'frozen'):
+        try:
+            dir2 = sys._MEIPASS + "/doc/"
+        except:
+            dir2 = "./"
+        locations.append(os.path.realpath(dir2))
+    for loc in locations:
+        thedoc = os.path.join(loc,filename)
+        if os.path.exists(thedoc):
+            return thedoc
+            break
+    # if this does not work:
+    return None
+
+
 def description():
     return """PyScanFCS is a data displaying and processing
 tool for perpendicular line scanning FCS utilizing 
@@ -102,20 +154,30 @@ def SoftwareUsed():
            "\n - struct"+\
            "\n - sys "+\
            "\n - wxPython "+wx.__version__
-           #"\n - yaml "+yaml.__version__
     if hasattr(sys, 'frozen'):
         pyinst = "\n\nThis executable has been created using PyInstaller."
         text = text+pyinst
     return text
 
 
+# Standard homepage
+HomePage = "http://pyscanfcs.craban.de/"
+
 # Changelog filename
 ChangeLog = "ChangeLog.txt"
-if hasattr(sys, 'frozen'):
-    StaticChangeLog = os.path.join(sys._MEIPASS, "doc/"+ChangeLog)
-else:
-    StaticChangeLog = os.path.join(os.path.dirname(sys.argv[0]), "../"+ChangeLog)
+StaticChangeLog = GetLocationOfChangeLog(ChangeLog)
 
-clfile = open(StaticChangeLog, 'r')
-__version__ = clfile.readline().strip()
-clfile.close()     
+
+# Check if we can extract the version
+try:
+    clfile = open(StaticChangeLog, 'r')
+    __version__ = clfile.readline().strip()
+    clfile.close()     
+except:
+    __version__ = "0.0.0-unknown"
+
+
+# Github homepage
+GitChLog = "https://raw.github.com/paulmueller/PyScanFCS/master/ChangeLog.txt"
+GitHome = "https://github.com/paulmueller/PyScanFCS"
+GitWiki = "https://github.com/paulmueller/PyScanFCS/wiki"
