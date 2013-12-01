@@ -3,7 +3,8 @@ a = Analysis(['C:\\Python27\\PyScanFCS\\src\\PyScanFCS.py'],
              pathex=['C:\\Python27\\pyinstaller-pyinstaller-6ca4af8'],
              hiddenimports=[],
              hookspath=None)
-a.datas += [('doc\\ChangeLog.txt', 'C:\\Python27\\PyScanFCS\\ChangeLog.txt', 'DATA')]
+a.datas += [('doc\\ChangeLog.txt', 'C:\\Python27\\PyScanFCS\\ChangeLog.txt', 'DATA'),
+            ('doc\\PyScanFCS_doc.pdf', 'C:\\Python27\\PyScanFCS\\PyScanFCS_doc.pdf', 'DATA')]
 pyz = PYZ(a.pure)
 exe = EXE(pyz,
           a.scripts,
