@@ -1393,7 +1393,7 @@ class MyFrame(wx.Frame):
             newtrace = multipletauc.BinTraceFromTrace(
                        np.float32(traceData),
                        bintime, length=500)
-        
+
             # Full trace:
             ti = np.arange(ltrb)
             expfull = np.exp(-ti/(2*t_0))
@@ -1419,14 +1419,18 @@ class MyFrame(wx.Frame):
                 fig = plt.figure()
                 ax = plt.subplot(111)
                 plt.title(title + " - bleaching correction")
-                plt.xlabel("Measurement time [s]")
-                plt.ylabel("approx. Intensity [kHz]")
+                plt.xlabel("Measurement time t [s]")
+                plt.ylabel("approx. Intensity I [kHz]")
                 plt.plot(xexp, yexp, '-', 
                          label = "Measured trace", color="gray")
                 plt.plot(xexp, yfit, '-', 
                          label = "Exponential fit", color="red")
                 plt.plot(xexp, ycorr, '-', 
                          label = "Corrected trace", color="blue")
+                xt = np.min(xexp)
+                yt = np.min(yexp)
+                text = "I = ({:.2e})*exp[-t / (2*({:.2e})) ]".format(f_0,t_0)
+                plt.text(xt,yt,text, size=12)
                 plt.legend()
                 plt.show()
 
