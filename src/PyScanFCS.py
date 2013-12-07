@@ -23,7 +23,7 @@ if platform.system() == 'Windows':
 
 import os
 import wx                               # GUI interface wxPython
-import wx.lib.agw.pyprogress as PBusy   # Busy Dialog
+#import wx.lib.agw.pyprogress as PBusy   # Busy Dialog
 
 import matplotlib
 matplotlib.use('WXAgg')
@@ -46,14 +46,14 @@ import numpy as np                            # NumPy
 import pyfits
 from scipy.fftpack import fft
 from scipy.fftpack import fftfreq
-import struct
+#import struct
 
 import edclasses
 import misc
 # SFCSnumeric needs scipy.optimize
 # We import it here, so that pyinstaller packs it into the executable.
 # Pyinstaller does not neccessarily know that SFCSnumeric needs it.
-from scipy import optimize
+#from scipy import optimize
 import SFCSnumeric
 import multipletauc
 
@@ -89,19 +89,23 @@ class plotarea(wx.Panel):
         # Labels
         self.axes.set_ylabel("Scan cycle time [ms]",size=16)
         self.axes.set_xlabel("Measurement time [s]",size=16)
-    def onselect(self, eclick, erelease):
-        self.grandparent.OnSelect(eclick, erelease)
+
+
+    def OnSelectPlot(self, eclick, erelease):
+        self.grandparent.OnSelectPlot(eclick, erelease)
+
+    
     def UseLineSelector(self):
         lineprops = dict(color='red', linestyle='-',
                          linewidth = 2, alpha=0.5)
         del self.rs
-        self.rs = RectangleSelector(self.axes, self.onselect, drawtype='line',
+        self.rs = RectangleSelector(self.axes, self.OnSelectPlot, drawtype='line',
                                     lineprops=lineprops)
     def UseRectangleSelector(self):
         del self.rs
         rectprops = dict(facecolor='white', edgecolor = 'red',
                        alpha=0.2, fill=True)
-        self.rs = RectangleSelector(self.axes, self.onselect, drawtype='box',
+        self.rs = RectangleSelector(self.axes, self.OnSelectPlot, drawtype='box',
                                     rectprops=rectprops)
         
 
@@ -168,10 +172,10 @@ maximum. \n The data achieved will automatically be updated within the main prog
         self.red = False
         # Set window icon
         try:
-          self.MainIcon = doc.getMainIcon()
-          wx.Frame.SetIcon(self, self.MainIcon)
+            self.MainIcon = doc.getMainIcon()
+            wx.Frame.SetIcon(self, self.MainIcon)
         except:
-          self.MainIcon = None
+            self.MainIcon = None
 
 
     def on_pick(self, event):
@@ -236,8 +240,8 @@ maximum. \n The data achieved will automatically be updated within the main prog
 
                 self.pnt.t_linescan = ltime*self.pnt.system_clock*1e3
 
-                amplitudes = self.ampl[idx-k:idx+k]
-                frequencies = self.freq[idx-k:idx+k]
+                #amplitudes = self.ampl[idx-k:idx+k]
+                #frequencies = self.freq[idx-k:idx+k]
                 self.redline = self.axes.vlines(ltime, self.ymin, self.ymax, color='red')
 
 
@@ -263,7 +267,7 @@ maximum. \n The data achieved will automatically be updated within the main prog
                 # Set check box to True: "use cycle time"
                 self.pnt.BoxPrebin[6].SetValue(True)
                 self.pnt.Update()
-                self.pnt.Low_Prebin()   
+                self.pnt.OnBinning_Prebin()   
 
 
 class MyFrame(wx.Frame):
@@ -337,10 +341,11 @@ class MyFrame(wx.Frame):
         self.Update()
         # Set window icon
         try:
-          self.MainIcon = doc.getMainIcon()
-          wx.Frame.SetIcon(self, self.MainIcon)
+            self.MainIcon = doc.getMainIcon()
+            wx.Frame.SetIcon(self, self.MainIcon)
         except:
-          self.MainIcon = None
+            self.MainIcon = None
+
 
     def AddToCache(self, Data, cachename, background=False):
         if self.cache.keys().count(cachename) == 0:
@@ -358,29 +363,6 @@ class MyFrame(wx.Frame):
         acache["dirname"] = self.dirname
         self.cache[cachename] = acache
 
-    def OnSelectCache(self, e=None):
-        for item in self.cachemenu.GetMenuItems():
-            if item.IsChecked():
-                cachename = item.GetLabel()
-        cache=self.cache[cachename]
-        self.BoxPrebin[8].SetValue(cache["bins_per_line"])
-        self.bins_per_line = cache["bins_per_line"]
-        linetime = cache["linetime"]
-        if linetime is not None:
-            self.BoxInfo[2].SetValue(str(linetime/self.system_clock/1e3))
-        self.t_linescan = linetime
-        self.intData = 1*cache["data"]
-        self.filename = cachename
-        self.dirname = cache["dirname"]
-        filename = os.path.join(self.dirname, self.filename)
-        style = wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME|wx.PD_CAN_ABORT
-        dlg2 = wx.ProgressDialog("Processing file", "Finding 32 bit events..."
-        , parent=self, style=style)
-        self.system_clock, self.datData = SFCSnumeric.OpenDat(filename, dlg2)
-        dlg2.Destroy()
-        self.GetTotalTime()
-        self.Update()
-        self.PlotImage()
 
     def Bin_All_Photon_Events(self, Data):
         """ Bin all photon events according to a binsize t_bin.
@@ -445,87 +427,6 @@ class MyFrame(wx.Frame):
 
 
 
-    def Final_Binnig(self, event=None):
-        if self.BoxPrebin[6].GetValue() == False:
-            # from µs to system clock ticks
-            t_bin = self.BoxPrebin[4].GetValue() * self.system_clock
-            # If, reset previously achieved things
-            self.t_linescan = None
-            self.Update()
-        else:
-            # Calculate t_bin through number of bins per line and cycle time
-            self.bins_per_line = self.BoxPrebin[8].GetValue()
-            t_bin = 1.0 * self.t_linescan / self.bins_per_line
-        self.t_bin = t_bin
-        # First we need to reset the linetime correction to zero
-        self.linespin.SetValue(0)
-        # Calculate binned data
-        self.intData = self.Bin_All_Photon_Events(self.datData)
-
-        # Add to cache
-        self.AddToCache(self.intData, self.filename)
-
-        # Then Plot the data somehow
-        self.PlotImage()
-
-
-
-    def Find_lscantime(self, event):
-        """
-        Find the time that the confocal microscope uses to capture a line
-        of data. This is done via FFT.
-        """
-        # Fourier Transform
-        cnData = fft(self.intData)
-        N = len(cnData)
-        # We only need positive/negative frequencies
-        amplitude = np.abs(cnData[0:N/2]*np.conjugate(cnData[0:N/2]))
-        n_bins = len(self.intData)
-
-        # Calculate the correct frequencies
-        rate = 1./self.t_bin
-        frequency = fftfreq(N)[0:N/2] * rate
-
-        if self.BoxLineScan[1].GetValue() == True:
-            # Find it automagically
-            # The first big maximum is usually the second maximum
-            idx = np.argmax(amplitude[10:])+10
-            # The first maximum is what we want ERROR
-            idx2 = np.argmax(amplitude[10:idx-30])+10
-            # Sometimes the first one was ok.
-            if 0.1*amplitude[idx] > amplitude[idx2]:
-                idx2 = idx
-            # We now have the maximum, but we actually want to have some
-            # kind of a weighted maximum. For that we take k data points next
-            # to the maximum and weigth them with their relative amplitude.
-            k = 10
-            timeweights = list()
-            timeweights.append(1/frequency[idx2])
-            Pie = 1
-            for i in np.arange(k):
-                weighta = amplitude[idx2+i+1]/amplitude[idx2]
-                weightb = amplitude[idx2-i-1]/amplitude[idx2]
-                timeweights.append(weighta/frequency[idx2+i+1])
-                timeweights.append(weightb/frequency[idx2-i-1])
-                Pie = Pie + weighta + weightb
-
-            timeweights = np.array(timeweights)
-            ltime = np.sum(timeweights, dtype="float")/Pie
-            self.t_linescan = ltime
-            # Plot the results (not anymore, we do a low_prebin)
-            #self.PlotImage()
-            # Set Checkbox value to True: "use cycle time"
-            self.BoxPrebin[6].SetValue(True)
-            self.Update()
-            self.Low_Prebin()
-        else:
-            # Pop up a dialog with the fourier transform of the function
-            # (log -plot) and let user decide which maximum to use.
-            dlg = FFTmaxDialog(self, frequency, amplitude)
-            dlg.Show()
-
-
-
     def GetTotalTime(self):
         """ 
         Sums over self.datData to find out the total time of the measurement.
@@ -534,35 +435,185 @@ class MyFrame(wx.Frame):
         # Need to set float variable here, because uint32 are not
         # large enough. T_total in system clocks.
         self.T_total = np.sum(self.datData, dtype="float")
-        
         self.Update()
 
 
-    def Low_Prebin(self, event=None):
-        """ Do prebinngin using *Bin_Photon_Events()* """
-        n_events = self.BoxPrebin[2].GetValue()
-        if self.BoxPrebin[6].GetValue() == False:
-            # from µs tp system clock ticks
-            t_bin = self.BoxPrebin[4].GetValue() * self.system_clock
-            ## If, reset previously achieved things. # - Why?
-            # self.t_linescan = None
-            self.Update()
+    def GetTraceFromIntData(self, intData, coords, title="Trace"):
+        """
+            region is a number describing the region the trace comes from (1 or 2)
+        """
+        ## Get the data
+        # Make sure we have the corners of the square
+        for atuple in coords:
+            if atuple[0] is None or atuple[1] is None:
+                return
+        [(x1,x2), (y1,y2)] = coords
+
+        # Convert times to positions in 2D array
+        x1 = np.floor(x1/self.t_linescan)
+        x2 = np.ceil(x2/self.t_linescan)
+        y1 = np.floor(y1/self.t_bin)
+        y2 = np.ceil(y2/self.t_bin)
+        bins_in_col = y2-y1
+        bins_in_row = x2-x1
+
+        ## Get some needed data
+        # bin time for on line in s (used for multiple tau algorithm)
+        bintime = self.t_linescan/self.system_clock/1e6
+        # Number of bins next to the maximum to use for the trace
+        num_next_max = self.Spinnumax.GetValue()
+
+        # We have to swap x and y, because we want to access
+        # the array linewise later.
+        traceData = np.zeros((bins_in_row, bins_in_col))
+
+        # We start from x1 (lowest time available) and
+        # successively fill the traceData array:
+        pos = x1*self.bins_per_line
+        for i in np.arange(len(traceData)):
+            traceData[i] = intData[pos+y1:pos+y2]
+            pos = pos + self.bins_per_line
+
+        ## Get the actual trace
+        # Calculate trace from maximum
+        traceDataMaxids = np.argmax(traceData, axis=1)
+        newtraceData = np.zeros((len(traceDataMaxids), num_next_max*2+1))
+
+        for i in np.arange(len(traceData)):
+            # We add to the new trace data array, such that the maximum of
+            # each line is at the center of the array.
+            maid = traceDataMaxids[i]
+            # The array to be written to newtraceData
+            nsli = np.zeros(num_next_max*2+1)
+            nsli[num_next_max] = traceData[i][maid]
+            for k in np.arange(num_next_max)+1:
+                if maid+1-k >= 0:
+                    nsli[num_next_max-k] = traceData[i][maid-k]
+                if maid+1+k <= len(traceData[i]):
+                    nsli[num_next_max+k] = traceData[i][maid+k]
+            newtraceData[i] = nsli
+        del traceDataMaxids
+
+
+        if self.CheckBoxCountrateFilter.GetValue() is True:
+            # "temporal detection profile"
+            # We use this to find out how much time we spent in the membrane
+            detprof = np.sum(newtraceData, axis=0)
+
+            # Countrate correction:
+            x = np.linspace(-num_next_max, +num_next_max, len(detprof))
+            popt, gauss = SFCSnumeric.FitGaussian(detprof, x, np.argmax(detprof))
+            # Time in bins, that the focus effectively was inside the membrane:
+            # Go two sigmas in each direction. This way we have an averaged
+            # cpp in the end.
+            MembraneBins = 4*popt[2]
+            LinetimeBins = self.bins_per_line
+
+            #tracemean = np.mean(newtraceData)
+            self.TraceCorrectionFactor=LinetimeBins/MembraneBins
+
+            if self.MenuVerbose.IsChecked():
+                x2 = np.linspace(popt[0]-4*popt[2], popt[0]+4*popt[2], 100)
+                plt.figure()
+                plt.subplot(111)
+                plt.plot(x, detprof, "-", label="Measured profile")
+                plt.plot(x2, gauss(popt,x2), "-", label="Gaussian fit")
+                plt.legend()
+                text = "sigma = "+str(popt[2])+ " bins\n" +\
+                       "residence time in bins: "+str(MembraneBins)+"\n" +\
+                       u"residence time [µs]: "+str(MembraneBins*bintime*1e6/
+                                                    self.bins_per_line)
+                coords = (MembraneBins, np.max(detprof)/2.)
+                plt.text(coords[0],coords[1],text)
+                plt.xlabel("Bin position relative to maximum in cycle time")
+                plt.ylabel("Sum of counted photons (whole trace)")
+                plt.title(title + " - Determination of residence time in membrane")
+                plt.show()
         else:
-            # Calculate t_bin through number of bins per line and cycle time
-            self.bins_per_line = self.BoxPrebin[8].GetValue()
-            t_bin = 1.0 * self.t_linescan / self.bins_per_line
-        # First we need to reset the linetime correction to zero
-        self.linespin.SetValue(0)
-        # Calculate binned data
-        self.intData = self.Bin_Photon_Events(n_events=n_events, t_bin=t_bin)
-
-        # Add to cache
-        self.AddToCache(self.intData, self.filename)
+            self.TraceCorrectionFactor=1.
 
 
-        # Then Plot the data somehow
-        self.Update()
-        self.PlotImage()    
+        # We could multiply newtraceData with self.TraceCorrectionFactor right
+        # here, but we are not doing it, because it might introduce numerical
+        # errors. This does not change statistics. In order to get the correct
+        # countrate, we correct the traces, when they are binned for saving
+        # in .csv files.
+        newtraceData = np.sum(newtraceData, axis=1)
+        traceData = newtraceData
+
+
+        # Bleach filter?
+        if self.CheckBoxBleachFilter.GetValue() is True:
+            ltrb = len(traceData)
+            ## Perform bleaching correction
+            # fitted function:
+            # f_i = f_0 * exp(-t_i/t_0) + offset
+            # parms = [f_0, t_0, offset]
+            # Corrected function:
+            # F_c = F_i/(f_0*exp(-ti/(2*t_0))) + f_0*(1-f_0*exp(-t_i/(2*t_0)))
+            # We don't want to subtract an offset from the trace?
+            # The offset is actually background signal.
+            popt, expfunc = SFCSnumeric.FitExp(np.arange(len(traceData)),
+                                               traceData)
+            [f_0, t_0] = popt
+
+            newtrace = multipletauc.BinTraceFromTrace(
+                       np.float32(traceData),
+                       bintime, length=500)
+
+            # Full trace:
+            ti = np.arange(ltrb)
+            expfull = np.exp(-ti/(2*t_0))
+            # see formula above:
+            traceData = traceData/expfull + f_0*(1-expfull)
+
+            newtracecorr = multipletauc.BinTraceFromTrace(
+                       np.float32(traceData),
+                       bintime, length=500)
+            
+            fitfuncdata = expfunc(popt, np.arange(ltrb))
+            newtracefit = multipletauc.BinTraceFromTrace(
+                       np.float32(fitfuncdata),
+                       bintime, length=500)
+
+            if self.MenuVerbose.IsChecked():
+                def view_bleach_data(e=None):
+                    print "peter2"
+                    #import IPython
+                    #IPython.embed()
+                # Show a plot
+                xexp = newtrace[:,0]
+                yexp = newtrace[:,1]*self.TraceCorrectionFactor
+                yfit = newtracefit[:,1]*self.TraceCorrectionFactor
+                ycorr = newtracecorr[:,1]*self.TraceCorrectionFactor
+
+                #fig, ax = plt.figure()
+                #ax = plt.subplot(111)
+                fig, ax = plt.subplots()
+                plt.subplots_adjust(bottom=0.2)
+                plt.title(title + " - bleaching correction")
+                plt.xlabel("Measurement time t [s]")
+                plt.ylabel("approx. Intensity I [kHz]")
+                plt.plot(xexp, yexp, '-', 
+                         label = "Measured trace", color="gray")
+                plt.plot(xexp, yfit, '-', 
+                         label = "Exponential fit", color="red")
+                plt.plot(xexp, ycorr, '-', 
+                         label = "Corrected trace", color="blue")
+                xt = np.min(xexp)
+                yt = np.min(yexp)
+                text = "I = ({:.2e})*exp[-t / (2*({:.2e})) ]".format(f_0,t_0)
+                plt.text(xt,yt,text, size=12)
+                plt.legend()
+                # Add button for plot data
+                axgb = plt.axes([0.75, 0.05, 0.15, 0.05])
+                buttonbleach = Button(axgb, 'view data')
+                buttonbleach.on_clicked(view_bleach_data)
+                # IPython.embed does something that makes the button work...
+                import IPython
+                IPython.embed()
+                plt.show()
+        return traceData
 
 
     def MakeButtons(self):
@@ -602,7 +653,7 @@ class MyFrame(wx.Frame):
         presizer.Add(prespinshift)   
         # Button
         prebutt = wx.Button(self.buttonarea, label="Calculate and plot")
-        self.Bind(wx.EVT_BUTTON, self.Low_Prebin, prebutt)
+        self.Bind(wx.EVT_BUTTON, self.OnBinning_Prebin, prebutt)
         presizer.Add(prebutt)
 
         self.BoxPrebin = list()
@@ -629,7 +680,7 @@ class MyFrame(wx.Frame):
         lscansizer.Add(lscanmagic)
         # OK button
         lscanbutt = wx.Button(self.buttonarea, label="Find periodicity (FFT)")
-        self.Bind(wx.EVT_BUTTON, self.Find_lscantime, lscanbutt)
+        self.Bind(wx.EVT_BUTTON, self.OnFindLineScanTime, lscanbutt)
         lscansizer.Add(lscanbutt)
 
         self.BoxLineScan = [lscanbox, lscanmagic, lscanbutt]
@@ -642,7 +693,7 @@ class MyFrame(wx.Frame):
         binsizer.Add(bintext)
         # OK button
         binbutt = wx.Button(self.buttonarea, label="Calculate and plot all")
-        self.Bind(wx.EVT_BUTTON, self.Final_Binnig, binbutt)
+        self.Bind(wx.EVT_BUTTON, self.OnBinning_Total, binbutt)
         binsizer.Add(binbutt)
 
         self.BoxBinTotal = [binbox, bintext, binbutt]
@@ -699,9 +750,9 @@ class MyFrame(wx.Frame):
         self.linespin.Bind(wx.EVT_SPINCTRL, self.CorrectLineTime)
         self.RbtnSelect = wx.RadioButton (self.buttonarea, -1, 'Select region 1')
         self.RbtnSelectB = wx.RadioButton (self.buttonarea, -1, 'Select region 2')
-        self.Bind(wx.EVT_RADIOBUTTON, self.OnRadioButton, self.RbtnSelect)
-        self.Bind(wx.EVT_RADIOBUTTON, self.OnRadioButton, self.RbtnSelectB)
-        self.Bind(wx.EVT_RADIOBUTTON, self.OnRadioButton, self.RbtnLinet)
+        self.Bind(wx.EVT_RADIOBUTTON, self.OnRadioSelector, self.RbtnSelect)
+        self.Bind(wx.EVT_RADIOBUTTON, self.OnRadioSelector, self.RbtnSelectB)
+        self.Bind(wx.EVT_RADIOBUTTON, self.OnRadioSelector, self.RbtnLinet)
         usizer.Add(self.RbtnLinet)
         usizer.Add(self.linespin)
         usizer.Add(self.RbtnSelect)
@@ -836,22 +887,157 @@ class MyFrame(wx.Frame):
         
         ## Set events
         #File
-        self.Bind(wx.EVT_MENU, self.OnExit, menuExit)
+        self.Bind(wx.EVT_MENU, self.OnMenuExit, menuExit)
         self.Bind(wx.EVT_MENU, self.OnOpenDat, menuOpenDat)
         self.Bind(wx.EVT_MENU, self.OnOpenFits, menuOpenFits)
         self.Bind(wx.EVT_MENU, self.OnSaveDat, self.menuSaveDat)
         self.Bind(wx.EVT_MENU, self.OnSaveFits, self.menuSaveFits)
 
         # Help
-        self.Bind(wx.EVT_MENU, self.OnAbout, menuAbout)
-        self.Bind(wx.EVT_MENU, self.OnUpdate, menuUpdate)
-        self.Bind(wx.EVT_MENU, self.OnSoftware, menuSoftw)
-        self.Bind(wx.EVT_MENU, self.OnDocumentation, menuDocu)
-        self.Bind(wx.EVT_MENU, self.OnWiki, menuWiki)
+        self.Bind(wx.EVT_MENU, self.OnMenuAbout, menuAbout)
+        self.Bind(wx.EVT_MENU, self.OnMenuUpdate, menuUpdate)
+        self.Bind(wx.EVT_MENU, self.OnMenuSoftware, menuSoftw)
+        self.Bind(wx.EVT_MENU, self.OnMenuDocumentation, menuDocu)
+        self.Bind(wx.EVT_MENU, self.OnMenuWiki, menuWiki)
 
-    
-    #Help
-    def OnAbout(self, event):
+
+
+
+    def OnBinning_Prebin(self, event=None):
+        """ Do prebinngin using *Bin_Photon_Events()* """
+        n_events = self.BoxPrebin[2].GetValue()
+        if self.BoxPrebin[6].GetValue() == False:
+            # from µs tp system clock ticks
+            t_bin = self.BoxPrebin[4].GetValue() * self.system_clock
+            ## If, reset previously achieved things. # - Why?
+            # self.t_linescan = None
+            self.Update()
+        else:
+            # Calculate t_bin through number of bins per line and cycle time
+            self.bins_per_line = self.BoxPrebin[8].GetValue()
+            t_bin = 1.0 * self.t_linescan / self.bins_per_line
+        # First we need to reset the linetime correction to zero
+        self.linespin.SetValue(0)
+        # Calculate binned data
+        self.intData = self.Bin_Photon_Events(n_events=n_events, t_bin=t_bin)
+
+        # Add to cache
+        self.AddToCache(self.intData, self.filename)
+
+
+        # Then Plot the data somehow
+        self.Update()
+        self.PlotImage()    
+
+
+    def OnBinning_Total(self, event=None):
+        if self.BoxPrebin[6].GetValue() == False:
+            # from µs to system clock ticks
+            t_bin = self.BoxPrebin[4].GetValue() * self.system_clock
+            # If, reset previously achieved things
+            self.t_linescan = None
+            self.Update()
+        else:
+            # Calculate t_bin through number of bins per line and cycle time
+            self.bins_per_line = self.BoxPrebin[8].GetValue()
+            t_bin = 1.0 * self.t_linescan / self.bins_per_line
+        self.t_bin = t_bin
+        # First we need to reset the linetime correction to zero
+        self.linespin.SetValue(0)
+        # Calculate binned data
+        self.intData = self.Bin_All_Photon_Events(self.datData)
+
+        # Add to cache
+        self.AddToCache(self.intData, self.filename)
+
+        # Then Plot the data somehow
+        self.PlotImage()
+
+
+    def OnFindLineScanTime(self, event):
+        """
+        Find the time that the confocal microscope uses to capture a line
+        of data. This is done via FFT.
+        """
+        # Fourier Transform
+        cnData = fft(self.intData)
+        N = len(cnData)
+        # We only need positive/negative frequencies
+        amplitude = np.abs(cnData[0:N/2]*np.conjugate(cnData[0:N/2]))
+        #n_bins = len(self.intData)
+
+        # Calculate the correct frequencies
+        rate = 1./self.t_bin
+        frequency = fftfreq(N)[0:N/2] * rate
+
+        if self.BoxLineScan[1].GetValue() == True:
+            # Find it automagically
+            # The first big maximum is usually the second maximum
+            idx = np.argmax(amplitude[10:])+10
+            # The first maximum is what we want ERROR
+            idx2 = np.argmax(amplitude[10:idx-30])+10
+            # Sometimes the first one was ok.
+            if 0.1*amplitude[idx] > amplitude[idx2]:
+                idx2 = idx
+            # We now have the maximum, but we actually want to have some
+            # kind of a weighted maximum. For that we take k data points next
+            # to the maximum and weigth them with their relative amplitude.
+            k = 10
+            timeweights = list()
+            timeweights.append(1/frequency[idx2])
+            Pie = 1
+            for i in np.arange(k):
+                weighta = amplitude[idx2+i+1]/amplitude[idx2]
+                weightb = amplitude[idx2-i-1]/amplitude[idx2]
+                timeweights.append(weighta/frequency[idx2+i+1])
+                timeweights.append(weightb/frequency[idx2-i-1])
+                Pie = Pie + weighta + weightb
+
+            timeweights = np.array(timeweights)
+            ltime = np.sum(timeweights, dtype="float")/Pie
+            self.t_linescan = ltime
+            # Plot the results (not anymore, we do a low_prebin)
+            #self.PlotImage()
+            # Set Checkbox value to True: "use cycle time"
+            self.BoxPrebin[6].SetValue(True)
+            self.Update()
+            self.OnBinning_Prebin()
+        else:
+            # Pop up a dialog with the fourier transform of the function
+            # (log -plot) and let user decide which maximum to use.
+            dlg = FFTmaxDialog(self, frequency, amplitude)
+            dlg.Show()
+
+
+    def OnLinetimeSelected(self, e=None):
+        Dropdown = self.BoxInfo[2]
+        Text = Dropdown.GetValue()
+        test = Text.split(".", 1)
+        for item in test:
+            if not item.isdigit():
+                return
+        Value = np.float(Text)
+        #sel = Dropdown.GetSelection()
+        elements = list()
+        for factor in [0.25, 0.5, 1.0, 2.0, 4]:
+            elements.append(str(np.float(Value*factor)))
+        Dropdown.SetItems(elements)
+        Dropdown.SetSelection(2)
+        #self.dropdown.SetSelection(0)
+        # Translate selected time to clockticks
+        # Value = self.t_linescan*1e-3/self.system_clock
+        if self.system_clock is None:
+            sysclck = 60
+        else:
+            sysclck = self.system_clock
+        # Avoid making str to float conversion errors?
+        # Use the second element, which is in the middle. (!!)
+        self.t_linescan = np.float(elements[2])*1e3*sysclck
+        self.BoxPrebin[6].Enable()
+        #self.Update()
+
+
+    def OnMenuAbout(self, event):
         # Show About Information
         description = doc.description()
         licence = doc.licence()
@@ -868,7 +1054,7 @@ class MyFrame(wx.Frame):
         wx.AboutBox(info)
 
 
-    def OnDocumentation(self, e=None):
+    def OnMenuDocumentation(self, e=None):
         """ Get the documentation and view it with browser"""
         filename = doc.GetLocationOfDocumentation()
         if filename is None:
@@ -887,38 +1073,24 @@ class MyFrame(wx.Frame):
                 os.system("xdg-open "+filename+" &")
 
 
-    def OnExit(self,e):
+    def OnMenuExit(self,e):
         # Exit the Program
         self.Close(True)  # Close the frame.
 
-    def OnLinetimeSelected(self, e=None):
-        Dropdown = self.BoxInfo[2]
-        Text = Dropdown.GetValue()
-        test = Text.split(".", 1)
-        for item in test:
-            if not item.isdigit():
-                return
-        Value = np.float(Text)
-        sel = Dropdown.GetSelection()
-        elements = list()
-        for factor in [0.25, 0.5, 1.0, 2.0, 4]:
-            elements.append(str(np.float(Value*factor)))
-        Dropdown.SetItems(elements)
-        Dropdown.SetSelection(2)
-        #self.dropdown.SetSelection(0)
-        # Translate selected time to clockticks
-        # Value = self.t_linescan*1e-3/self.system_clock
-        if self.system_clock is None:
-            sysclck = 60
-        else:
-            sysclck = self.system_clock
-        # Avoid making str to float conversion errors?
-        # Use the second element, which is in the middle. (!!)
-        self.t_linescan = np.float(elements[2])*1e3*self.system_clock
-        self.BoxPrebin[6].Enable()
-        #self.Update()
+
+    def OnMenuSoftware(self, event):
+        # Show About Information
+        text = doc.SoftwareUsed()
+        wx.MessageBox(text, 'Software', wx.OK | wx.ICON_INFORMATION)
 
 
+    def OnMenuUpdate(self, event):
+        misc.Update(self)
+
+
+    def OnMenuWiki(self, e=None):
+        """ Go to the GitHub Wiki page"""
+        webbrowser.open(doc.GitWiki)
 
     def OnMultipleTau(self, e=None):
         """ Perform a multiple tau algorithm.
@@ -1240,215 +1412,6 @@ class MyFrame(wx.Frame):
 
         wx.EndBusyCursor()
 
-    def SaveCSVFile(self, G, trace, csvfile, num=1, num_traces=1, Type="AC",
-                    secondtrace=None):
-
-        openedfile = open(csvfile, 'wb')
-        openedfile.write('# This file was created using PyScanFCS v.'+\
-                         self.version+"\r\n")
-        openedfile.write("# Source file \t"+self.filename+"\r\n")
-        openedfile.write("# Source slice \t"+str(num)+" of "+str(num_traces)+"\r\n")
-        openedfile.write('# Channel (tau [s]) \t Correlation function \r\n')
-        if Type[:2] == "CC":
-            openedfile.write("# Type AC/CC \t Cross-Correlation "+Type[2:]+"\r\n")
-        else:
-            openedfile.write("# Type AC/CC \t Autocorrelation "+Type[2:]+"\r\n")
-        dataWriter = csv.writer(openedfile, delimiter='\t')
-        for i in np.arange(len(G)):
-            dataWriter.writerow([str(G[i,0])+" \t", str(G[i,1])])
-        openedfile.write('# BEGIN TRACE \r\n')
-        openedfile.write('# Time ([s]) \t Intensity Trace [kHz] \r\n')
-        for i in np.arange(len(trace)):
-            dataWriter.writerow([ str("%.10e")%trace[i,0], str("%.10e")%trace[i,1] ])
-
-        if secondtrace is not None:
-            openedfile.write('#\r\n# BEGIN SECOND TRACE \r\n')
-            openedfile.write('# Time ([s]) \t Intensity Trace [kHz] \r\n')
-            for i in np.arange(len(trace)):
-                dataWriter.writerow([ str("%.10e")%secondtrace[i,0], 
-                                      str("%.10e")%secondtrace[i,1] ])   
-
-        openedfile.close()
-
-
-
-    def GetTraceFromIntData(self, intData, coords, title="Trace"):
-        """
-            region is a number describing the region the trace comes from (1 or 2)
-        """
-        ## Get the data
-        # Make sure we have the corners of the square
-        for atuple in coords:
-            if atuple[0] is None or atuple[1] is None:
-                return
-        [(x1,x2), (y1,y2)] = coords
-
-        # Convert times to positions in 2D array
-        x1 = np.floor(x1/self.t_linescan)
-        x2 = np.ceil(x2/self.t_linescan)
-        y1 = np.floor(y1/self.t_bin)
-        y2 = np.ceil(y2/self.t_bin)
-        bins_in_col = y2-y1
-        bins_in_row = x2-x1
-
-        ## Get some needed data
-        # bin time for on line in s (used for multiple tau algorithm)
-        bintime = self.t_linescan/self.system_clock/1e6
-        # Number of bins next to the maximum to use for the trace
-        num_next_max = self.Spinnumax.GetValue()
-
-        # We have to swap x and y, because we want to access
-        # the array linewise later.
-        traceData = np.zeros((bins_in_row, bins_in_col))
-
-        # We start from x1 (lowest time available) and
-        # successively fill the traceData array:
-        pos = x1*self.bins_per_line
-        for i in np.arange(len(traceData)):
-            traceData[i] = intData[pos+y1:pos+y2]
-            pos = pos + self.bins_per_line
-
-        ## Get the actual trace
-        # Calculate trace from maximum
-        traceDataMaxids = np.argmax(traceData, axis=1)
-        newtraceData = np.zeros((len(traceDataMaxids), num_next_max*2+1))
-
-        for i in np.arange(len(traceData)):
-            # We add to the new trace data array, such that the maximum of
-            # each line is at the center of the array.
-            maid = traceDataMaxids[i]
-            # The array to be written to newtraceData
-            nsli = np.zeros(num_next_max*2+1)
-            nsli[num_next_max] = traceData[i][maid]
-            for k in np.arange(num_next_max)+1:
-                if maid+1-k >= 0:
-                    nsli[num_next_max-k] = traceData[i][maid-k]
-                if maid+1+k <= len(traceData[i]):
-                    nsli[num_next_max+k] = traceData[i][maid+k]
-            newtraceData[i] = nsli
-        del traceDataMaxids
-
-
-        if self.CheckBoxCountrateFilter.GetValue() is True:
-            # "temporal detection profile"
-            # We use this to find out how much time we spent in the membrane
-            detprof = np.sum(newtraceData, axis=0)
-
-            # Countrate correction:
-            x = np.linspace(-num_next_max, +num_next_max, len(detprof))
-            popt, gauss = SFCSnumeric.FitGaussian(detprof, x, np.argmax(detprof))
-            # Time in bins, that the focus effectively was inside the membrane:
-            # Go two sigmas in each direction. This way we have an averaged
-            # cpp in the end.
-            MembraneBins = 4*popt[2]
-            LinetimeBins = self.bins_per_line
-
-            #tracemean = np.mean(newtraceData)
-            self.TraceCorrectionFactor=LinetimeBins/MembraneBins
-
-            if self.MenuVerbose.IsChecked():
-                x2 = np.linspace(popt[0]-4*popt[2], popt[0]+4*popt[2], 100)
-                plt.figure()
-                plt.subplot(111)
-                plt.plot(x, detprof, "-", label="Measured profile")
-                plt.plot(x2, gauss(popt,x2), "-", label="Gaussian fit")
-                plt.legend()
-                text = "sigma = "+str(popt[2])+ " bins\n" +\
-                       "residence time in bins: "+str(MembraneBins)+"\n" +\
-                       u"residence time [µs]: "+str(MembraneBins*bintime*1e6/
-                                                    self.bins_per_line)
-                coords = (MembraneBins, np.max(detprof)/2.)
-                plt.text(coords[0],coords[1],text)
-                plt.xlabel("Bin position relative to maximum in cycle time")
-                plt.ylabel("Sum of counted photons (whole trace)")
-                plt.title(title + " - Determination of residence time in membrane")
-                plt.show()
-        else:
-            self.TraceCorrectionFactor=1.
-
-
-        # We could multiply newtraceData with self.TraceCorrectionFactor right
-        # here, but we are not doing it, because it might introduce numerical
-        # errors. This does not change statistics. In order to get the correct
-        # countrate, we correct the traces, when they are binned for saving
-        # in .csv files.
-        newtraceData = np.sum(newtraceData, axis=1)
-        traceData = newtraceData
-
-
-        # Bleach filter?
-        if self.CheckBoxBleachFilter.GetValue() is True:
-            ltrb = len(traceData)
-            ## Perform bleaching correction
-            # fitted function:
-            # f_i = f_0 * exp(-t_i/t_0) + offset
-            # parms = [f_0, t_0, offset]
-            # Corrected function:
-            # F_c = F_i/(f_0*exp(-ti/(2*t_0))) + f_0*(1-f_0*exp(-t_i/(2*t_0)))
-            # We don't want to subtract an offset from the trace?
-            # The offset is actually background signal.
-            popt, expfunc = SFCSnumeric.FitExp(np.arange(len(traceData)),
-                                               traceData)
-            [f_0, t_0] = popt
-
-            newtrace = multipletauc.BinTraceFromTrace(
-                       np.float32(traceData),
-                       bintime, length=500)
-
-            # Full trace:
-            ti = np.arange(ltrb)
-            expfull = np.exp(-ti/(2*t_0))
-            # see formula above:
-            traceData = traceData/expfull + f_0*(1-expfull)
-
-            newtracecorr = multipletauc.BinTraceFromTrace(
-                       np.float32(traceData),
-                       bintime, length=500)
-            
-            fitfuncdata = expfunc(popt, np.arange(ltrb))
-            newtracefit = multipletauc.BinTraceFromTrace(
-                       np.float32(fitfuncdata),
-                       bintime, length=500)
-
-            if self.MenuVerbose.IsChecked():
-                def view_bleach_data(e=None):
-                    print "peter2"
-                    #import IPython
-                    #IPython.embed()
-                # Show a plot
-                xexp = newtrace[:,0]
-                yexp = newtrace[:,1]*self.TraceCorrectionFactor
-                yfit = newtracefit[:,1]*self.TraceCorrectionFactor
-                ycorr = newtracecorr[:,1]*self.TraceCorrectionFactor
-
-                #fig, ax = plt.figure()
-                #ax = plt.subplot(111)
-                fig, ax = plt.subplots()
-                plt.subplots_adjust(bottom=0.2)
-                plt.title(title + " - bleaching correction")
-                plt.xlabel("Measurement time t [s]")
-                plt.ylabel("approx. Intensity I [kHz]")
-                plt.plot(xexp, yexp, '-', 
-                         label = "Measured trace", color="gray")
-                plt.plot(xexp, yfit, '-', 
-                         label = "Exponential fit", color="red")
-                plt.plot(xexp, ycorr, '-', 
-                         label = "Corrected trace", color="blue")
-                xt = np.min(xexp)
-                yt = np.min(yexp)
-                text = "I = ({:.2e})*exp[-t / (2*({:.2e})) ]".format(f_0,t_0)
-                plt.text(xt,yt,text, size=12)
-                plt.legend()
-                # Add button for plot data
-                axgb = plt.axes([0.75, 0.05, 0.15, 0.05])
-                buttonbleach = Button(axgb, 'view data')
-                buttonbleach.on_clicked(view_bleach_data)
-                # IPython.embed does something that makes the button work...
-                import IPython
-                IPython.embed()
-                plt.show()
-        return traceData
-
           
 
     def OnOpenFits(self,e):
@@ -1553,7 +1516,7 @@ class MyFrame(wx.Frame):
             self.Update()
 
 
-    def OnRadioButton(self, e=None):
+    def OnRadioSelector(self, e=None):
         # Define what style of selector will be used in plot.
         if self.RbtnLinet.Value == True:
             self.plotarea.UseLineSelector()
@@ -1600,7 +1563,7 @@ class MyFrame(wx.Frame):
             cards.append(pyfits.Card('SysClck', self.system_clock,
                                 "System clock [MHz]"))
             if self.T_total is not None:
-                 cards.append(pyfits.Card('Total', self.T_total,
+                cards.append(pyfits.Card('Total', self.T_total,
                                "Total time in system clock ticks"))
             if self.t_linescan is not None:
                 t_linescan = self.t_linescan
@@ -1661,17 +1624,42 @@ class MyFrame(wx.Frame):
             NewFile.close()
 
 
-    def OnSelect(self, eclick, erelease):
-
+    def OnSelectPlot(self, eclick, erelease):
         # Define what will happen upon clicking on the plot.
         if self.RbtnLinet.Value == True:
-            self.OnSelectLinet(eclick, erelease)
+            self.OnSelectLineTime(eclick, erelease)
         else:
-            self.OnSelectSelect(eclick, erelease)
+            self.OnSelectRegion(eclick, erelease)
         self.Update()
 
 
-    def OnSelectLinet(self, eclick, erelease):
+
+    def OnSelectCache(self, e=None):
+        for item in self.cachemenu.GetMenuItems():
+            if item.IsChecked():
+                cachename = item.GetLabel()
+        cache=self.cache[cachename]
+        self.BoxPrebin[8].SetValue(cache["bins_per_line"])
+        self.bins_per_line = cache["bins_per_line"]
+        linetime = cache["linetime"]
+        if linetime is not None:
+            self.BoxInfo[2].SetValue(str(linetime/self.system_clock/1e3))
+        self.t_linescan = linetime
+        self.intData = 1*cache["data"]
+        self.filename = cachename
+        self.dirname = cache["dirname"]
+        filename = os.path.join(self.dirname, self.filename)
+        style = wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME|wx.PD_CAN_ABORT
+        dlg2 = wx.ProgressDialog("Processing file", "Finding 32 bit events..."
+        , parent=self, style=style)
+        self.system_clock, self.datData = SFCSnumeric.OpenDat(filename, dlg2)
+        dlg2.Destroy()
+        self.GetTotalTime()
+        self.Update()
+        self.PlotImage()
+
+
+    def OnSelectLineTime(self, eclick, erelease):
 
         y1 = eclick.ydata
         y2 = erelease.ydata
@@ -1705,7 +1693,7 @@ class MyFrame(wx.Frame):
         self.percent = percent
         self.CorrectLineTime(event=None)
 
-    def OnSelectSelect(self, eclick, erelease):
+    def OnSelectRegion(self, eclick, erelease):
 
         x1 = eclick.xdata
         x2 = erelease.xdata
@@ -1793,24 +1781,6 @@ class MyFrame(wx.Frame):
                 self.XY_Trace_square[0] = (x1, x2)
 
 
-
-
-    def OnSoftware(self, event):
-        # Show About Information
-        text = doc.SoftwareUsed()
-        dlg = wx.MessageBox(text, 'Software', 
-            wx.OK | wx.ICON_INFORMATION)
-
-
-    def OnUpdate(self, event):
-        misc.Update(self)
-
-
-    def OnWiki(self, e=None):
-        """ Go to the GitHub Wiki page"""
-        webbrowser.open(doc.GitWiki)
-
-
     def PlotImage(self):
         """
             Plot self.intData. If not enough information about
@@ -1866,6 +1836,37 @@ class MyFrame(wx.Frame):
         self.plotarea.canvas.draw()
 
         self.imgData = plotdata
+
+
+    def SaveCSVFile(self, G, trace, csvfile, num=1, num_traces=1, Type="AC",
+                    secondtrace=None):
+
+        openedfile = open(csvfile, 'wb')
+        openedfile.write('# This file was created using PyScanFCS v.'+\
+                         self.version+"\r\n")
+        openedfile.write("# Source file \t"+self.filename+"\r\n")
+        openedfile.write("# Source slice \t"+str(num)+" of "+str(num_traces)+"\r\n")
+        openedfile.write('# Channel (tau [s]) \t Correlation function \r\n')
+        if Type[:2] == "CC":
+            openedfile.write("# Type AC/CC \t Cross-Correlation "+Type[2:]+"\r\n")
+        else:
+            openedfile.write("# Type AC/CC \t Autocorrelation "+Type[2:]+"\r\n")
+        dataWriter = csv.writer(openedfile, delimiter='\t')
+        for i in np.arange(len(G)):
+            dataWriter.writerow([str(G[i,0])+" \t", str(G[i,1])])
+        openedfile.write('# BEGIN TRACE \r\n')
+        openedfile.write('# Time ([s]) \t Intensity Trace [kHz] \r\n')
+        for i in np.arange(len(trace)):
+            dataWriter.writerow([ str("%.10e")%trace[i,0], str("%.10e")%trace[i,1] ])
+
+        if secondtrace is not None:
+            openedfile.write('#\r\n# BEGIN SECOND TRACE \r\n')
+            openedfile.write('# Time ([s]) \t Intensity Trace [kHz] \r\n')
+            for i in np.arange(len(trace)):
+                dataWriter.writerow([ str("%.10e")%secondtrace[i,0], 
+                                      str("%.10e")%secondtrace[i,1] ])   
+
+        openedfile.close()
 
 
     def Update(self, e=None):
