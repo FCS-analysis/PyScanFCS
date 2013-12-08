@@ -27,6 +27,7 @@ import wx                               # GUI interface wxPython
 
 import matplotlib
 matplotlib.use('WXAgg')
+
 import matplotlib.cm as cm              # Color maps for plotting
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_wxagg import \
@@ -90,6 +91,7 @@ class plotarea(wx.Panel):
         self.axes.set_ylabel("Scan cycle time [ms]",size=16)
         self.axes.set_xlabel("Measurement time [s]",size=16)
 
+        
 
     def OnSelectPlot(self, eclick, erelease):
         self.grandparent.OnSelectPlot(eclick, erelease)
@@ -170,6 +172,7 @@ maximum. \n The data achieved will automatically be updated within the main prog
         self.ymin = np.min(self.ampl)
         self.interval = [0, 0]
         self.red = False
+
         # Set window icon
         try:
             self.MainIcon = doc.getMainIcon()
@@ -577,10 +580,35 @@ class MyFrame(wx.Frame):
                        bintime, length=500)
 
             if self.MenuVerbose.IsChecked():
-                def view_bleach_data(e=None):
-                    print "peter2"
-                    #import IPython
-                    #IPython.embed()
+                def view_bleach_profile(e=None):
+                    # Create a temporary file and open it
+                    filename = tempfile.mktemp(".csv", "PyScanFCS_bleach_profile_")
+                    outfile = open(filename, 'wb')
+                    outfile.write("# {} - bleaching correction\r\n".format(title))
+                    outfile.write("# {}\t{}\t{}\t{}\r\n".format(u"Time [s]",
+                            u"Measured trace [kHz]", u"Exponential fit [kHz]",
+                            u"Corrected trace [kHz]"))
+                    dataWriter = csv.writer(outfile, delimiter='\t')
+                    # we will write
+                    data = [xexp, yexp, yfit, ycorr]
+                    for i in np.arange(len(data[0])):
+                        # row-wise, data may have more than two elements per row
+                        datarow = list()
+                        for j in np.arange(len(data)):
+                            rowcoli = str("%.10e") % data[j][i]
+                            datarow.append(rowcoli)
+                        dataWriter.writerow(datarow)
+                    outfile.close()
+                    ## Open the file
+                    if platform.system().lower() == 'windows':
+                        os.system("start /b "+filename)
+                    elif platform.system().lower() == 'linux':
+                        os.system("xdg-open "+filename+" &")
+                    elif platform.system().lower() == 'darwin':
+                        os.system("open "+filename+" &")
+                    else:
+                        # defaults to linux style:
+                        os.system("xdg-open "+filename+" &")
                 # Show a plot
                 xexp = newtrace[:,0]
                 yexp = newtrace[:,1]*self.TraceCorrectionFactor
@@ -605,14 +633,14 @@ class MyFrame(wx.Frame):
                 text = "I = ({:.2e})*exp[-t / (2*({:.2e})) ]".format(f_0,t_0)
                 plt.text(xt,yt,text, size=12)
                 plt.legend()
-                # Add button for plot data
-                axgb = plt.axes([0.75, 0.05, 0.15, 0.05])
-                buttonbleach = Button(axgb, 'view data')
-                buttonbleach.on_clicked(view_bleach_data)
-                # IPython.embed does something that makes the button work...
-                import IPython
-                IPython.embed()
                 plt.show()
+                
+                # We would like to have a button for the view_bleach_profile
+                # function. Unfortunately, this does not work:
+                #axgb = plt.axes([0.75, 0.05, 0.15, 0.05])
+                #buttonbleach = Button(axgb, 'view data')
+                #buttonbleach.on_clicked(view_bleach_data)
+                view_bleach_profile()
         return traceData
 
 
