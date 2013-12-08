@@ -588,9 +588,11 @@ class MyFrame(wx.Frame):
                                   "PyScanFCS_bleach_profile_{}_".format(
                                                title.replace(" ", "_")))
             outfile = open(filename, 'wb')
+            outfile.write("# This is not correlation data.\r\n")
             outfile.write("# {} - bleaching correction\r\n".format(title))
-            outfile.write("# {}\t{}\t{}\t{}\r\n".format(u"Time [s]",
-                    u"Measured trace [kHz]", u"Exponential fit [kHz]",
+            outfile.write("# I = ({:.2e})*exp[-t / (2*({:.2e})) ]\r\n".format(f_0,t_0))
+            outfile.write("# {}\t{}\t{}\t{}\r\n".format(u"Time t [s]",
+                    u"Measured trace [kHz]", u"Exponential fit I [kHz]",
                     u"Corrected trace [kHz]"))
             dataWriter = csv.writer(outfile, delimiter='\t')
             # we will write
@@ -611,7 +613,7 @@ class MyFrame(wx.Frame):
 
             if self.MenuVerbose.IsChecked():
                 def view_bleach_profile(e=None):
-                     ## Open the file
+                    ## Open the file
                     if platform.system().lower() == 'windows':
                         os.system("start /b "+filename)
                     elif platform.system().lower() == 'linux':
@@ -1418,11 +1420,15 @@ class MyFrame(wx.Frame):
                 SaveCC(Gtype, tracea, traceb, swaptraces)
 
         # Add bleaching profile files
+
         for bleach_file in self.file_bleach_profile:
+            olddir = os.getcwd()
+            os.chdir(os.path.dirname(bleach_file))
             try:
-                Arc.write(bleach_file)
+                Arc.write(os.path.basename(bleach_file))
             except:
                 pass
+            os.chdir(olddir)
         
         os.chdir(returnWD)
         os.removedirs(tempdir)
