@@ -334,6 +334,9 @@ class MyFrame(wx.Frame):
         self.XY_Trace_square = [ (None, None), (None, None) ]
         self.XY_Trace_squareB = [ (None, None), (None, None) ]
 
+        # List of absolute filenames that contain bleaching info
+        self.file_bleach_profile = list()
+        
         # We try to work with a cache to save time.
         self.cache = dict()
         # Each element of the cache is a filename connected to some data
@@ -579,27 +582,36 @@ class MyFrame(wx.Frame):
                        np.float32(fitfuncdata),
                        bintime, length=500)
 
+            # Bleaching profile to temporary file
+            # Create a temporary file and open it
+            filename = tempfile.mktemp(".csv",
+                                  "PyScanFCS_bleach_profile_{}_".format(
+                                               title.replace(" ", "_")))
+            outfile = open(filename, 'wb')
+            outfile.write("# {} - bleaching correction\r\n".format(title))
+            outfile.write("# {}\t{}\t{}\t{}\r\n".format(u"Time [s]",
+                    u"Measured trace [kHz]", u"Exponential fit [kHz]",
+                    u"Corrected trace [kHz]"))
+            dataWriter = csv.writer(outfile, delimiter='\t')
+            # we will write
+            xexp = newtrace[:,0]
+            yexp = newtrace[:,1]*self.TraceCorrectionFactor
+            yfit = newtracefit[:,1]*self.TraceCorrectionFactor
+            ycorr = newtracecorr[:,1]*self.TraceCorrectionFactor
+            data = [xexp, yexp, yfit, ycorr]
+            for i in np.arange(len(data[0])):
+                # row-wise, data may have more than two elements per row
+                datarow = list()
+                for j in np.arange(len(data)):
+                    rowcoli = str("%.10e") % data[j][i]
+                    datarow.append(rowcoli)
+                dataWriter.writerow(datarow)
+            outfile.close()
+            self.file_bleach_profile.append(filename)
+
             if self.MenuVerbose.IsChecked():
                 def view_bleach_profile(e=None):
-                    # Create a temporary file and open it
-                    filename = tempfile.mktemp(".csv", "PyScanFCS_bleach_profile_")
-                    outfile = open(filename, 'wb')
-                    outfile.write("# {} - bleaching correction\r\n".format(title))
-                    outfile.write("# {}\t{}\t{}\t{}\r\n".format(u"Time [s]",
-                            u"Measured trace [kHz]", u"Exponential fit [kHz]",
-                            u"Corrected trace [kHz]"))
-                    dataWriter = csv.writer(outfile, delimiter='\t')
-                    # we will write
-                    data = [xexp, yexp, yfit, ycorr]
-                    for i in np.arange(len(data[0])):
-                        # row-wise, data may have more than two elements per row
-                        datarow = list()
-                        for j in np.arange(len(data)):
-                            rowcoli = str("%.10e") % data[j][i]
-                            datarow.append(rowcoli)
-                        dataWriter.writerow(datarow)
-                    outfile.close()
-                    ## Open the file
+                     ## Open the file
                     if platform.system().lower() == 'windows':
                         os.system("start /b "+filename)
                     elif platform.system().lower() == 'linux':
@@ -610,10 +622,6 @@ class MyFrame(wx.Frame):
                         # defaults to linux style:
                         os.system("xdg-open "+filename+" &")
                 # Show a plot
-                xexp = newtrace[:,0]
-                yexp = newtrace[:,1]*self.TraceCorrectionFactor
-                yfit = newtracefit[:,1]*self.TraceCorrectionFactor
-                ycorr = newtracecorr[:,1]*self.TraceCorrectionFactor
 
                 #fig, ax = plt.figure()
                 #ax = plt.subplot(111)
@@ -1125,6 +1133,8 @@ class MyFrame(wx.Frame):
             We sneak in a plt.plot here and there
             so the user can take a look at the results.
         """
+        # Reset the bleaching profile
+        self.file_bleach_profile = list()
         wx.BeginBusyCursor()
         ## Dirty, but makes it shorter. We need the namespace:
         def SaveAC(Gtype, traceData):
@@ -1267,9 +1277,6 @@ class MyFrame(wx.Frame):
         tempdir = tempfile.mkdtemp()
         os.chdir(tempdir)
 
-
-
-
         ### 1 color 1 focus
         if self.ModeDropDown.GetSelection() == 0:
             traceData = self.GetTraceFromIntData(self.intData, self.XY_Trace_square)
@@ -1410,6 +1417,13 @@ class MyFrame(wx.Frame):
                     swaptraces = True
                 SaveCC(Gtype, tracea, traceb, swaptraces)
 
+        # Add bleaching profile files
+        for bleach_file in self.file_bleach_profile:
+            try:
+                Arc.write(bleach_file)
+            except:
+                pass
+        
         os.chdir(returnWD)
         os.removedirs(tempdir)
         Arc.close()
