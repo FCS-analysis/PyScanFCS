@@ -1,3 +1,8 @@
+0.2.1
+ - Updated help menu (documentation, wiki, update)
+ - Performed some artwork around PyScanFCS
+ - Output of bleaching correction data (#1)
+ - Code cleanup
 0.2.0
  - Code cleanup
  - Considerable speed-up in binning of .dat files

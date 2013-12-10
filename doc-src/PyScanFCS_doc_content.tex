@@ -192,7 +192,11 @@ The bin shift parameter adds a number of empty bins to the beginning of the binn
 	\begin{itemize}
 	\item[-] Span: The trace is calculated from the maximum of each scanned line. This corrects for spacial fluctuations perpendicular to the surface of the probed membrane. If the binning is too fine, or the scan cycle time is not exactly correct, this number can be increased to include more neighboring bins for the calculation of the trace.
 	\item[-] No. of trace slices: Sometimes, dirt contaminates the trace. The trace can be split and the correlation curves can be calculated separately from each slice. \texttt{PyCorrFit} is able to average over user selected curves, yielding cleaner statistics.
-	\item[-] Bleach filter: Fits an exponential function to the selected trace and performs a bleaching correction according to \cite{Ries2009}. Note that this bleaching correction is only valid for an approximately linear decay in the fluorescence signal.
+	\item[-] Bleach filter: Fits an exponential function to the selected trace and performs a bleaching correction according to \cite{Ries2009}. Note that this bleaching correction is only valid for an approximately linear decay in the fluorescence signal. The bleaching data is exported to the zip file that also contains the correlation data. They are named
+	\begin{center}
+	\texttt{PyScanFCS\_bleach\_profile\_TYPE\_RANDOM.csv}
+	\end{center}
+	where  \texttt{TYPE} is the type of the curve (e.g. \texttt{Region\_A1}) and \texttt{RANDOM} is just a random number.
 	\item[-] Countrate filter: Approximates the count rate of the fluorescence signal from the membrane. Because the laser focus is \textit{scanned} through the membrane, the average signal from the measurement does not equal the actual count rate within the membrane. The algorithm fits a Gaussian to the average intensity profile and uses the standard deviation to calculate the residence time of the focus inside the membrane.	This residence time is then used to calculate the approximate count rate.
 	\item[-] M.-$\tau$ parameter m: This is a parameter of the multiple-$\tau$ algorithm. $m$ is the number of points of the correlation curve that are calculated by the multiple-$\tau$ algorithm in the first loop. Afterwards, the intensity trace is binned by combining two neighboring bins. Then, sequentially $m/2$ data points are calculated after each binning of the trace. A thorough description is given in \cite{Wohland2001}. $m=16$ is a good measure.
 
