@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" PyScanFCS
+u""" PyScanFCS
     Paul Müller, Biotec - TU Dresden
 
     Module doc
@@ -73,7 +73,7 @@ def GetLocationOfDocumentation(filename = "PyScanFCS_doc.pdf"):
 
 
 def description():
-    return """PyScanFCS is a data displaying and processing
+    return u"""PyScanFCS is a data displaying and processing
 tool for perpendicular line scanning FCS utilizing 
 correlator.com correlators. PyScanFCS is written in Python."""
 
@@ -82,16 +82,16 @@ def info(version):
     """ Returns a little info about our program and what it can do.
     """
     textwin = u"""
-    Copyright 2011-2012 Paul Müller, Biotec - TU Dresden
+    Copyright 2011-2012 Paul Mueller, Biotec - TU Dresden
 
     Data processing for perpendicular line scanning FCS.
     """
-    textlin = u"""
+    textlin = """
     © 2011-2012 Paul Müller, Biotec - TU Dresden
 
     Data processing for perpendicular line scanning FCS.
     """
-    if platform.system() != 'Linux':
+    if (platform.system() != 'Linux') or hasattr(sys, 'frozen'):
         texta = textwin
     else:
         texta = textlin
@@ -99,7 +99,9 @@ def info(version):
     lizenz = ""
     for line in licence().splitlines():
         lizenz += "    "+line+"\n"
-    return one + lizenz + texta 
+    ret = one + lizenz + texta
+    print ret[710:719]
+    return ret
 
 
 def getMainIcon(pxlength=32):
@@ -115,7 +117,7 @@ def getMainIcon(pxlength=32):
 
 
 def licence():
-    return """PyScanFCS is free software: you can redistribute it and/or modify it
+    return u"""PyScanFCS is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published 
 by the Free Software Foundation, either version 2 of the License, 
 or (at your option) any later version.

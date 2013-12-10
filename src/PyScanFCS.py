@@ -54,7 +54,7 @@ import misc
 # SFCSnumeric needs scipy.optimize
 # We import it here, so that pyinstaller packs it into the executable.
 # Pyinstaller does not neccessarily know that SFCSnumeric needs it.
-#from scipy import optimize
+from scipy import optimize
 import SFCSnumeric
 import multipletauc
 
