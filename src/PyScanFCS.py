@@ -17,9 +17,8 @@ import webbrowser
 # http://stackoverflow.com/questions/5419/python-unicode-and-the-windows-console
 # and it helped (needs to be done before import of matplotlib):
 import platform
-if platform.system() == 'Windows' or  hasattr(sys, 'frozen'):
-    reload(sys)
-    sys.setdefaultencoding('utf-8')
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 import os
 import wx                               # GUI interface wxPython
