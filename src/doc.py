@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-u""" PyScanFCS
+""" PyScanFCS
     Paul Müller, Biotec - TU Dresden
 
     Module doc
@@ -82,7 +82,7 @@ def info(version):
     """ Returns a little info about our program and what it can do.
     """
     textwin = u"""
-    Copyright 2011-2012 Paul Mueller, Biotec - TU Dresden
+    Copyright 2011-2012 Paul Müller, Biotec - TU Dresden
 
     Data processing for perpendicular line scanning FCS.
     """
@@ -91,7 +91,7 @@ def info(version):
 
     Data processing for perpendicular line scanning FCS.
     """
-    if (platform.system() != 'Linux') or hasattr(sys, 'frozen'):
+    if (platform.system() != 'Linux'):
         texta = textwin
     else:
         texta = textlin
@@ -100,7 +100,6 @@ def info(version):
     for line in licence().splitlines():
         lizenz += "    "+line+"\n"
     ret = one + lizenz + texta
-    print ret[710:719]
     return ret
 
 
