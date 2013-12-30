@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-""" Binning Data for Multiple Tau Algorithm
-    Paul Müller, Biotec - TU Dresden
+""" 
+    PyScanFCS
+    
+    Binning Data for Multiple Tau Algorithm
 
     As fast as you can get with python, binning the photon arrival times
     created by Photon.exe from correlator.com.
@@ -8,6 +10,21 @@
     See at the end of the file, which .dat file will be opened.
     In console, we ask for binning time in µs and an .int file
     is created.
+    
+    (C) 2012 Paul Müller
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License 
+    along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
 #import codecs, sys, win32console
