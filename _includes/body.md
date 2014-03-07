@@ -7,13 +7,13 @@ algorithm. The obtained correlation curves can be evaluated using
 
 
 #### Supported Operating Systems
-- Windows XP/7 (binary and source code)  
-- Ubuntu Linux 12.04 (binary and source code) 
+- Windows XP and higher
+- Ubuntu Linux [LTS](https://wiki.ubuntu.com/LTS)
 - Any other system with a Python 2.7 and Cython installation  
   (source code only) 
 
 #### Supported Filetypes
-- [Correlator.com](http://correlator.com/) Flex correlator (~.dat photon stream data)
+- [Correlator.com](http://correlator.com/) Flex correlator (~.dat photon stream data)  
 
 
 #### How to cite
