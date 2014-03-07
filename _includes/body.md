@@ -12,7 +12,7 @@ algorithm. The obtained correlation curves can be evaluated using
 - Any other system with a Python 2.7 and Cython installation (source code only) 
 
 #### Supported Filetypes
-- Correlator.com (~.dat): Those are files usually created by e.g. Flex02-01D correlators.
+- [Correlator.com](http://correlator.com/) Flex correlator (~.dat - photon stream data)
 
 
 #### How to cite
