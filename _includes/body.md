@@ -12,8 +12,7 @@ algorithm. The obtained correlation curves can be evaluated using
 - Any other system with a Python 2.7 and Cython installation (source code only)
 
 #### Supported Filetypes
-- [Correlator.com](http://correlator.com/) Flex correlator (~.dat photon stream data)  
-
+- [Correlator.com](http://correlator.com/) Flex correlator (~.dat photon stream data)
 
 #### How to cite
 PyScanFCS is described in
@@ -25,7 +24,6 @@ Download citation:
 - [BibTeX](./cite/PyScanFCS.bib)
 - [RIS](./cite/PyScanFCS.ris)
 - [Endnote](./cite/PyScanFCS_endnote.txt)
-
 
 #### Screenshots
 
