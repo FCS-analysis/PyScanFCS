@@ -1,6 +1,5 @@
 /* CSS Document */
 body {
-    
 	background-color:"#f8f8f8"
 	font-family:"DejaVu Sans";
 	margin-left: 5px;
@@ -37,7 +36,7 @@ color: #000000;
 }
 
 
-table, tbody, blockquote {
+table, tbody, td, blockquote {
     margin-left:20px;
     margin-right:0px;
     background-color: #f9fdf9;
