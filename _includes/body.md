@@ -16,6 +16,14 @@ algorithm. The obtained correlation curves can be evaluated using
 - [Correlator.com](http://correlator.com/) Flex correlator  
   (~.dat - photon stream data)
 
+#### Verbosity
+- Detailed [documentation](https://github.com/paulmueller/PyScanFCS/raw/master/PyScanFCS_doc.pdf)
+- Public [wiki](https://github.com/paulmueller/PyScanFCS/wiki)
+- Documented and structured [source code](https://github.com/paulmueller/PyScanFCS/tree/master/src)
+- Sophisticated [bug/feature tracking system](https://github.com/paulmueller/PyScanFCS/issues?state=open)
+- Update helper to check for new program version
+- Open source software; anyone can contribute
+
 #### How to cite
 PyScanFCS is described in
 
