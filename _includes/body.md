@@ -13,7 +13,7 @@ algorithm. The obtained correlation curves can be evaluated using
   (source code only)
 
 #### Supported Filetypes
-- [Correlator.com](http://correlator.com/) Flex correlator
+- [Correlator.com](http://correlator.com/) Flex correlator  
   (~.dat - photon stream data)
 
 #### How to cite
