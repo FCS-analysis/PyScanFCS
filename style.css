@@ -40,7 +40,8 @@ text-decoration: none;
 color: #000000;
 }
 
-.citation, blockquote {
+
+table, blockquote {
 	margin-left:20px;
     margin-right:0px;
     background-color: #f9fdf9;
@@ -80,4 +81,5 @@ footer {
 }
 
 img[alt=scrot] { width: 500px; }
+
 
