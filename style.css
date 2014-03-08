@@ -41,8 +41,8 @@ color: #000000;
 }
 
 
-table, blockquote {
-	margin-left:20px;
+table, tbody, blockquote {
+    margin-left:20px;
     margin-right:0px;
     background-color: #f9fdf9;
     width: 500px;
