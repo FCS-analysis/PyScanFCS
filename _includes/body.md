@@ -12,17 +12,11 @@ algorithm. The obtained correlation curves can be evaluated using
 - Any other system with a Python 2.7 and Cython installation  
   (source code only)
 
+#### Supported Filetypes
+- [Correlator.com](http://correlator.com/) Flex correlator (~.dat - photon stream data)
+
 #### How to cite
 PyScanFCS is described in
 <div class="citation" markdown='1'>
 Müller, P., Schwille, P., and Weidemann, T. *Fluorescence Spectroscopy and Microscopy*, chapter: Scanning Fluorescence Correlation Spectroscopy (SFCS) with a Scan Path Perpendicular to the Membrane Plane. Methods in Molecular Biology, Humana Press, Springer, New York. 2014, 635-651. DOI: [10.1007/978-1-62703-649-8_29](http://dx.doi.org/10.1007/978-1-62703-649-8_29)
 </div>
-
-Download citation: 
-- [BibTeX](./cite/PyScanFCS.bib)
-- [RIS](./cite/PyScanFCS.ris)
-- [Endnote](./cite/PyScanFCS_endnote.txt)
-
-#### Screenshots
-
-[ ![scrot](./images/PyScanFCS_Main.png) ](./images/PyScanFCS_Main.png "Main Window")
