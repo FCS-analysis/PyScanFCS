@@ -17,7 +17,7 @@ algorithm. The obtained correlation curves can be evaluated using
 
 #### How to cite
 PyScanFCS is described in
-<div class="citation">
+<div>
 Msller, P., Schwille, P., 
 </div>
 
