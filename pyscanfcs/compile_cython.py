@@ -8,14 +8,8 @@ from distutils.extension import Extension
 from Cython.Distutils import build_ext
 
 import os
-# The multipletauc.pyx file might not be in our directory, but, like in the
-# GitHub repository, in a separate folder.
-multipletaucpath = "multipletauc.pyx"
-if os.path.exists(multipletaucpath) is False:
-    multipletaucpath = "../multipletau/"+multipletaucpath
 
-ext_modules = [Extension("SFCSnumeric", ["SFCSnumeric.pyx"]),
-               Extension("multipletauc", [multipletaucpath])]
+ext_modules = [Extension("SFCSnumeric", ["SFCSnumeric.pyx"])]
 
 setup(
   name = 'Scanning FCS cythoning...',

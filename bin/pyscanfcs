@@ -1,0 +1,16 @@
+#!/bin/sh
+# debian
+if [ -f "/usr/share/pyshared/pyscanfcs/PyScanFCS.py" ]
+then
+    python /usr/share/pyshared/pyscanfcs/PyScanFCS.py
+elif [ -f "/usr/local/lib/python2.7/dist-packages/pyscanfcs/PyScanFCS.py" ]
+# pip
+then
+    python /usr/local/lib/python2.7/dist-packages/pyscanfcs/PyScanFCS.py
+# pip and virtualenv
+elif [ -f "../lib/python2.7/site-packages/pyscanfcs/PyScanFCS.py" ]
+then
+    python ../lib/python2.7/site-packages/pyscanfcs/PyScanFCS.py
+else
+    echo "Could not find PyScanFCS. Please notify the author."
+fi

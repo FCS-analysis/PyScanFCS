@@ -31,7 +31,7 @@ import wx
 # The icon file was created with
 # img2py -i -n Main PyScanFCS_icon.png icon.py
 import icon
-import multipletauc
+import multipletau
 
 
 def GetLocationOfChangeLog(filename = "ChangeLog.txt"):
@@ -147,27 +147,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 def SoftwareUsed():
     """ Return some Information about the software used for this program """
-    # csv
-    # matplotlib
-    # NumPy
-    # os
-    # platform
-    # SciPy 
-    # struct
-    # sys
-    # wxPython
-    # yaml 
     text= "Python "+sys.version+\
            "\n\nModules:"+\
-           "\n - csv "+csv.__version__+\
            "\n - matplotlib "+matplotlib.__version__+\
-           "\n - multipletauc "+multipletauc.__version__+\
+           "\n - multipletau "+multipletau.__version__+\
            "\n - NumPy "+numpy.__version__+\
-           "\n - os "+\
-           "\n - platform "+platform.__version__+\
            "\n - SciPy "+scipy.__version__+\
-           "\n - struct"+\
-           "\n - sys "+\
            "\n - wxPython "+wx.__version__
     if hasattr(sys, 'frozen'):
         pyinst = "\n\nThis executable has been created using PyInstaller."

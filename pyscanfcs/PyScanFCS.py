@@ -70,7 +70,7 @@ import misc
 # Pyinstaller does not neccessarily know that SFCSnumeric needs it.
 from scipy import optimize
 import SFCSnumeric
-import multipletauc
+import multipletau
 
 import doc      # Documentation/some texts
 
@@ -577,7 +577,7 @@ class MyFrame(wx.Frame):
                                                traceData)
             [f_0, t_0] = popt
 
-            newtrace = multipletauc.BinTraceFromTrace(
+            newtrace = multipletau.BinTraceFromTrace(
                        np.float32(traceData),
                        bintime, length=500)
 
@@ -587,12 +587,12 @@ class MyFrame(wx.Frame):
             # see formula above:
             traceData = traceData/expfull + f_0*(1-expfull)
 
-            newtracecorr = multipletauc.BinTraceFromTrace(
+            newtracecorr = multipletau.BinTraceFromTrace(
                        np.float32(traceData),
                        bintime, length=500)
             
             fitfuncdata = expfunc(popt, np.arange(ltrb))
-            newtracefit = multipletauc.BinTraceFromTrace(
+            newtracefit = multipletau.BinTraceFromTrace(
                        np.float32(fitfuncdata),
                        bintime, length=500)
 
@@ -1160,7 +1160,7 @@ class MyFrame(wx.Frame):
                 if i == num_traces -1:
                     usedTrace = traceData[i*NM:]
                 # Calculate AC function and trace with human readable length
-                G = multipletauc.ACFromArray(np.float32(usedTrace), bintime, m=m)
+                G = multipletau.ACFromArray(np.float32(usedTrace), bintime, m=m)
                 if self.MenuVerbose.IsChecked():
                     plt.figure(0)
                     plt.plot(G[:,0], G[:,1], "-")
@@ -1168,7 +1168,7 @@ class MyFrame(wx.Frame):
                 # self.TraceCorrectionFactor is 1.0, if the user
                 # did not check the "countrate filter"
                 usedTrace = usedTrace*self.TraceCorrectionFactor
-                trace = multipletauc.BinTraceFromTrace(np.float32(usedTrace),
+                trace = multipletau.BinTraceFromTrace(np.float32(usedTrace),
                         bintime, length=700)
                 # Save Correlation function
                 csvfile = filenamedummy+"_"+Gtype+"_"+str(i+1)+".csv"
@@ -1184,7 +1184,7 @@ class MyFrame(wx.Frame):
                 if i == num_traces -1:
                     usedTa = tracea[i*NM:]
                     usedTb = traceb[i*NM:]
-                G = multipletauc.CCFromArray(np.float32(usedTa), 
+                G = multipletau.CCFromArray(np.float32(usedTa), 
                                np.float32(usedTb), bintime, m=m)
                 if self.MenuVerbose.IsChecked():
                     plt.figure(0)
@@ -1194,9 +1194,9 @@ class MyFrame(wx.Frame):
                 # did not check the "countrate filter"
                 usedTa = usedTa*self.TraceCorrectionFactor
                 usedTb = usedTb*self.TraceCorrectionFactor
-                tra = multipletauc.BinTraceFromTrace(np.float32(usedTa),
+                tra = multipletau.BinTraceFromTrace(np.float32(usedTa),
                         bintime, length=700)
-                trb = multipletauc.BinTraceFromTrace(np.float32(usedTb),
+                trb = multipletau.BinTraceFromTrace(np.float32(usedTb),
                         bintime, length=700)
                 # In order to keep trace1 trace1 and trace2 trace2, we
                 # need to swap here:
@@ -1993,7 +1993,6 @@ class MyFrame(wx.Frame):
                 item.Enable()
             for item in self.BoxImageSelection:
                 item.Enable()
-        
 
         ### Modes
         if self.ModeDropDown.GetSelection() > 1 and self.intData is not None:
@@ -2026,16 +2025,18 @@ class MyFrame(wx.Frame):
             self.OnLinetimeSelected()
 
 
-
 ## VERSION
 version = doc.__version__
 __version__ = version
 
 print doc.info(version)
 
-
 ## Start gui
-app = wx.App(False)
-frame = MyFrame(None, -1, version)
-app.MainLoop()
+def Main():
+    app = wx.App(False)
+    frame = MyFrame(None, -1, version)
+    app.MainLoop()
 
+
+if __name__ == "__main__":
+    Main()
