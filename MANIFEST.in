@@ -1,5 +1,6 @@
 include doc-src/*.tex
 include doc-src/*.bib
+include pyscanfcs/*.pyx
 include doc-src/Images/*
 include Readme.txt
 include ChangeLog.txt

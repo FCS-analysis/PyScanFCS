@@ -17,6 +17,7 @@ for scheme in INSTALL_SCHEMES.values():
 
 # Get the version of PyCorrFit from the Changelog.txt
 StaticChangeLog = join(dirname(realpath(__file__)), "ChangeLog.txt")
+
 try:
     clfile = open(StaticChangeLog, 'r')
     version = clfile.readline().strip()
@@ -27,7 +28,7 @@ except:
 
 
 EXTENSIONS = [Extension("pyscanfcs.SFCSnumeric",
-                        ["SFCSnumeric.pyx"],
+                        ["pyscanfcs/SFCSnumeric.pyx"],
                         libraries=[],
                         include_dirs=[np.get_include()]
                         )
@@ -47,8 +48,9 @@ setup(
     description='Scientific tool for perpendicular line scanning FCS.',
     long_description=open(join(dirname(__file__), 'Readme.txt')).read(),
     scripts=['bin/pyscanfcs'],
-    cmdclass={"build_ext  --inplace": build_ext},
+    cmdclass={"build_ext": build_ext},
     include_package_data=True,
+    ext_modules=EXTENSIONS,
     install_requires=[
         "cython",
         "multipletau >= 0.1.4",
