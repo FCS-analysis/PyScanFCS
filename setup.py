@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # To create a distribution package for pip or easy-install:
 # python setup.py sdist
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages, Extension
+from Cython.Distutils import build_ext
+import numpy as np
+
 from os.path import join, dirname, realpath
 from warnings import warn
 
@@ -22,6 +25,15 @@ except:
     warn("Could not find 'ChangeLog.txt'. PyScanFCS version is unknown.")
     version = "0.0.0-unknown"
 
+
+EXTENSIONS = [Extension("pyscanfcs.SFCSnumeric",
+                        ["SFCSnumeric.pyx"],
+                        libraries=[],
+                        include_dirs=[np.get_include()]
+                        )
+              ]
+
+
 setup(
     name='pyscanfcs',
     author='Paul Mueller',
@@ -35,8 +47,10 @@ setup(
     description='Scientific tool for perpendicular line scanning FCS.',
     long_description=open(join(dirname(__file__), 'Readme.txt')).read(),
     scripts=['bin/pyscanfcs'],
+    cmdclass={"build_ext  --inplace": build_ext},
     include_package_data=True,
     install_requires=[
+        "cython",
         "multipletau >= 0.1.4",
         "NumPy >= 1.5.1",
         "SciPy >= 0.8.0",

@@ -1,0 +1,6 @@
+include doc-src/*.tex
+include doc-src/*.bib
+include doc-src/Images/*
+include Readme.txt
+include ChangeLog.txt
+include PyScanFCS_doc.pdf
