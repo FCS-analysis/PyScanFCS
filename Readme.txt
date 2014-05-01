@@ -5,7 +5,7 @@ For a full list of features and supported file formats visit http://pyscanfcs.cr
 There are also precompiled binaries for various systems.
 
 This package provides the Python module `pyscanfcs` and its graphical user interface. The 
-graphical user interface is written with wxPython.
+graphical user interface is written in wxPython.
 
 Installation and usage:
 
