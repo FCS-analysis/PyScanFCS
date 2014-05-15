@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 """ 
     PyScanFCS
@@ -577,9 +578,8 @@ class MyFrame(wx.Frame):
                                                traceData)
             [f_0, t_0] = popt
 
-            newtrace = multipletau.BinTraceFromTrace(
-                       np.float32(traceData),
-                       bintime, length=500)
+            newtrace = SFCSnumeric.ReduceTrace(traceData, bintime,
+                                               length=500)
 
             # Full trace:
             ti = np.arange(ltrb)
@@ -587,14 +587,14 @@ class MyFrame(wx.Frame):
             # see formula above:
             traceData = traceData/expfull + f_0*(1-expfull)
 
-            newtracecorr = multipletau.BinTraceFromTrace(
-                       np.float32(traceData),
-                       bintime, length=500)
+            #### TODO:
+            # Does this do anything?
+            newtracecorr = SFCSnumeric.ReduceTrace(traceData, bintime,
+                                                   length=500)
             
             fitfuncdata = expfunc(popt, np.arange(ltrb))
-            newtracefit = multipletau.BinTraceFromTrace(
-                       np.float32(fitfuncdata),
-                       bintime, length=500)
+            newtracefit = SFCSnumeric.ReduceTrace(fitfuncdata,
+                                                  bintime, length=500)
 
             # Bleaching profile to temporary file
             # Create a temporary file and open it
@@ -1160,7 +1160,8 @@ class MyFrame(wx.Frame):
                 if i == num_traces -1:
                     usedTrace = traceData[i*NM:]
                 # Calculate AC function and trace with human readable length
-                G = multipletau.ACFromArray(np.float32(usedTrace), bintime, m=m)
+                G = multipletau.autocorrelate(usedTrace,
+                                    m=m, deltat=bintime, normalize=True)
                 if self.MenuVerbose.IsChecked():
                     plt.figure(0)
                     plt.plot(G[:,0], G[:,1], "-")
@@ -1168,8 +1169,8 @@ class MyFrame(wx.Frame):
                 # self.TraceCorrectionFactor is 1.0, if the user
                 # did not check the "countrate filter"
                 usedTrace = usedTrace*self.TraceCorrectionFactor
-                trace = multipletau.BinTraceFromTrace(np.float32(usedTrace),
-                        bintime, length=700)
+                trace = SFCSnumeric.ReduceTrace(usedTrace,
+                                                bintime, length=700)
                 # Save Correlation function
                 csvfile = filenamedummy+"_"+Gtype+"_"+str(i+1)+".csv"
                 self.SaveCSVFile(G, trace, csvfile, i+1, num_traces, Type=Gtype)
@@ -1184,8 +1185,8 @@ class MyFrame(wx.Frame):
                 if i == num_traces -1:
                     usedTa = tracea[i*NM:]
                     usedTb = traceb[i*NM:]
-                G = multipletau.CCFromArray(np.float32(usedTa), 
-                               np.float32(usedTb), bintime, m=m)
+                G = multipletau.correlate(usedTa, usedTb,
+                                    m=m, deltat=bintime, normalize=True)
                 if self.MenuVerbose.IsChecked():
                     plt.figure(0)
                     plt.plot(G[:,0], G[:,1], "--")
@@ -1194,10 +1195,10 @@ class MyFrame(wx.Frame):
                 # did not check the "countrate filter"
                 usedTa = usedTa*self.TraceCorrectionFactor
                 usedTb = usedTb*self.TraceCorrectionFactor
-                tra = multipletau.BinTraceFromTrace(np.float32(usedTa),
-                        bintime, length=700)
-                trb = multipletau.BinTraceFromTrace(np.float32(usedTb),
-                        bintime, length=700)
+                tra = SFCSnumeric.ReduceTrace(usedTa,
+                                              bintime, length=700)
+                trb = SFCSnumeric.ReduceTrace(usedTb,
+                                              bintime, length=700)
                 # In order to keep trace1 trace1 and trace2 trace2, we
                 # need to swap here:
                 if swaptraces == True:
