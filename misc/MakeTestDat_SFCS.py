@@ -28,9 +28,9 @@ def MakeDat(linetime, noisearray, dtype, filename):
     NewFile.write(newformat)
     NewFile.write(newclock)
     noisearray = dtype(noisearray)
-    # Creat matrix. Each line is scanned line with
+    # Create matrix. Each line is a scan.
     data = list()
-    timeticks = linetime*60*1e6
+    timeticks = linetime*newclock*1e6 # 60MHz
     for i in np.arange(len(noisearray)):
         # Create a line
         N = noisearray[i]
@@ -42,7 +42,7 @@ def MakeDat(linetime, noisearray, dtype, filename):
         else:
             line = np.ones(N+1, dtype=dtype)
             # events are included between two far events
-            line[0] = line[-1] = timeticks
+            line[0] = line[-1] = timeticks-int(len(line)/2)
             line.tofile(NewFile)
     NewFile.close()
 
