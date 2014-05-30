@@ -8,7 +8,7 @@
 """
 
 import numpy as np
-import multipletauc
+import multipletau
 import csv
 
 def MakeDat(linetime, noisearray, dtype, filename):
@@ -28,9 +28,9 @@ def MakeDat(linetime, noisearray, dtype, filename):
     NewFile.write(newformat)
     NewFile.write(newclock)
     noisearray = dtype(noisearray)
-    # Creat matrix. Each line is scanned line with
+    # Create matrix. Each line is a scan.
     data = list()
-    timeticks = linetime*60*1e6
+    timeticks = linetime*newclock*1e6 # 60MHz
     for i in np.arange(len(noisearray)):
         # Create a line
         N = noisearray[i]
@@ -42,7 +42,7 @@ def MakeDat(linetime, noisearray, dtype, filename):
         else:
             line = np.ones(N+1, dtype=dtype)
             # events are included between two far events
-            line[0] = line[-1] = timeticks
+            line[0] = line[-1] = timeticks-int(len(line)/2)
             line.tofile(NewFile)
     NewFile.close()
 
@@ -108,6 +108,42 @@ def GenerateExpNoise(N, taud=20., variance=1., deltat=1.):
     return z
 
 
+def ReduceTrace(trace, deltat, length):
+    """
+        Given a `trace` of length `len(trace)`, compute a trace of
+        length smaller than `length` by averaging. 
+        
+        
+        Parameters
+        ----------
+        trace : ndarray, shape (N)
+            Input trace that is to be averaged.
+        deltat : float
+            Time difference between bins in trace.
+        length : int
+            Maximum length of the new trace.
+
+
+        Returns
+        -------
+        newtrace : ndarray, shape (N,2)
+            New trace (axis 1) with timepoints (axis 0).
+
+    """
+    step = 0
+    while len(trace) > length:
+        N = len(trace)
+        if N % 2 != 0:
+            N -= 1
+        trace = (trace[0:N:2] + trace[1:N:2]) / 2
+        step += 1
+    # Return 2d array with times
+    T = np.zeros((len(trace), 2))
+    T[:,1] = trace/deltat/1e3 # in kHz
+    T[:,0] = np.arange(len(trace))*deltat*2**step
+    return T
+
+
 def SaveCSV(G, trace, filename):
     """ Save correlation and trace tuple array G and trace to a .csv file
         that can be opened with FCSfit.
@@ -148,7 +184,7 @@ data = MakeDat(linetime/2, noisearray, np.uint16, "test_"+str(taudiff)+"ms_16bit
 data = MakeDat(linetime/2, noisearray, np.uint32, "test_"+str(taudiff)+"ms_32bit.dat")
 
 # Create reference .csv file to check results
-G = multipletauc.ACFromArray(np.float32(noisearray), deltat=linetime)
-newtrace = multipletauc.BinTraceFromTrace(np.float32(noisearray), deltat=linetime, length=500)
+G = multipletau.autocorrelate(noisearray, deltat=linetime, normalize=True)
+newtrace = ReduceTrace(noisearray, deltat=linetime, length=500)
 SaveCSV(G, newtrace, "test_"+str(taudiff)+"ms_reference.csv")
 

@@ -57,6 +57,15 @@ setup(
         "NumPy >= 1.5.1",
         "SciPy >= 0.8.0",
         "wxPython >= 2.8.10.1",
-        "matplotlib >= 1.1.0"]
+        "matplotlib >= 1.1.0"],
+    keywords=["fcs", "fluorescence", "correlation", "spectroscopy",
+              "perpendicular", "scanning", "multiple", "tau"],
+    classifiers= [
+        'Operating System :: OS Independent',
+        'Programming Language :: Python :: 2.7',
+        'Topic :: Scientific/Engineering :: Visualization',
+        'Intended Audience :: Science/Research'
+                 ],
+    platforms=['ALL']
     )
 
