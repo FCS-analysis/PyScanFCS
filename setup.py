@@ -41,8 +41,8 @@ setup(
     author_email='paul.mueller@biotec.tu-dresden.de',
     url='https://github.com/paulmueller/PyScanFCS',
     version=version,
-    packages=['pyscanfcs'],
-    package_dir={'pyscanfcs': 'pyscanfcs'},
+    packages=[name],
+    package_dir={name: name},
     data_files=[('pyscanfcs_doc', ['ChangeLog.txt', 'PyScanFCS_doc.pdf'])],
     license="GPL v2",
     description='Scientific tool for perpendicular line scanning FCS.',
@@ -53,11 +53,13 @@ setup(
     ext_modules=EXTENSIONS,
     install_requires=[
         "cython",
+        "matplotlib >= 1.1.0",
         "multipletau >= 0.1.4",
         "NumPy >= 1.5.1",
+        "pyfits",
         "SciPy >= 0.8.0",
-        "wxPython >= 2.8.10.1",
-        "matplotlib >= 1.1.0"],
+        "wxPython >= 2.8.10.1"
+        ],
     keywords=["fcs", "fluorescence", "correlation", "spectroscopy",
               "perpendicular", "scanning", "multiple", "tau"],
     classifiers= [

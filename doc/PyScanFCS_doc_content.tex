@@ -41,8 +41,7 @@ python-multipletau ($\geq$ 0.1.4) \\
 python-numpy ($\geq$ 1.6.2) \\
 python-pyfits \\
 python-scipy ($\geq$ 0.10.1) \\
-python-wxtools \\
-python-wxgtk2.8-dbg \\
+python-wxgtk2.8 (2.8.12.1) \\
 }
 \\
 There are two ways to make PyScanFCS run from source.\\
@@ -65,9 +64,9 @@ PyScanFCS needs Cython to perform some CPU intensive operations. Before running 
 \\
 \texttt{build-essential\\
 python-dev} 
-\item[ ] \textbf{MacOS}. This should work with Apple's XCode, available from \url{http://developer.apple.com}. It has not been tested.
+\item[ ] \textbf{MacOS}. Use Apple's XCode, available from \url{http://developer.apple.com}.
 \end{itemize}
-Cython can be obtained from \url{http://www.cython.org/}. After unpacking of the archive, Cython is installed by executing \texttt{python setup.py install} within the unpacked directory\footnote{Cython can also be installed via PyPI (\url{http://pypi.python.org/pypi}).}.
+Cython can be obtained from \url{http://www.cython.org/}. After unpacking of the archive, Cython is installed by executing \texttt{python setup.py install} within the unpacked directory\footnote{Cython can also be installed via PyPI with \texttt{pip install cython} (\url{http://pypi.python.org/pypi}).}.
 
 For older version of Ubuntu, some of the above package versions are not listed in the package repository. To enable the use of PyScanFCS on those systems, the following packages need to be installed separately:
 
