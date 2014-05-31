@@ -18,7 +18,7 @@ cd "../../"
 StartDir=$(pwd)"/"
 Progdir=${StartDir}${Progname}"/"
 # We require a Progname_doc.tex in the source-doc directory
-DocDir=${StartDir}${Progname}"/doc-src/"
+DocDir=${StartDir}${Progname}"/doc/"
 PyInstallerDir=${Progdir}${PyInstaller}
 Specfile=${BASEDIR}"/"${Progname}"_linux.spec"
 echo $Specfile

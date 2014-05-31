@@ -33,10 +33,11 @@ For Windows XP or Windows 7, stand-alone binary executables are available from t
 \item \textbf{Linux}
 There are executable binaries for widely used distributions (e.g. Ubuntu).
 \item \textbf{Sources}
-The program is written in python 2.7. On any operating system, PyScanFCS can be run from source. To obtain the latest source, visit PyScanFCS at GitHub (\url{https://github.com/paulmueller/PyScanFCS}). We give more information on the installation process there. In general, the following packages need to be available:
+The program is written in python 2.7. On any operating system, PyScanFCS can be run from source. In general, the following packages need to be available:
 \texttt{\\
 cython ($\geq$ 0.1.6)\\
 python-matplotlib ($\geq$ 1.0.1) \\
+python-multipletau ($\geq$ 0.1.4) \\
 python-numpy ($\geq$ 1.6.2) \\
 python-pyfits \\
 python-scipy ($\geq$ 0.10.1) \\
@@ -44,6 +45,15 @@ python-wxtools \\
 python-wxgtk2.8-dbg \\
 }
 \\
+There are two ways to make PyScanFCS run from source.\\
+\textbf{Recommended way:} Install via pip
+\texttt{ pip install pyscanfcs}
+and run the package directly
+\texttt{python -m pyscanfcs}.
+\\
+\textbf{Second way:}
+Obtain the source directly from GitHub (\url{https://github.com/paulmueller/PyScanFCS}).
+
 
 \paragraph*{Cython}
 PyScanFCS needs Cython to perform some CPU intensive operations. Before running PyScanFCS from source, a C compiler needs to be installed (\url{http://docs.cython.org/src/quickstart/install.html}).
@@ -57,9 +67,9 @@ PyScanFCS needs Cython to perform some CPU intensive operations. Before running 
 python-dev} 
 \item[ ] \textbf{MacOS}. This should work with Apple's XCode, available from \url{http://developer.apple.com}. It has not been tested.
 \end{itemize}
-Cython can be obtained from \url{http://www.cython.org/}. After unpacking of the archive, Cython is installed by executing \texttt{python setup.py install} within the unpacked directory\footnote{Cython can also be installed via PyPI (\url{http://pypi.python.org/pypi}).}. Executing \texttt{python compile\_cython.py build{\_}ext --inplace} within the PyScanFCS source directory will compile the \mytilde .pyx files (SFCSnumeric.pyx, multipletauc.pyx) to corresponding \mytilde .pyd (Windows) or \mytilde .so (Linux) files.
+Cython can be obtained from \url{http://www.cython.org/}. After unpacking of the archive, Cython is installed by executing \texttt{python setup.py install} within the unpacked directory\footnote{Cython can also be installed via PyPI (\url{http://pypi.python.org/pypi}).}.
 
-For older version of Ubuntu, some of the above package versions are not listed in the package repository. To enable the use of PyScanFCS on those systems, the following tasks have to be performed:
+For older version of Ubuntu, some of the above package versions are not listed in the package repository. To enable the use of PyScanFCS on those systems, the following packages need to be installed separately:
 
 \begin{itemize}
 \item[ ] \textbf{matplotlib}. The tukss-ppa includes version 1.0.1. After adding the repository (\texttt{apt-add-repository ppa:tukss/ppa}), matplotlib can be installed as usual.
@@ -158,7 +168,7 @@ Possible correlations (2 foci): $AC_{A1}$, $AC_{B2}$, $CC_{A1B2}$, $CC_{B2A1}$
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.95\linewidth]{PyScanFCS_Main.png}
- \mycaption{user interface of PyScanFCS}{The screenshot was taken on an Ubuntu desktop environment. \label{fig:SFCSMain}}
+ \mycaption{user interface}{The left panel displays all parameters. The right panel shows the kymograph of the measurement. \label{fig:SFCSMain}}
 \end{figure}
 \hyref{Figure}{fig:SFCSMain} shows the main user interface with the following content:
 \begin{itemize}
@@ -186,6 +196,7 @@ The bin shift parameter adds a number of empty bins to the beginning of the binn
 	\item[-] scan cycle correction: This is used, if the scan cycle time found is not exactly correct (tilted lines in the kymograph). To correct the scan cylce time, the user draws a line along the trace in the kymograph. Afterwards, the kymograph can be recalculated using \textbf{Pre-Binning} or \textbf{Total-binning}.
 	\item[-] Select region 1: Lets the user draw a rectangle around a trace that should be used for correlation. Region 1 is always displayed in yellow.
 	\item[-] Select region 2: Depending on the \texttt{mode}, the user may select a second region for additional auto- and cross-correlation. Region 2 is always displayed in cyan.
+	\item[-] Full measurement time: Maximizes the measurement time selection (horizontal in the kymograph) for the regions.
 	\end{itemize}
 	
 \item \textbf{Correlation}: Calculates the traces and perform the multiple-$\tau$ algorithm according to the selected \textbf{mode}. 
