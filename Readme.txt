@@ -9,5 +9,6 @@ graphical user interface is written in wxPython.
 
 Installation and usage:
 
-    pip install pyscanfcs
+    pip install pyscanfcs  
+    
     python -m pyscanfcs
