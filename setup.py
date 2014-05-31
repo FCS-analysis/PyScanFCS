@@ -34,9 +34,10 @@ EXTENSIONS = [Extension("pyscanfcs.SFCSnumeric",
                         )
               ]
 
+name='pyscanfcs'
 
 setup(
-    name='pyscanfcs',
+    name=name,
     author='Paul Mueller',
     author_email='paul.mueller@biotec.tu-dresden.de',
     url='https://github.com/paulmueller/PyScanFCS',
