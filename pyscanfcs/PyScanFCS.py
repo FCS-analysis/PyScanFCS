@@ -669,9 +669,8 @@ class MyFrame(wx.Frame):
 
 
     def MakeButtons(self):
-        ## Button area
 
-        ## Prebinning of data
+        ## Pre-binning
         prebox = wx.StaticBox(self.buttonarea, label="Pre-binning")
         presizer = wx.StaticBoxSizer(prebox, wx.VERTICAL)
         # Checkbox for later using the cycle time
@@ -707,7 +706,6 @@ class MyFrame(wx.Frame):
         prebutt = wx.Button(self.buttonarea, label="Calculate and plot")
         self.Bind(wx.EVT_BUTTON, self.OnBinning_Prebin, prebutt)
         presizer.Add(prebutt)
-
         self.BoxPrebin = list()
         self.BoxPrebin.append(prebox)       # 0 box
         self.BoxPrebin.append(pretext)      # 1 text: enter # events to use
@@ -722,22 +720,7 @@ class MyFrame(wx.Frame):
         self.BoxPrebin.append(prespinshift)  # 10 spin: bin shift
 
 
-
-        ## Find scan cycle periodicity
-        lscanbox = wx.StaticBox(self.buttonarea, label="Scan cycle periodicity")
-        lscansizer = wx.StaticBoxSizer(lscanbox, wx.VERTICAL)
-        # Magic checkbox
-        lscanmagic = wx.CheckBox(self.buttonarea, label="Find automagically")
-        lscanmagic.SetValue(True)
-        lscansizer.Add(lscanmagic)
-        # OK button
-        lscanbutt = wx.Button(self.buttonarea, label="Find periodicity (FFT)")
-        self.Bind(wx.EVT_BUTTON, self.OnFindLineScanTime, lscanbutt)
-        lscansizer.Add(lscanbutt)
-
-        self.BoxLineScan = [lscanbox, lscanmagic, lscanbutt]
-
-        # Get the whole file into bins
+        ## Total-binning
         binbox = wx.StaticBox(self.buttonarea, label="Total-binning")
         binsizer = wx.StaticBoxSizer(binbox, wx.VERTICAL)
         # Some informative text
@@ -747,10 +730,10 @@ class MyFrame(wx.Frame):
         binbutt = wx.Button(self.buttonarea, label="Calculate and plot all")
         self.Bind(wx.EVT_BUTTON, self.OnBinning_Total, binbutt)
         binsizer.Add(binbutt)
-
         self.BoxBinTotal = [binbox, bintext, binbutt]
 
-        # Set mode of correlation
+
+        ## Mode
         modebox = wx.StaticBox(self.buttonarea, label="Mode")
         modesizer = wx.StaticBoxSizer(modebox, wx.VERTICAL)
         # Some informative text
@@ -769,84 +752,107 @@ class MyFrame(wx.Frame):
              label="Save raw traces")
         self.CheckBoxSaveTrace.SetValue(False)
         modesizer.Add(self.CheckBoxSaveTrace)
-
-
-        ## Some Info
+        
+        
+        ## Data
         infobox = wx.StaticBox(self.buttonarea, label="Data")
         insizer = wx.StaticBoxSizer(infobox, wx.VERTICAL)
-        sclock = wx.StaticText(self.buttonarea, -1, "System clock [MHz]: \t \t")
+        sclock = wx.StaticText(self.buttonarea, -1,
+                               "System clock [MHz]: \t \t")
         insizer.Add(sclock)
-        totalt = wx.StaticText(self.buttonarea, -1, "Total time [s]:  \t \t")
+        totalt = wx.StaticText(self.buttonarea, -1,
+                               "Total time [s]:  \t \t")
         insizer.Add(totalt)
         linet = wx.StaticText(self.buttonarea, -1, "Scan cycle [ms]:")
         insizer.Add(linet)
         linetdropdown = wx.ComboBox(self.buttonarea, -1, "", (15, 30),
                          wx.DefaultSize, [], wx.CB_DROPDOWN)
         insizer.Add(linetdropdown)
-        self.Bind(wx.EVT_COMBOBOX, self.OnLinetimeSelected, linetdropdown)
+        self.Bind(wx.EVT_COMBOBOX, self.OnLinetimeSelected,
+                  linetdropdown)
         self.Bind(wx.EVT_TEXT, self.OnLinetimeSelected, linetdropdown)
-
         # Do not change order of BoxInfo!!
         self.BoxInfo = [sclock, totalt, linetdropdown, infobox, linet]
-    
+        
+        
+        ## Scan cycle periodicity
+        lscanbox = wx.StaticBox(self.buttonarea,
+                                label="Scan cycle periodicity")
+        lscansizer = wx.StaticBoxSizer(lscanbox, wx.VERTICAL)
+        # Magic checkbox
+        lscanmagic = wx.CheckBox(self.buttonarea,
+                                 label="Find automagically")
+        lscanmagic.SetValue(True)
+        lscansizer.Add(lscanmagic)
+        # OK button
+        lscanbutt = wx.Button(self.buttonarea,
+                              label="Find periodicity (FFT)")
+        self.Bind(wx.EVT_BUTTON, self.OnFindLineScanTime, lscanbutt)
+        lscansizer.Add(lscanbutt)
+        self.BoxLineScan = [lscanbox, lscanmagic, lscanbutt]
 
 
-        # User box
+        ## Image selection
         # Add radio buttons that change behavior of mouse in Plot
         userbox = wx.StaticBox(self.buttonarea, label="Image selection")
         usizer = wx.StaticBoxSizer(userbox, wx.VERTICAL)
         self.RbtnLinet = wx.RadioButton (self.buttonarea, -1,
-                    'Scan cycle correction % +/-: ', style = wx.RB_GROUP)
+                   'Scan cycle correction % +/-: ', style = wx.RB_GROUP)
         self.linespin = floatspin.FloatSpin(self.buttonarea, digits=10,
                                       increment=.001)
         self.linespin.Bind(wx.EVT_SPINCTRL, self.CorrectLineTime)
-        self.RbtnSelect = wx.RadioButton (self.buttonarea, -1, 'Select region 1')
-        self.RbtnSelectB = wx.RadioButton (self.buttonarea, -1, 'Select region 2')
-        self.Bind(wx.EVT_RADIOBUTTON, self.OnRadioSelector, self.RbtnSelect)
-        self.Bind(wx.EVT_RADIOBUTTON, self.OnRadioSelector, self.RbtnSelectB)
-        self.Bind(wx.EVT_RADIOBUTTON, self.OnRadioSelector, self.RbtnLinet)
+        self.RbtnSelect = wx.RadioButton (self.buttonarea, -1,
+                                          'Select region 1')
+        self.RbtnSelectB = wx.RadioButton (self.buttonarea, -1,
+                                           'Select region 2')
+        self.Bind(wx.EVT_RADIOBUTTON, self.OnRadioSelector,
+                  self.RbtnSelect)
+        self.Bind(wx.EVT_RADIOBUTTON, self.OnRadioSelector,
+                  self.RbtnSelectB)
+        self.Bind(wx.EVT_RADIOBUTTON, self.OnRadioSelector,
+                  self.RbtnLinet)
+        # version 0.2.2: Add button "full measurement time"
+        fullmeasbutt = wx.Button(self.buttonarea,
+                              label="Full measurement time")
+        self.Bind(wx.EVT_BUTTON, self.OnSetFullMeasTime, fullmeasbutt)
         usizer.Add(self.RbtnLinet)
         usizer.Add(self.linespin)
         usizer.Add(self.RbtnSelect)
         usizer.Add(self.RbtnSelectB)
+        usizer.Add(fullmeasbutt)
+        self.BoxImageSelection = [userbox, self.RbtnLinet,
+         self.linespin, self.RbtnSelect, self.RbtnSelectB, fullmeasbutt]
 
-        self.BoxImageSelection = [userbox, self.RbtnLinet, self.linespin,
-                                  self.RbtnSelect, self.RbtnSelectB]
 
-
-        # Get Trace and Autocorrelation function.
+        ## Correlation
         corrbox = wx.StaticBox(self.buttonarea, label="Correlation")
         corrsizer = wx.StaticBoxSizer(corrbox, wx.VERTICAL)
-
         # Add switch for 
         # how many bins next to a maximum should be used for the trace
         corrsizerText1 = wx.StaticText(self.buttonarea, 
                      label="Span +/-:")
         corrsizer.Add(corrsizerText1)
-        self.Spinnumax = wx.SpinCtrl(self.buttonarea, -1, min=0, max=50000, initial=3)
+        self.Spinnumax = wx.SpinCtrl(self.buttonarea, -1, min=0,
+                                     max=50000, initial=3)
         corrsizer.Add(self.Spinnumax)
-
         # Add switch for slicing of trace
         corrsizerText3 = wx.StaticText(self.buttonarea, 
                      label="No. of trace slices:")
         corrsizer.Add(corrsizerText3)
-        self.Spinslice = wx.SpinCtrl(self.buttonarea, -1, min=1, max=50000, initial=10)
+        self.Spinslice = wx.SpinCtrl(self.buttonarea, -1, min=1,
+                                     max=50000, initial=10)
         corrsizer.Add(self.Spinslice)
-
-        ## Trace
+        # Trace
         # Switch for bleaching correction
         self.CheckBoxBleachFilter = wx.CheckBox(self.buttonarea, -1,
              label="Bleach filter")
         self.CheckBoxBleachFilter.SetValue(True)
         corrsizer.Add(self.CheckBoxBleachFilter)
-
-
         # Switch for countrate correction
         self.CheckBoxCountrateFilter = wx.CheckBox(self.buttonarea, -1,
              label="Countrate filter")
         self.CheckBoxCountrateFilter.SetValue(False)
         corrsizer.Add(self.CheckBoxCountrateFilter)
-
         # Add switch for m
         # m is the parameter that defines the number of channels
         # after which the the intensity trace is binned (neighboring
@@ -855,35 +861,54 @@ class MyFrame(wx.Frame):
         corrsizerText2 = wx.StaticText(self.buttonarea, 
                      label=u"M.-τ parameter m:")
         corrsizer.Add(corrsizerText2)
-        self.Spinm = wx.SpinCtrl(self.buttonarea, -1, min=16, max=50000, initial=16)
+        self.Spinm = wx.SpinCtrl(self.buttonarea, -1, min=16, max=50000,
+                                 initial=16)
         corrsizer.Add(self.Spinm)
-
         ## Multiple Tau
         # Get Autocorrelation function
         taubutt = wx.Button(self.buttonarea, label="Get correlation")
         self.Bind(wx.EVT_BUTTON, self.OnMultipleTau, taubutt)
         corrsizer.Add(taubutt)
-
         self.BoxMultipleTau = [self.CheckBoxBleachFilter, corrbox,
               corrsizerText3, corrsizerText1, self.Spinnumax,
               corrsizerText2, self.Spinm, self.Spinslice, taubutt,
               self.CheckBoxCountrateFilter]
 
 
+        ## Set sizes
+        firlist = [presizer, binsizer, modesizer]
+        firmin = 100
+        for abox in firlist:
+            firmin = max(abox.GetMinSize()[0], firmin)
+        for abox in firlist:
+            abox.SetMinSize((firmin, -1))
+        seclist = [corrsizer, usizer, lscansizer, insizer]
+        secmin = 100
+        for abox in seclist:
+            secmin = max(abox.GetMinSize()[0], secmin)
+        for abox in seclist:
+            abox.SetMinSize((secmin, -1))
+
+
+        ## Put everything together
         self.firvert = wx.BoxSizer(wx.VERTICAL)
         self.firvert.Add(presizer)
+        self.firvert.AddSpacer(5)
         self.firvert.Add(binsizer)
+        self.firvert.AddSpacer(5)
         self.firvert.Add(modesizer)
-
         self.secvert = wx.BoxSizer(wx.VERTICAL)
         self.secvert.Add(insizer)
+        self.secvert.AddSpacer(5)
         self.secvert.Add(lscansizer)
+        self.secvert.AddSpacer(5)
         self.secvert.Add(usizer)
+        self.secvert.AddSpacer(5)
         self.secvert.Add(corrsizer)
-
-
         self.firhorz = wx.BoxSizer(wx.HORIZONTAL)
+        self.firhorz.AddSpacer(5)
         self.firhorz.Add(self.firvert)
+        self.firhorz.AddSpacer(5)
         self.firhorz.Add(self.secvert)
         self.buttonarea.SetSizer(self.firhorz)
 
@@ -1756,12 +1781,43 @@ class MyFrame(wx.Frame):
         self.percent = percent
         self.CorrectLineTime(event=None)
 
-    def OnSelectRegion(self, eclick, erelease):
 
-        x1 = eclick.xdata
-        x2 = erelease.xdata
-        y1 = eclick.ydata
-        y2 = erelease.ydata
+    def OnSelectRegion(self, eclick=None, erelease=None, fullMT=False):
+        """ Internally sets the region in the kymograph
+            
+            `eclick` and `erelease` are matplotlib events on a plot
+            
+            if `fulMT` is True and `eclick` and `erelease` are None,
+            then the x-values are overridden and old y-values are used.
+        """
+
+        if eclick is None and erelease is None and fullMT is True:
+            # try to get data from two sources:
+            if self.RbtnSelect.Value == True:
+                try:
+                    (y1,y2) = self.XY_Trace_square[1]
+                    # Line_time [ms] - convert to ms from (us and clock ticks)
+                    y1 /= 1e3 * self.system_clock
+                    y2 /= 1e3 * self.system_clock
+                except:
+                    pass
+            else:
+                try:
+                    (y1,y2) = self.XY_Trace_squareB[1]
+                    # Line_time [ms] - convert to ms from (us and clock ticks)
+                    y1 /= 1e3 * self.system_clock
+                    y2 /= 1e3 * self.system_clock
+                except:
+                    pass
+            if (y1, y2) == (None, None):
+                (y1, y2) = self.plotarea.axes.get_ylim()
+            # Get absolute x values
+            (x1, x2) = self.plotarea.axes.get_xlim()
+        else:
+            x1 = eclick.xdata
+            x2 = erelease.xdata
+            y1 = eclick.ydata
+            y2 = erelease.ydata
 
         # Sort values
         if x1 > x2:
@@ -1821,10 +1877,10 @@ class MyFrame(wx.Frame):
         self.plotarea.canvas.draw()
 
         # Convert values to array indices and make public.
-        # Total_time [s] (convert to us and then to cock ticks)
+        # Total_time [s] (convert to us and then to clock ticks)
         x1 = (x1*1e6 * self.system_clock) 
         x2 = (x2*1e6 * self.system_clock)
-        # Line_time [ms] (convert to us and then to cock ticks)
+        # Line_time [ms] (convert to us and then to clock ticks)
         y1 = (y1*1e3 * self.system_clock) 
         y2 = (y2*1e3 * self.system_clock)
 
@@ -1842,6 +1898,12 @@ class MyFrame(wx.Frame):
             self.square = oldsquare
             if oldsquare is not None:
                 self.XY_Trace_square[0] = (x1, x2)
+
+
+    def OnSetFullMeasTime(self, e=None):
+        """ Sets the full range of the measurement time
+        """
+        self.OnSelectRegion(fullMT=True)
 
 
     def PlotImage(self):
