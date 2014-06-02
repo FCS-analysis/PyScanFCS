@@ -7,6 +7,7 @@ algorithm. The obtained correlation curves can be evaluated using
 
 
 #### Supported Operating Systems
+- Mac OSx 10.6.8 or higher
 - Windows XP and higher
 - Ubuntu Linux [LTS](https://wiki.ubuntu.com/LTS)
 - Any other system with a Python 2.7 and Cython installation  
