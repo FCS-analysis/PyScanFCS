@@ -691,8 +691,6 @@ class MyFrame(wx.Frame):
         # Text bins
         pretext = wx.StaticText(self.buttonarea, -1, "No. of events to use:")
         presizer.Add(pretext)  
-        import IPython
-        IPython.embed()
         # Spin bins
         prespin = wx.SpinCtrl(self.buttonarea, -1, min=100, max=500000000, initial=1000)
         prespin.SetMinSize(minsize)
