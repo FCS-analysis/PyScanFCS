@@ -295,7 +295,7 @@ class MyFrame(wx.Frame):
         self.CreateStatusBar() # A Statusbar in the bottom of the window
 
         ## Properties of the Frame
-        initial_size = (1024,586)
+        initial_size = (1024,595)
         #initial_size = (1024,768)
         self.SetSize(initial_size)
         self.SetMinSize(initial_size)
@@ -669,7 +669,8 @@ class MyFrame(wx.Frame):
 
 
     def MakeButtons(self):
-
+        minsize = (150,-1)
+        dropminsize = (175,-1)
         ## Pre-binning
         prebox = wx.StaticBox(self.buttonarea, label="Pre-binning")
         presizer = wx.StaticBoxSizer(prebox, wx.VERTICAL)
@@ -682,25 +683,30 @@ class MyFrame(wx.Frame):
         prebplt = wx.StaticText(self.buttonarea, -1, "Bins per scan cycle:")
         presizer.Add(prebplt)  
         # Bins per line
-        self.prebpl = wx.SpinCtrl(self.buttonarea, -1, min=1, max=50000, initial=70)
+        self.prebpl = wx.SpinCtrl(self.buttonarea, -1, min=1, max=50000,
+                                  initial=70)
+        self.prebpl.SetMinSize(minsize)
         presizer.Add(self.prebpl)  
         # Text bins
         pretext = wx.StaticText(self.buttonarea, -1, "No. of events to use:")
         presizer.Add(pretext)  
         # Spin bins
         prespin = wx.SpinCtrl(self.buttonarea, -1, min=100, max=500000000, initial=1000)
+        prespin.SetMinSize(minsize)
         presizer.Add(prespin)    
         # Text tbin
         pretextt = wx.StaticText(self.buttonarea, -1, u"Bin width [µs]:")
         presizer.Add(pretextt)       
         # Spin tbin
         prespint = edclasses.FloatSpin(self.buttonarea, value=5.0)
+        prespint.SetMinSize(minsize)
         presizer.Add(prespint)  
         # Text binfshift
         preshifttextt = wx.StaticText(self.buttonarea, -1, "Bin shift:")
         presizer.Add(preshifttextt)   
         # Spin shift bins
         prespinshift = wx.SpinCtrl(self.buttonarea, -1, min=0, max=500000000, initial=0)
+        prespinshift.SetMinSize(minsize)
         presizer.Add(prespinshift)   
         # Button
         prebutt = wx.Button(self.buttonarea, label="Calculate and plot")
@@ -744,6 +750,7 @@ class MyFrame(wx.Frame):
                     "2 colours 2 foci", "Alternating excitation"] 
         self.ModeDropDown = wx.ComboBox(self.buttonarea, -1, "", (15, 30),
                          wx.DefaultSize, Modelist, wx.CB_DROPDOWN)
+        self.ModeDropDown.SetMinSize(dropminsize)
         self.ModeDropDown.SetSelection(0)
         self.Bind(wx.EVT_COMBOBOX, self.Update, self.ModeDropDown)
         modesizer.Add(self.ModeDropDown)
@@ -767,6 +774,7 @@ class MyFrame(wx.Frame):
         insizer.Add(linet)
         linetdropdown = wx.ComboBox(self.buttonarea, -1, "", (15, 30),
                          wx.DefaultSize, [], wx.CB_DROPDOWN)
+        linetdropdown.SetMinSize(dropminsize)
         insizer.Add(linetdropdown)
         self.Bind(wx.EVT_COMBOBOX, self.OnLinetimeSelected,
                   linetdropdown)
@@ -800,11 +808,13 @@ class MyFrame(wx.Frame):
                    'Scan cycle correction % +/-: ', style = wx.RB_GROUP)
         self.linespin = floatspin.FloatSpin(self.buttonarea, digits=10,
                                       increment=.001)
+        self.linespin.SetMinSize(minsize)
         self.linespin.Bind(wx.EVT_SPINCTRL, self.CorrectLineTime)
         self.RbtnSelect = wx.RadioButton (self.buttonarea, -1,
                                           'Select region 1')
         self.RbtnSelectB = wx.RadioButton (self.buttonarea, -1,
                                            'Select region 2')
+        self.RbtnLinet.SetValue(True)
         self.Bind(wx.EVT_RADIOBUTTON, self.OnRadioSelector,
                   self.RbtnSelect)
         self.Bind(wx.EVT_RADIOBUTTON, self.OnRadioSelector,
@@ -834,6 +844,7 @@ class MyFrame(wx.Frame):
         corrsizer.Add(corrsizerText1)
         self.Spinnumax = wx.SpinCtrl(self.buttonarea, -1, min=0,
                                      max=50000, initial=3)
+        self.Spinnumax.SetMinSize(minsize)
         corrsizer.Add(self.Spinnumax)
         # Add switch for slicing of trace
         corrsizerText3 = wx.StaticText(self.buttonarea, 
@@ -841,6 +852,7 @@ class MyFrame(wx.Frame):
         corrsizer.Add(corrsizerText3)
         self.Spinslice = wx.SpinCtrl(self.buttonarea, -1, min=1,
                                      max=50000, initial=10)
+        self.Spinslice.SetMinSize(minsize)
         corrsizer.Add(self.Spinslice)
         # Trace
         # Switch for bleaching correction
@@ -863,6 +875,7 @@ class MyFrame(wx.Frame):
         corrsizer.Add(corrsizerText2)
         self.Spinm = wx.SpinCtrl(self.buttonarea, -1, min=16, max=50000,
                                  initial=16)
+        self.Spinm.SetMinSize(minsize)
         corrsizer.Add(self.Spinm)
         ## Multiple Tau
         # Get Autocorrelation function
