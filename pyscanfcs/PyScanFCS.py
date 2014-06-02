@@ -295,7 +295,10 @@ class MyFrame(wx.Frame):
         self.CreateStatusBar() # A Statusbar in the bottom of the window
 
         ## Properties of the Frame
-        initial_size = (1024,595)
+        if sys.platform == "darwin":
+            initial_size = (1024,612)
+        else:
+            initial_size = (1024,595)
         #initial_size = (1024,768)
         self.SetSize(initial_size)
         self.SetMinSize(initial_size)
