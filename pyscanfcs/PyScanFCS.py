@@ -684,20 +684,20 @@ class MyFrame(wx.Frame):
         presizer.Add(prebplt)  
         # Bins per line
         self.prebpl = wx.SpinCtrl(self.buttonarea, -1, min=1, max=50000,
-                                  initial=70)
-        self.prebpl.SetValue(self.prebpl.GetValue())
+                                  value=70)
         self.prebpl.SetMinSize(minsize)
         presizer.Add(self.prebpl)  
         # Text bins
         pretext = wx.StaticText(self.buttonarea, -1, "No. of events to use:")
         presizer.Add(pretext)  
         # Spin bins
-        prespin = wx.SpinCtrl(self.buttonarea, -1, min=100, max=500000000, initial=1000)
+        prespin = wx.SpinCtrl(self.buttonarea, -1, min=100,
+                              max=500000000, value=1000)
         prespin.SetMinSize(minsize)
         presizer.Add(prespin)    
         # Text tbin
         pretextt = wx.StaticText(self.buttonarea, -1, u"Bin width [µs]:")
-        presizer.Add(pretextt)       
+        presizer.Add(pretextt)
         # Spin tbin
         prespint = edclasses.FloatSpin(self.buttonarea, value=5.0)
         prespint.SetMinSize(minsize)
@@ -706,7 +706,8 @@ class MyFrame(wx.Frame):
         preshifttextt = wx.StaticText(self.buttonarea, -1, "Bin shift:")
         presizer.Add(preshifttextt)   
         # Spin shift bins
-        prespinshift = wx.SpinCtrl(self.buttonarea, -1, min=0, max=500000000, initial=0)
+        prespinshift = wx.SpinCtrl(self.buttonarea, -1, min=0,
+                                   max=500000000, value=0)
         prespinshift.SetMinSize(minsize)
         presizer.Add(prespinshift)   
         # Button
@@ -844,7 +845,7 @@ class MyFrame(wx.Frame):
                      label="Span +/-:")
         corrsizer.Add(corrsizerText1)
         self.Spinnumax = wx.SpinCtrl(self.buttonarea, -1, min=0,
-                                     max=50000, initial=3)
+                                     max=50000, value=3)
         self.Spinnumax.SetMinSize(minsize)
         corrsizer.Add(self.Spinnumax)
         # Add switch for slicing of trace
@@ -852,7 +853,7 @@ class MyFrame(wx.Frame):
                      label="No. of trace slices:")
         corrsizer.Add(corrsizerText3)
         self.Spinslice = wx.SpinCtrl(self.buttonarea, -1, min=1,
-                                     max=50000, initial=10)
+                                     max=50000, value=10)
         self.Spinslice.SetMinSize(minsize)
         corrsizer.Add(self.Spinslice)
         # Trace
@@ -875,7 +876,7 @@ class MyFrame(wx.Frame):
                      label=u"M.-τ parameter m:")
         corrsizer.Add(corrsizerText2)
         self.Spinm = wx.SpinCtrl(self.buttonarea, -1, min=16, max=50000,
-                                 initial=16)
+                                 value=16)
         self.Spinm.SetMinSize(minsize)
         corrsizer.Add(self.Spinm)
         ## Multiple Tau
