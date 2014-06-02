@@ -1,3 +1,10 @@
+0.2.2
+ - Added button 'full time interval'
+ - This is the first version that uses the external module `multipletau`
+ - This is the first version that is available at PyPI
+ - Added setup files with Cython support
+ - MakeTestDat_FCS.py can be used to create test data
+ - Tested with Mac OSx
 0.2.1
  - Updated help menu (documentation, wiki, update)
  - Performed some artwork around PyScanFCS
