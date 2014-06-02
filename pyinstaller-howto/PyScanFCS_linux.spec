@@ -1,5 +1,5 @@
 # -*- mode: python -*-
-a = Analysis(['PyScanFCS/src/PyScanFCS.py'],
+a = Analysis(['PyScanFCS/pyscanfcs/PyScanFCS.py'],
              pathex=['pyinstaller-2.0'],
              hiddenimports=[],
              hookspath=None)

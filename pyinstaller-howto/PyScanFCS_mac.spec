@@ -1,7 +1,6 @@
 # -*- mode: python -*-
-a = Analysis(['src/PyScanFCS.py'],
+a = Analysis(['pyscanfcs/PyScanFCS.py'],
              pathex=['PyInstaller-2.1'],
-             hiddenimports=['sympy'],
              hookspath=None)
 a.datas += [('doc/ChangeLog.txt', 'ChangeLog.txt', 'DATA'),
             ('doc/PyScanFCS_doc.pdf', 'PyScanFCS_doc.pdf', 'DATA')]
