@@ -685,11 +685,14 @@ class MyFrame(wx.Frame):
         # Bins per line
         self.prebpl = wx.SpinCtrl(self.buttonarea, -1, min=1, max=50000,
                                   initial=70)
+        self.prebpl.SetValue(self.prebpl.GetValue())
         self.prebpl.SetMinSize(minsize)
         presizer.Add(self.prebpl)  
         # Text bins
         pretext = wx.StaticText(self.buttonarea, -1, "No. of events to use:")
         presizer.Add(pretext)  
+        import IPython
+        IPython.embed()
         # Spin bins
         prespin = wx.SpinCtrl(self.buttonarea, -1, min=100, max=500000000, initial=1000)
         prespin.SetMinSize(minsize)
