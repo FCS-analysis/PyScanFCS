@@ -10,8 +10,7 @@ algorithm. The obtained correlation curves can be evaluated using
 - Mac OSx 10.6.8 and higher
 - Windows XP and higher
 - Ubuntu Linux [LTS](https://wiki.ubuntu.com/LTS)
-- Any other system with a Python 2.7 and Cython installation  
-  (source code only)
+- Any other system with a Python 2.7 installation (via pip)
 
 #### Supported Filetypes
 - [Correlator.com](http://correlator.com/) Flex correlator  
