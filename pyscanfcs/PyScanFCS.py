@@ -296,7 +296,7 @@ class MyFrame(wx.Frame):
 
         ## Properties of the Frame
         if sys.platform == "darwin":
-            initial_size = (1024,612)
+            initial_size = (1036,622)
         else:
             initial_size = (1024,595)
         #initial_size = (1024,768)
