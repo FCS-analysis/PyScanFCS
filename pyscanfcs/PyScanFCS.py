@@ -1487,10 +1487,13 @@ class MyFrame(wx.Frame):
             except:
                 pass
             os.chdir(olddir)
-        
+
+            Arc.close()        
         os.chdir(returnWD)
-        os.removedirs(tempdir)
-        Arc.close()
+        try:
+            os.removedirs(tempdir)
+        except:
+            pass
 
         if self.MenuVerbose.IsChecked():
             plt.figure(0)
