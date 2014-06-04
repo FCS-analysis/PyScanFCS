@@ -355,6 +355,10 @@ class MyFrame(wx.Frame):
         # List of absolute filenames that contain bleaching info
         self.file_bleach_profile = list()
         
+        # Temporary filenames for binned intensity
+        self.tempbintot = tempfile.mktemp("_binned_total.int")
+        self.tempbinpar = tempfile.mktemp("_binned_partial.int")
+
         # We try to work with a cache to save time.
         self.cache = dict()
         # Each element of the cache is a filename connected to some data
@@ -402,7 +406,7 @@ class MyFrame(wx.Frame):
         # t_bin in clock ticks
         t_bin = self.t_linescan/self.bins_per_line
         dtype = np.uint16
-        filename = "Binned_total.int"
+        filename = self.tempbintot
         SFCSnumeric.BinPhotonEvents(Data, t_bin, filename, dtype, dlg, binshift=eb)
 
         binneddata = np.fromfile(filename, dtype=dtype)
@@ -431,7 +435,8 @@ class MyFrame(wx.Frame):
         self.bins_per_line = int(self.BoxPrebin[8].GetValue())
 
         dtype = np.uint16
-        filename = "Binned_partial.int"
+        filename = self.tempbinpar
+
         retval = SFCSnumeric.BinPhotonEvents(Data, t_bin, filename, dtype, dlg, binshift=eb)
 
         binneddata = np.fromfile(filename, dtype=dtype)
