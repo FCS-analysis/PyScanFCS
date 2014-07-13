@@ -21,18 +21,26 @@
 """
 import csv
 import matplotlib
+import multipletau
 import numpy
 import os
 import platform
 import scipy
 import sys
-import wx
+try:
+    import wx
+except:
+    pass
 
 # The icon file was created with
 # img2py -i -n Main PyScanFCS_icon.png icon.py
-import icon
-import multipletau
-import uilayer
+try:
+    from . import icon
+except:
+    pass
+from . import uilayer
+
+
 
 
 def GetLocationOfChangeLog(filename = "ChangeLog.txt"):
