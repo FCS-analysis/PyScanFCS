@@ -27,7 +27,7 @@
 import multipletau
 
 from . import doc
-from . import SFCSnumeric
+from .SFCSnumeric import *
 
 __version__ = doc.__version__
 __author__ = "Paul Mueller"

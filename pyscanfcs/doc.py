@@ -32,6 +32,7 @@ import wx
 # img2py -i -n Main PyScanFCS_icon.png icon.py
 import icon
 import multipletau
+import uilayer
 
 
 def GetLocationOfChangeLog(filename = "ChangeLog.txt"):
@@ -153,6 +154,7 @@ def SoftwareUsed():
            "\n - multipletau "+multipletau.__version__+\
            "\n - NumPy "+numpy.__version__+\
            "\n - SciPy "+scipy.__version__+\
+           "\n - uilayer "+uilayer.__version__+\
            "\n - wxPython "+wx.__version__
     if hasattr(sys, 'frozen'):
         pyinst = "\n\nThis executable has been created using PyInstaller."

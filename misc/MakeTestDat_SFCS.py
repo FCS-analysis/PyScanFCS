@@ -179,6 +179,7 @@ noisearray += np.abs(np.min(noisearray))
 noisearray *= 30./np.max(noisearray)
 noisearray = np.uint32(noisearray)
 
+
 # Create 32bit and 16bit binary .dat files
 data = MakeDat(linetime/2, noisearray, np.uint16, "test_"+str(taudiff)+"ms_16bit.dat")
 data = MakeDat(linetime/2, noisearray, np.uint32, "test_"+str(taudiff)+"ms_32bit.dat")

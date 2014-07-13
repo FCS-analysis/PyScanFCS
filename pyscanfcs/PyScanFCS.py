@@ -75,6 +75,8 @@ import multipletau
 
 import doc      # Documentation/some texts
 
+import uilayer
+
 class plotarea(wx.Panel):
     def __init__(self, parent, grandparent):
         wx.Panel.__init__(self, parent, -1, size=(500,500))
@@ -396,23 +398,29 @@ class MyFrame(wx.Frame):
         """ Bin all photon events according to a binsize t_bin.
         """
         eb = self.BoxPrebin[10].GetValue()  # 10 spin: bin shift
-        # Now show an informing dialog
-        style=wx.PD_REMAINING_TIME|wx.PD_SMOOTH|wx.PD_AUTO_HIDE|wx.PD_CAN_ABORT
-        dlg = wx.ProgressDialog("Binning Data", "Counting photon events..."
-        , maximum = 100, parent=self, style=style)
-
         # The box contains bins per line
-        self.bins_per_line = int(self.BoxPrebin[8].GetValue())
+        self.bins_per_line = int(self.BoxPrebin[8].GetValue())        
         # t_bin in clock ticks
         t_bin = self.t_linescan/self.bins_per_line
-        dtype = np.uint16
-        filename = self.tempbintot
-        SFCSnumeric.BinPhotonEvents(Data, t_bin, filename, dtype, dlg, binshift=eb)
+        outdtype = np.uint16
+        outfile = self.tempbintot
 
-        binneddata = np.fromfile(filename, dtype=dtype)
+        wxdlg = uilayer.wxdlg(parent=self, steps=100,
+                              title="Binning photon events...")
+        
+        print("Creating file {} ({})".format(outfile, outdtype.__name__))
+
+        SFCSnumeric.BinPhotonEvents(Data, t_bin, binshift=eb,
+                                    outfile=outfile,
+                                    outdtype=outdtype,
+                                    callback=wxdlg.Iterate)
+        wxdlg.Finalize()
+
+        binneddata = np.fromfile(outfile, dtype=outdtype)
+        
         if np.max(binneddata) < 256:
+            #save memory
             binneddata = np.uint8(binneddata)
-
         return binneddata
 
 
@@ -422,25 +430,32 @@ class MyFrame(wx.Frame):
         calculate the photon events that take place every *t_bin* in system 
         clocks, where n_events is the number of events to use.
         """
-        eb = self.BoxPrebin[10].GetValue()  # 10 spin: bin shift
-
-        self.t_bin = t_bin
-        # Now show an informing dialog
-        style=wx.PD_REMAINING_TIME|wx.PD_SMOOTH|wx.PD_AUTO_HIDE|wx.PD_CAN_ABORT
-        dlg = wx.ProgressDialog("Binning Data", "Counting photon events..."
-        , maximum = 100, parent=self, style=style)
-        Data = self.datData[:n_events]
-
         # The box contains bins per line
         self.bins_per_line = int(self.BoxPrebin[8].GetValue())
 
-        dtype = np.uint16
-        filename = self.tempbinpar
+        # t_bin in clock ticks
+        self.t_bin = t_bin
+        outdtype = np.uint16
+        outfile = self.tempbinpar
+        eb = self.BoxPrebin[10].GetValue()  # 10 spin: bin shift
 
-        retval = SFCSnumeric.BinPhotonEvents(Data, t_bin, filename, dtype, dlg, binshift=eb)
+        Data = self.datData[:n_events]
+        
+        wxdlg = uilayer.wxdlg(parent=self, steps=100,
+                              title="Binning photon events...")
+        
+        print("Creating file {} ({})".format(outfile, outdtype.__name__))
 
-        binneddata = np.fromfile(filename, dtype=dtype)
+        SFCSnumeric.BinPhotonEvents(Data, t_bin, binshift=eb,
+                                    outfile=outfile,
+                                    outdtype=outdtype,
+                                    callback=wxdlg.Iterate)
+        wxdlg.Finalize()
+
+        binneddata = np.fromfile(outfile, dtype=outdtype)
+
         if np.max(binneddata) < 256:
+            # save memory
             binneddata = np.uint8(binneddata)
 
         return binneddata
@@ -1314,11 +1329,13 @@ class MyFrame(wx.Frame):
                 except KeyError:
                     # Open B.dat and add to cache
                     filenames = os.path.join(self.dirname, filename)
-                    style = wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME|wx.PD_CAN_ABORT
-                    dlg2 = wx.ProgressDialog("Processing 2nd file", 
-                           "Finding 32 bit events...", parent=self, style=style)
-                    system_clock, datData2 = SFCSnumeric.OpenDat(filenames, dlg2)
-                    dlg2.Destroy()
+
+                    wxdlg = uilayer.wxdlg(parent=self, steps=3,
+                                          title="Importing dat file...")
+                    self.system_clock, self.datData = SFCSnumeric.OpenDat(
+                                         filename, callback=wxdlg.Iterate)
+                    wxdlg.Finalize()
+
                     # Bin to obtain intData2
                     intData2 = self.Bin_All_Photon_Events(datData2)
                     # Add to cache
@@ -1621,11 +1638,12 @@ class MyFrame(wx.Frame):
             #self.filename = dlg.GetFilename()
             #self.dirname = dlg.GetDirectory()
             filename = os.path.join(self.dirname, self.filename)
-            style = wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME|wx.PD_CAN_ABORT
-            dlg2 = wx.ProgressDialog("Processing file", "Finding 32 bit events..."
-            , parent=self, style=style)
-            self.system_clock, self.datData = SFCSnumeric.OpenDat(filename, dlg2)
-            dlg2.Destroy()
+            
+            wxdlg = uilayer.wxdlg(parent=self, steps=3,
+                                  title="Importing dat file...")
+            self.system_clock, self.datData = SFCSnumeric.OpenDat(
+                                       filename, callback=wxdlg.Iterate)
+            wxdlg.Finalize()
             self.GetTotalTime()
             self.Update()
 
@@ -1763,11 +1781,13 @@ class MyFrame(wx.Frame):
         self.filename = cachename
         self.dirname = cache["dirname"]
         filename = os.path.join(self.dirname, self.filename)
-        style = wx.PD_APP_MODAL|wx.PD_ELAPSED_TIME|wx.PD_CAN_ABORT
-        dlg2 = wx.ProgressDialog("Processing file", "Finding 32 bit events..."
-        , parent=self, style=style)
-        self.system_clock, self.datData = SFCSnumeric.OpenDat(filename, dlg2)
-        dlg2.Destroy()
+        
+        wxdlg = uilayer.wxdlg(parent=self, steps=3,
+                              title="Importing dat file...")
+        self.system_clock, self.datData = SFCSnumeric.OpenDat(
+                                   filename, callback=wxdlg.Iterate)
+        wxdlg.Finalize()
+        
         self.GetTotalTime()
         self.Update()
         self.PlotImage()
