@@ -5,7 +5,7 @@ from setuptools import setup, find_packages, Extension
 from Cython.Distutils import build_ext
 import numpy as np
 
-from os.path import join, dirname, realpath
+from os.path import join, dirname, realpath, exists
 from warnings import warn
 
 # The next three lines are necessary for setup.py install to include
@@ -15,9 +15,17 @@ for scheme in INSTALL_SCHEMES.values():
     scheme['data'] = scheme['purelib']
 
 
+# Download documentation if it was not compiled
+Documentation = join(dirname(realpath(__file__)), "doc/PyCorrFit_doc.pdf")
+webdoc = "https://github.com/paulmueller/PyCorrFit/wiki/PyCorrFit_doc.pdf"
+if not exists(Documentation):
+    print "Downloading {} from {}".format(Documentation, webdoc)
+    import urllib
+    #testfile = urllib.URLopener()
+    urllib.urlretrieve(webdoc, Documentation)
+
 # Get the version of PyCorrFit from the Changelog.txt
 StaticChangeLog = join(dirname(realpath(__file__)), "ChangeLog.txt")
-
 try:
     clfile = open(StaticChangeLog, 'r')
     version = clfile.readline().strip()
@@ -44,7 +52,7 @@ setup(
     version=version,
     packages=[name],
     package_dir={name: name},
-    data_files=[('pyscanfcs_doc', ['ChangeLog.txt', 'PyScanFCS_doc.pdf'])],
+    data_files=[('pyscanfcs_doc', ['ChangeLog.txt', 'doc/PyScanFCS_doc.pdf'])],
     license="GPL v2",
     description='Scientific tool for perpendicular line scanning FCS.',
     long_description=open(join(dirname(__file__), 'Readme.txt')).read(),
