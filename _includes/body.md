@@ -17,7 +17,7 @@ algorithm. The obtained correlation curves can be evaluated using
   (~.dat - photon stream data)
 
 #### Docs
-- Detailed [documentation](https://github.com/paulmueller/PyScanFCS/raw/master/PyScanFCS_doc.pdf)
+- Detailed [documentation](https://github.com/paulmueller/PyScanFCS/wiki/PyScanFCS_doc.pdf)
 - Public [wiki](https://github.com/paulmueller/PyScanFCS/wiki)
 - Documented and structured [source code](https://github.com/paulmueller/PyScanFCS/tree/master/src)
 - Sophisticated [bug/feature tracking system](https://github.com/paulmueller/PyScanFCS/issues?state=open) by GitHub
