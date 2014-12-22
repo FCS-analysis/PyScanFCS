@@ -1,5 +1,6 @@
 include doc/*.tex
 include doc/*.bib
+include doc/*.pdf
 include pyscanfcs/*.pyx
 include doc/Images/*
 include Readme.txt
