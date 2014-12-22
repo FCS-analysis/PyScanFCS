@@ -21,5 +21,5 @@ For further information, please visit the PyScanFCS homepage at
 [http://pyscanfcs.craban.de](http://pyscanfcs.craban.de).
 
 - [Download the latest version](https://github.com/paulmueller/PyScanFCS/releases)
-- [Documentation](https://github.com/paulmueller/PyScanFCS/raw/master/PyScanFCS_doc.pdf)
+- [Documentation](https://github.com/paulmueller/PyScanFCS/wiki/PyScanFCS_doc.pdf)
 - [Using Cython on Windows XP](https://github.com/paulmueller/PyScanFCS/wiki/Using-Cython-on-Windows-XP)
