@@ -1,18 +1,4 @@
-#!/bin/sh
-# go to script directory (necessary for relative paths with pip)
-cd $(dirname "$0")
-# debian
-if [ -f "/usr/share/pyshared/pyscanfcs/PyScanFCS.py" ]
-then
-    python /usr/share/pyshared/pyscanfcs/PyScanFCS.py
-elif [ -f "/usr/local/lib/python2.7/dist-packages/pyscanfcs/PyScanFCS.py" ]
-# pip
-then
-    python /usr/local/lib/python2.7/dist-packages/pyscanfcs/PyScanFCS.py
-# pip and virtualenv
-elif [ -f "../lib/python2.7/site-packages/pyscanfcs/PyScanFCS.py" ]
-then
-    python ../lib/python2.7/site-packages/pyscanfcs/PyScanFCS.py
-else
-    echo "Could not find PyScanFCS. Please notify the author."
-fi
+#!/bin/bash
+# go to this directory to prevent execution of a git checkout
+cd "$(dirname "$0")"
+python -m pyscanfcs
