@@ -1,5 +1,6 @@
 #!/bin/bash
 Progname="PyScanFCS"
+Prgname_lower="pyscanfcs"
 # Go to base dir of repo
 BASEDIR=$(dirname $0)
 cd $BASEDIR
@@ -30,7 +31,7 @@ then
 else
     echo "Could not find specfile. Proceeding without..."
     sleep 1
-    pyinstaller -F ${Progdir}"pyscanfcs/"${Progname}".py"
+    pyinstaller -F ${Progdir}${Prgname_lower}"/"${Progname}".py"
 fi
 
 # zip the release
