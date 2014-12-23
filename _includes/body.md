@@ -19,7 +19,7 @@ algorithm. The obtained correlation curves can be evaluated using
 #### Docs
 - Detailed [documentation](https://github.com/paulmueller/PyScanFCS/wiki/PyScanFCS_doc.pdf)
 - Public [wiki](https://github.com/paulmueller/PyScanFCS/wiki)
-- Documented and structured [source code](https://github.com/paulmueller/PyScanFCS/tree/master/src)
+- Documented and structured [source code](https://github.com/paulmueller/PyScanFCS/tree/master)
 - Sophisticated [bug/feature tracking system](https://github.com/paulmueller/PyScanFCS/issues?state=open) by GitHub
 - Update helper to check for new program version
 - Open source software; anyone can contribute
