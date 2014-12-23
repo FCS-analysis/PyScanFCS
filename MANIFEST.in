@@ -5,4 +5,3 @@ include pyscanfcs/*.pyx
 include doc/Images/*
 include Readme.txt
 include ChangeLog.txt
-include PyScanFCS_doc.pdf
