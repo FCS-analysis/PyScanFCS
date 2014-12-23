@@ -25,7 +25,7 @@
 """
 
 from . import doc
-from . import PyScanFCS
+from . import main
 from . import uilayer
 from . import SFCSnumeric
 
@@ -33,4 +33,4 @@ from . import SFCSnumeric
 version = doc.__version__
 __version__ = version
 
-PyScanFCS.Main()
+main.Main()

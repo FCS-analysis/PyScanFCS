@@ -35,11 +35,11 @@ except:
 # The icon file was created with
 # img2py -i -n Main PyScanFCS_icon.png icon.py
 try:
-    import icon
+    from . import icon
 except:
     pass
     
-import uilayer
+from . import uilayer
 
 
 
