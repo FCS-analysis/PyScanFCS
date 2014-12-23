@@ -1,10 +1,10 @@
 # -*- mode: python -*-
-a = Analysis(['PyScanFCS/pyscanfcs/PyScanFCS.py'],
-             pathex=['pyinstaller-2.0'],
+a = Analysis(['pyscanfcs/PyScanFCS.py'],
+             pathex=[],
              hiddenimports=[],
              hookspath=None)
-a.datas += [('doc/ChangeLog.txt', 'PyScanFCS/ChangeLog.txt', 'DATA'),
-            ('doc/PyScanFCS_doc.pdf', 'PyScanFCS/PyScanFCS_doc.pdf', 'DATA')]
+a.datas += [('doc/ChangeLog.txt', 'ChangeLog.txt', 'DATA'),
+            ('doc/PyScanFCS_doc.pdf', 'doc/PyScanFCS_doc.pdf', 'DATA')]
 pyz = PYZ(a.pure)
 exe = EXE(pyz,
           a.scripts,

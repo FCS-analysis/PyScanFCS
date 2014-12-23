@@ -26,6 +26,8 @@
 
 from . import doc
 from . import PyScanFCS
+from . import uilayer
+from . import SFCSnumeric
 
 ## VERSION
 version = doc.__version__

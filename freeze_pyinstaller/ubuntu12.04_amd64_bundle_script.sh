@@ -10,11 +10,11 @@ Uploads="Uploads/"
 # Progname.py should be in the Progdir
 Progname="PyScanFCS"
 # We require a ChangeLog.txt and a source directory in the Progdir
-# BASEDIR/PyScanFCS/pyinstaller-howto
-BASEDIR=$(dirname $BASH_SOURCE)
+# BASEDIR/PyScanFCS/freeze_pyinstaller
+BASEDIR=$(dirname $0)
 cd $BASEDIR
 BASEDIR=$(pwd)
-cd "../../"
+cd "../"
 StartDir=$(pwd)"/"
 Progdir=${StartDir}${Progname}"/"
 # We require a Progname_doc.tex in the source-doc directory
@@ -33,10 +33,12 @@ if [ -f $Specfile ]
 then
     # added following line (remove build directory beforehand!)
     # a.datas += [('doc/ChangeLog.txt', '/PATH/TO/PyCorrFit/ChangeLog.txt', 'DATA')]
-    python ${PyInstallerDir}pyinstaller.py -F $Specfile
+    pyinstaller -F $Specfile
 else
-    python ${PyInstallerDir}pyinstaller.py -F ${Progdir}"src/"${Progname}".py"
+    echo "Could not find specfile. Proceeding without..."
+    sleep 1
+    pyinstaller -F ${Progdir}"pyscanfcs/"${Progname}".py"
 fi
 
 # make executable
-chmod +x ${Progdir}"pyinstaller-howto/dist/"${Progname}
+chmod +x ${Progdir}"dist/"${Progname}

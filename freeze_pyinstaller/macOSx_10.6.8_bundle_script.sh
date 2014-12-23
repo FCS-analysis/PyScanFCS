@@ -17,7 +17,7 @@ appn="./PyScanFCS.app"
 
 if [ -e $appn ]; then rm -R $appn; fi
 
-python ./Pyinstaller-2.1/pyinstaller.py -y ./pyinstaller-howto/PyScanFCS_mac.spec
+python ./Pyinstaller-2.1/pyinstaller.py -y ./freeze_pyinstaller/PyScanFCS_mac.spec
 
 if [ $? != 0 ]; then exit 1; fi
 
@@ -25,7 +25,7 @@ if [ $? != 0 ]; then exit 1; fi
 
 mv ./dist/PyScanFCS.app/Contents/MacOS/PyScanFCS ./dist/PyScanFCS.app/Contents/MacOS/PyScanFCS.bin
 
-cp ./pyinstaller-howto/macOSx_script_starter.sh ./dist/PyScanFCS.app/Contents/MacOS/PyScanFCS
+cp ./freeze_pyinstaller/macOSx_script_starter.sh ./dist/PyScanFCS.app/Contents/MacOS/PyScanFCS
 
 chmod +x ./dist/PyScanFCS.app/Contents/MacOS/PyScanFCS
 

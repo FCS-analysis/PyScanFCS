@@ -26,8 +26,9 @@
 
 import multipletau
 
-from . import doc
-from .SFCSnumeric import *
+import doc
+import uilayer
+from SFCSnumeric import *
 
 __version__ = doc.__version__
 __author__ = "Paul Mueller"

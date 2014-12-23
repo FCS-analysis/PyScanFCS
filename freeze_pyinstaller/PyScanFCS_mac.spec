@@ -3,7 +3,7 @@ a = Analysis(['pyscanfcs/PyScanFCS.py'],
              pathex=['PyInstaller-2.1'],
              hookspath=None)
 a.datas += [('doc/ChangeLog.txt', 'ChangeLog.txt', 'DATA'),
-            ('doc/PyScanFCS_doc.pdf', 'PyScanFCS_doc.pdf', 'DATA')]
+            ('doc/PyScanFCS_doc.pdf', 'doc/PyScanFCS_doc.pdf', 'DATA')]
 pyz = PYZ(a.pure)
 exe = EXE(pyz,
           a.scripts,
@@ -22,4 +22,4 @@ coll = COLLECT(exe,
                name='PyScanFCS')
 app = BUNDLE(coll,
              name='PyScanFCS.app',
-             icon='pyinstaller-howto/PyScanFCS.icns')
+             icon='freeze_pyinstaller/PyScanFCS.icns')
