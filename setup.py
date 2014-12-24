@@ -16,8 +16,8 @@ for scheme in INSTALL_SCHEMES.values():
 
 
 # Download documentation if it was not compiled
-Documentation = join(dirname(realpath(__file__)), "doc/PyCorrFit_doc.pdf")
-webdoc = "https://github.com/paulmueller/PyCorrFit/wiki/PyCorrFit_doc.pdf"
+Documentation = join(dirname(realpath(__file__)), "doc/PyScanFCS_doc.pdf")
+webdoc = "https://github.com/paulmueller/PyScanFCS/wiki/PyScanFCS_doc.pdf"
 if not exists(Documentation):
     print "Downloading {} from {}".format(Documentation, webdoc)
     import urllib
