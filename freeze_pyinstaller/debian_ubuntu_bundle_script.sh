@@ -17,7 +17,7 @@ distrib=$(lsb_release -i | awk 'BEGIN { FS = "\t" }; { print $2 }')
 version=$(head -n1 ./ChangeLog.txt | tr -d "\r\n")
 #Binname="dist/"${Progname}_${distrib}_${codename}_$(uname -r)".bin"
 Zipname="dist/"${Progname}_${version}_${distrib}_${codename}_$(uname -r)".zip"
-Env="${Progname}_env"
+Env="env_${Progname}"
 
 echo $Specfile
 
@@ -39,6 +39,8 @@ if ! [ -e $Env ]; then
     fi
 fi
 source $Env"/bin/activate"
+# Pyinstaller
+pip install git+git://github.com/pyinstaller/pyinstaller.git@779d07b236a943a4bf9d2b1a0ae3e0ebcc914798
 
 
 echo "###################"
