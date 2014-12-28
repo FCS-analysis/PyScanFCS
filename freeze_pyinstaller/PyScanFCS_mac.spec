@@ -1,6 +1,5 @@
 # -*- mode: python -*-
 a = Analysis(['pyscanfcs/PyScanFCS.py'],
-             pathex=['PyInstaller-2.1'],
              hookspath=None)
 a.datas += [('doc/ChangeLog.txt', 'ChangeLog.txt', 'DATA'),
             ('doc/PyScanFCS_doc.pdf', 'doc/PyScanFCS_doc.pdf', 'DATA')]
@@ -21,5 +20,5 @@ coll = COLLECT(exe,
                upx=True,
                name='PyScanFCS')
 app = BUNDLE(coll,
-             name='PyScanFCS.app',
+             name='dist/PyScanFCS.app',
              icon='freeze_pyinstaller/PyScanFCS.icns')
