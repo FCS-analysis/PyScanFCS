@@ -58,6 +58,7 @@ from scipy.fftpack import fftfreq
 # Pyinstaller does not neccessarily know that SFCSnumeric needs it.
 from scipy import optimize
 import tempfile
+import traceback
 import webbrowser
 import wx                               # GUI interface wxPython
 from wx.lib.agw import floatspin        # Float numbers in spin fields
@@ -72,6 +73,19 @@ from . import SFCSnumeric
 from . import uilayer
 
 
+
+
+########################################################################
+class ExceptionDialog(wx.MessageDialog):
+    """"""
+    def __init__(self, msg):
+        """Constructor"""
+        wx.MessageDialog.__init__(self, None, msg, "Error",
+                                          wx.OK|wx.ICON_ERROR)   
+                                          
+                                          
+                                          
+########################################################################                                          
 class plotarea(wx.Panel):
     def __init__(self, parent, grandparent):
         wx.Panel.__init__(self, parent, -1, size=(500,500))
@@ -124,8 +138,7 @@ class plotarea(wx.Panel):
         
 
 
-
-
+########################################################################
 class FFTmaxDialog(wx.Dialog):
     def __init__(
             self, parent, frequency, amplitude, size=wx.DefaultSize, pos=wx.DefaultPosition, 
@@ -285,8 +298,13 @@ maximum. \n The data achieved will automatically be updated within the main prog
                 self.pnt.OnBinning_Prebin()   
 
 
+
+########################################################################
 class MyFrame(wx.Frame):
     def __init__(self, parent, id, version):
+        # GUI exceptions
+        sys.excepthook = MyExceptionHook
+        
         self.version = version
         wx.Frame.__init__(self, parent, id, "PyScanFCS " + self.version)
         self.CreateStatusBar() # A Statusbar in the bottom of the window
@@ -2128,6 +2146,28 @@ class MyFrame(wx.Frame):
             self.BoxInfo[2].SetValue(str(self.t_linescan*1e-3/self.system_clock))
             self.OnLinetimeSelected()
 
+
+
+def MyExceptionHook(etype, value, trace):
+    """
+    Handler for all unhandled exceptions.
+ 
+    :param `etype`: the exception type (`SyntaxError`, `ZeroDivisionError`, etc...);
+    :type `etype`: `Exception`
+    :param string `value`: the exception error message;
+    :param string `trace`: the traceback header, if any (otherwise, it prints the
+     standard Python header: ``Traceback (most recent call last)``.
+    """
+    frame = wx.GetApp().GetTopWindow()
+    tmp = traceback.format_exception(etype, value, trace)
+    exception = "".join(tmp)
+ 
+    dlg = ExceptionDialog(exception)
+    dlg.ShowModal()
+    dlg.Destroy()     
+    wx.EndBusyCursor()
+    
+    
 
 ## VERSION
 version = doc.__version__
