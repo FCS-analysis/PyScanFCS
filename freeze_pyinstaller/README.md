@@ -14,7 +14,7 @@ To create a single binary file, go to the unpacked pyinstaller directory and exe
 
     python pyinstaller.py /Path/To/PyScanFCS.py
 
-Alternatively, there are ~.spec files and scripts for Windows XP / Ubuntu12.04 in this directory for bundling binary files.
+Alternatively, there are ~.spec files and scripts for Windows / Mac / Debian  in this directory for bundling binary files.
 
 Note
 -------------------
