@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "PyScanFCS"
-#define MyAppVersion "0.8.3-alpha1"
+#define MyAppVersion "0.2.2"
 #define MyAppPublisher "Paul Müller"
 #define MyAppURL "http://pyscanfcs.craban.de"
 #define MyAppExeName "PyScanFCS.exe"
@@ -12,7 +12,7 @@
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{09078D61-0BFE-405A-B57D-47BCC20B8359}
+AppId={{10078D61-1BFE-505A-C57D-57BCC20B8360}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
