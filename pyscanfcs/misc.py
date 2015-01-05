@@ -34,6 +34,7 @@ import wx                               # GUI interface wxPython
 import wx.html
 import wx.lib.delayedresult as delayedresult
 
+
 from . import doc                          # Documentation/some texts
 # The icon file was created with
 # img2py -i -n Main PyScanFCS_icon.png icon.py
@@ -121,7 +122,7 @@ class ArtificialDataDlg(wx.Frame):
 
         # line scanning time
         colsizer.Add( wx.StaticText(self.panel,
-                                    label=u"scan cycle time [ms]: "))
+                                    label=u"Scan cycle time [ms]: "))
         self.WXLine = edclasses.FloatSpin(self.panel,
                                           value="0.714")
         colsizer.Add(self.WXLine)

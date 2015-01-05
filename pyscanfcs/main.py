@@ -62,6 +62,8 @@ import traceback
 import webbrowser
 import wx                               # GUI interface wxPython
 from wx.lib.agw import floatspin        # Float numbers in spin fields
+from wx.lib.scrolledpanel import ScrolledPanel
+
 import zipfile
 
 
@@ -333,7 +335,8 @@ class MyFrame(wx.Frame):
         # thing accordingly and plot again.
 
         self.sp = wx.SplitterWindow(self, style=wx.SP_3DSASH)
-        self.buttonarea = wx.Panel(self.sp)
+        self.buttonarea = ScrolledPanel(self.sp)
+        self.buttonarea.SetupScrolling(scroll_y=True)
         self.plotarea = plotarea(self.sp, self)
         self.pdata = np.linspace(0,1,100)
         self.pdata.shape = (10,10)

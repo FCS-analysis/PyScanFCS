@@ -41,7 +41,9 @@ a = Analysis([ProgPy],
              hookspath=None)
 a.datas += [('doc\\ChangeLog.txt', ChLog, 'DATA'),
             ('doc\\PyScanFCS.pdf', DocPDF, 'DATA')]
+
 pyz = PYZ(a.pure)
+
 exe = EXE(pyz,
           a.scripts,
           exclude_binaries=True,
@@ -50,7 +52,7 @@ exe = EXE(pyz,
           strip=None,
           upx=True,
           icon=ICO,
-          console=True )
+          console=False )
 
 coll = COLLECT(exe,
                a.binaries,
