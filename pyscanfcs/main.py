@@ -977,10 +977,12 @@ class MyFrame(wx.Frame):
  "Opens a correlator file (.dat) that contains photon arrival time differences")
         menuOpenFits = filemenu.Append(wx.ID_ANY, "Open .&fits file", 
                               "Opens a previously binned intensity file (.fits)")
-        self.menuSaveDat = filemenu.Append(wx.ID_ANY, "&Save 32 bit .dat file", 
+        self.menuSaveDat = filemenu.Append(wx.ID_ANY, "Save 32 bit .&dat file", 
               "Saves photon arrival time difference data in 32 bit file format")
         self.menuSaveFits = filemenu.Append(wx.ID_SAVE, "&Save .fits file", 
                                  "Saves binned intensity data into a .fits file")
+        filemenu.AppendSeparator()
+        menuTest = filemenu.Append(wx.ID_ANY,"Create &artificial .dat file", "Create an artificial data set")
         filemenu.AppendSeparator()
         menuExit = filemenu.Append(wx.ID_EXIT,"E&xit", "Terminate the program")
 
@@ -1020,6 +1022,7 @@ class MyFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnOpenFits, menuOpenFits)
         self.Bind(wx.EVT_MENU, self.OnSaveDat, self.menuSaveDat)
         self.Bind(wx.EVT_MENU, self.OnSaveFits, self.menuSaveFits)
+        self.Bind(wx.EVT_MENU, self.OnMenuTest, menuTest)
 
         # Help
         self.Bind(wx.EVT_MENU, self.OnMenuAbout, menuAbout)
@@ -1211,6 +1214,10 @@ class MyFrame(wx.Frame):
         text = doc.SoftwareUsed()
         wx.MessageBox(text, 'Software', wx.OK | wx.ICON_INFORMATION)
 
+
+    def OnMenuTest(self, e=None):
+        misc.ArtificialDataDlg(self)
+        
 
     def OnMenuUpdate(self, event):
         misc.Update(self)

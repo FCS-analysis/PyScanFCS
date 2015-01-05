@@ -31,21 +31,23 @@ def MakeDat(linetime, noisearray, dtype, filename):
     # Create matrix. Each line is a scan.
     data = list()
     timeticks = linetime*newclock*1e6 # 60MHz
+    half1 = np.ceil(timeticks/2)
+    half2 = np.floor(timeticks/2)
     for i in np.arange(len(noisearray)):
         # Create a line
         N = noisearray[i]
         if N == 0:
             line=np.zeros(1, dtype=dtype)
             # Only one event at the far corner
-            line[0] = 2*timeticks
+            line[0] = timeticks
             line.tofile(NewFile)
         else:
             line = np.ones(N+1, dtype=dtype)
             # events are included between two far events
-            line[0] = line[-1] = timeticks-int(len(line)/2)
+            line[0] = half1-len(line)
+            line[-1] = half2
             line.tofile(NewFile)
     NewFile.close()
-
 
 def OnSaveDat(filename, data):
     # Save the Data
@@ -78,7 +80,7 @@ def GenerateExpNoise(N, taud=20., variance=1., deltat=1.):
     """
     # length of mean0 trace
     N_steps = N
-    dt = int(deltat)
+    dt = deltat
     # time trace
     t = np.arange(N_steps)
     # AR-1 processes - what does that mean?
@@ -169,23 +171,23 @@ def SaveCSV(G, trace, filename):
 
     openedfile.close()
 
-# Line time to be ound by SFCS analyzation software
-linetime = 0.000714
+# Line time to be found by SFCS analyzation software
+linetime = 0.714 # in ms
 # Time of exponentially correlated noise
 taudiff = 7. # in ms
 
-noisearray = GenerateExpNoise(200000, taud=taudiff/linetime/1e3)
+noisearray = GenerateExpNoise(200000, taud=taudiff/linetime)
 noisearray += np.abs(np.min(noisearray))
 noisearray *= 30./np.max(noisearray)
 noisearray = np.uint32(noisearray)
 
 
 # Create 32bit and 16bit binary .dat files
-data = MakeDat(linetime/2, noisearray, np.uint16, "test_"+str(taudiff)+"ms_16bit.dat")
-data = MakeDat(linetime/2, noisearray, np.uint32, "test_"+str(taudiff)+"ms_32bit.dat")
+data = MakeDat(linetime/1000, noisearray, np.uint16, "test_"+str(taudiff)+"ms_16bit.dat")
+data = MakeDat(linetime/1000, noisearray, np.uint32, "test_"+str(taudiff)+"ms_32bit.dat")
 
 # Create reference .csv file to check results
-G = multipletau.autocorrelate(noisearray, deltat=linetime, normalize=True)
+G = multipletau.autocorrelate(noisearray, deltat=linetime/1000, normalize=True)
 newtrace = ReduceTrace(noisearray, deltat=linetime, length=500)
 SaveCSV(G, newtrace, "test_"+str(taudiff)+"ms_reference.csv")
 
