@@ -343,11 +343,12 @@ class MyFrame(wx.Frame):
         #self.plotarea = wxmplot.ImagePanel(self.sp)
         #self.plotarea.display(self.pdata)
 
-        self.sp.SplitVertically(self.buttonarea, self.plotarea, 450)
-
         self.MakeButtons()
 
         self.Layout()
+
+        split = max(400, self.firhorz.GetMinSize()[0]+5)
+        self.sp.SplitVertically(self.buttonarea, self.plotarea, split)
 
         self.Show()
 
@@ -966,6 +967,7 @@ class MyFrame(wx.Frame):
         self.firhorz.Add(self.secvert)
         self.buttonarea.SetSizer(self.firhorz)
 
+        
 
     def MakeMenu(self):
         ## Setting up the menus.

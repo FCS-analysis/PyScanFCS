@@ -192,95 +192,90 @@ class ArtificialDataDlg(wx.Frame):
             return
 
         wx.BeginBusyCursor()
-        # deltat is linetime
-        noisearray = self.GenerateExpNoise(N, taud=taudiff, deltat=linetime)
-        noisearray -= np.min(noisearray)
-        noisearray *= 30./np.max(noisearray)
-        #noisearray += 5
-        noisearray = np.uint32(noisearray)
 
-        # Create 32bit and 16bit binary .dat files
-        # translate linetime in bins of taud
-        ltbin = linetime / 1000
-        data = self.MakeDat(ltbin, noisearray, dtype, path)
+        # start new thread
+        args = N, taudiff, linetime, dtype, path
+        delayedresult.startWorker(_CreateConsumer, _CreateWorker,
+                                  wargs=(args,),)
+        
 
-        wx.EndBusyCursor()
+
+
+
+def GenerateExpNoise(N, taud=20., variance=1., deltat=1.):
+    """
+        Generate exponentially correlated noise.
+    """
+    # length of mean0 trace
+    N_steps = N
+    dt = deltat
+    # time trace
+    t = np.arange(N_steps)
+    # AR-1 processes - what does that mean?
+    # time constant (inverse of correlationtime taud)
+    g = 1./taud
+    # variance
+    s0 = variance
     
-    @staticmethod
-    def GenerateExpNoise(N, taud=20., variance=1., deltat=1.):
-        """
-            Generate exponentially correlated noise.
-        """
-        # length of mean0 trace
-        N_steps = N
-        dt = deltat
-        # time trace
-        t = np.arange(N_steps)
-        # AR-1 processes - what does that mean?
-        # time constant (inverse of correlationtime taud)
-        g = 1./taud
-        # variance
-        s0 = variance
+    # normalization factor (memory of the trace)
+    exp_g = np.exp(-g*dt)
+    one_exp_g = 1-exp_g
+    z_norm_factor = np.sqrt(1-np.exp(-2*g*dt))/one_exp_g
+    
+    # create random number array
+    # generates random numbers in interval [0,1)
+    randarray = np.random.random(N_steps)
+    # make numbers random in interval [-1,1)
+    randarray = 2*(randarray-0.5)
+    
+    # simulate exponential random behavior
+    z = np.zeros(N_steps)
+    z[0] = one_exp_g*randarray[0]
+    for i in np.arange(N_steps-1)+1:
+        z[i] = exp_g*z[i-1] + one_exp_g*randarray[i]
         
-        # normalization factor (memory of the trace)
-        exp_g = np.exp(-g*dt)
-        one_exp_g = 1-exp_g
-        z_norm_factor = np.sqrt(1-np.exp(-2*g*dt))/one_exp_g
-        
-        # create random number array
-        # generates random numbers in interval [0,1)
-        randarray = np.random.random(N_steps)
-        # make numbers random in interval [-1,1)
-        randarray = 2*(randarray-0.5)
-        
-        # simulate exponential random behavior
-        z = np.zeros(N_steps)
-        z[0] = one_exp_g*randarray[0]
-        for i in np.arange(N_steps-1)+1:
-            z[i] = exp_g*z[i-1] + one_exp_g*randarray[i]
-            
-        z = z * z_norm_factor*s0
-        return z
+    z = z * z_norm_factor*s0
+    return z
 
 
-    @staticmethod
-    def MakeDat(linetime, noisearray, dtype, filename):
-        """ Create a .dat file (like Photon.exe).
-            System clock is fixed to 60MHz.
-            linetime [s]
-            noisearray integer array (uint16 or uint32)
-        """
-        NewFile = open(filename, 'wb')
-        if dtype == np.uint32:
-            newformat = np.uint8(32)
-        elif dtype == np.uint16:
-            newformat = np.uint8(16)
+
+def MakeDat(linetime, noisearray, dtype, filename):
+    """ Create a .dat file (like Photon.exe).
+        System clock is fixed to 60MHz.
+        linetime [s]
+        noisearray integer array (uint16 or uint32)
+    """
+    NewFile = open(filename, 'wb')
+    if dtype == np.uint32:
+        newformat = np.uint8(32)
+    elif dtype == np.uint16:
+        newformat = np.uint8(16)
+    else:
+        raise ValueError
+    newclock = np.uint8(60)
+    NewFile.write(newformat)
+    NewFile.write(newclock)
+    noisearray = dtype(noisearray)
+    # Create matrix. Each line is a scan.
+    data = list()
+    timeticks = linetime*newclock*1e6 # 60MHz
+    half1 = np.ceil(timeticks/2)
+    half2 = np.floor(timeticks/2)
+    for i in np.arange(len(noisearray)):
+        # Create a line
+        N = noisearray[i]
+        if N == 0:
+            line=np.zeros(1, dtype=dtype)
+            # Only one event at the far corner
+            line[0] = timeticks
+            line.tofile(NewFile)
         else:
-            raise ValueError
-        newclock = np.uint8(60)
-        NewFile.write(newformat)
-        NewFile.write(newclock)
-        noisearray = dtype(noisearray)
-        # Create matrix. Each line is a scan.
-        data = list()
-        timeticks = linetime*newclock*1e6 # 60MHz
-        half1 = np.ceil(timeticks/2)
-        half2 = np.floor(timeticks/2)
-        for i in np.arange(len(noisearray)):
-            # Create a line
-            N = noisearray[i]
-            if N == 0:
-                line=np.zeros(1, dtype=dtype)
-                # Only one event at the far corner
-                line[0] = timeticks
-                line.tofile(NewFile)
-            else:
-                line = np.ones(N+1, dtype=dtype)
-                # events are included between two far events
-                line[0] = half1-len(line)
-                line[-1] = half2
-                line.tofile(NewFile)
-        NewFile.close()
+            line = np.ones(N+1, dtype=dtype)
+            # events are included between two far events
+            line[0] = half1-len(line)
+            line[-1] = half2
+            line.tofile(NewFile)
+    NewFile.close()
 
 
 def removewrongUTF8(name):
@@ -323,6 +318,28 @@ def findprogram(program):
                 if os.path.isfile(fullpath):
                     return (1, fullpath)
     return (0, None)
+
+
+def _CreateConsumer(e=None):
+    wx.EndBusyCursor()
+    
+
+def _CreateWorker(args):
+    N, taudiff, linetime, dtype, path = args
+
+    # deltat is linetime
+    noisearray = GenerateExpNoise(N, taud=taudiff, deltat=linetime)
+    noisearray -= np.min(noisearray)
+    noisearray *= 30./np.max(noisearray)
+    #noisearray += 5
+    noisearray = np.uint32(noisearray)
+
+    # Create 32bit and 16bit binary .dat files
+    # translate linetime in bins of taud
+    ltbin = linetime / 1000
+    data = MakeDat(ltbin, noisearray, dtype, path)
+
+
 
 
 def Update(parent):
