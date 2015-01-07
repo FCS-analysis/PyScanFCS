@@ -13,7 +13,7 @@ PyInstDir = os.path.join(DIR, "freeze_pyinstaller")
 PCFDIR = os.path.join(DIR, "pyscanfcs")
 ProgPy = os.path.join(PCFDIR,"PyScanFCS.py")
 ChLog = os.path.join(DIR,"ChangeLog.txt")
-DocPDF = os.path.join(DIR,"doc/PyScanFCS.pdf")
+DocPDF = os.path.join(DIR,"doc/PyScanFCS_doc.pdf")
 ICO = os.path.join(PyInstDir,"PyScanFCS.ico")
 
 sys.path.append(DIR)
@@ -40,7 +40,7 @@ a = Analysis([ProgPy],
                             "scipy.special._ufuncs_cxx"],
              hookspath=None)
 a.datas += [('doc\\ChangeLog.txt', ChLog, 'DATA'),
-            ('doc\\PyScanFCS.pdf', DocPDF, 'DATA')]
+            ('doc\\PyScanFCS_doc.pdf', DocPDF, 'DATA')]
 
 pyz = PYZ(a.pure)
 
