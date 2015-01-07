@@ -5,7 +5,7 @@
  - Under the hood:
    - Updated repository structure
    - Relative imports
-   - build machine is now Windows 7
+   - Build machine is now Windows 7
 0.2.2
  - Added button 'full time interval'
  - This is the first version that uses the external module `multipletau`
