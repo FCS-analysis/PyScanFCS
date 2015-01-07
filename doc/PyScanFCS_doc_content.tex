@@ -11,7 +11,7 @@ by the Free Software Foundation, either version 2 of the License,
 or (at your option) any later version.
 \\
 \\
-An exemplary usage of PyScanFCS - delivering a proof of principle from calibration to data fitting - was shown in \cite{Mueller2014}.
+An exemplary usage of PyScanFCS - delivering a proof of principle from calibration to data fitting - was shown in \cite{Mueller2014} (Authors manuscript available at \url{pyscanfcs.craban.de}.
 
 \subsection{Prerequisites}
 In order to use the PyScanFCS software, the following equipment is needed:
@@ -29,7 +29,7 @@ In order to use the PyScanFCS software, the following equipment is needed:
 PyScanFCS can be downloaded from \url{http://pyscanfcs.craban.de}.
 \begin{itemize}
 \item \textbf{Windows}
-For Windows XP or Windows 7, stand-alone binary executables are available from the download page. 
+For Windows, stand-alone binary executables are available from the download page. 
 \item \textbf{Linux}
 There are executable binaries for widely used distributions (e.g. Ubuntu).
 \item \textbf{Sources}
@@ -45,12 +45,12 @@ python-wxgtk2.8 (2.8.12.1) \\
 }
 \\
 There are two ways to make PyScanFCS run from source.\\
-\textbf{Recommended way:} Install via pip
-\texttt{ pip install pyscanfcs}
+\textbf{install from PyPI:}
+\texttt{pip install pyscanfcs}
 and run the package directly
 \texttt{python -m pyscanfcs}.
 \\
-\textbf{Second way:}
+\textbf{clone from GitHub:}
 Obtain the source directly from GitHub (\url{https://github.com/paulmueller/PyScanFCS}).
 
 
@@ -67,26 +67,19 @@ python-dev}
 \item[ ] \textbf{MacOS}. Use Apple's XCode, available from \url{http://developer.apple.com}.
 \end{itemize}
 Cython can be obtained from \url{http://www.cython.org/}. After unpacking of the archive, Cython is installed by executing \texttt{python setup.py install} within the unpacked directory\footnote{Cython can also be installed via PyPI with \texttt{pip install cython} (\url{http://pypi.python.org/pypi}).}.
-
-For older version of Ubuntu, some of the above package versions are not listed in the package repository. To enable the use of PyScanFCS on those systems, the following packages need to be installed separately:
-
-\begin{itemize}
-\item[ ] \textbf{matplotlib}. The tukss-ppa includes version 1.0.1. After adding the repository (\texttt{apt-add-repository ppa:tukss/ppa}), matplotlib can be installed as usual.
-\item[ ] \textbf{numpy}. The package from a later version of Ubuntu can be installed: \url{https://launchpad.net/ubuntu/+source/python-numpy/}
-\item[ ] \textbf{scipy}. The package from a later version of Ubuntu can be installed: \url{https://launchpad.net/ubuntu/+source/python-scipy/}
 \end{itemize}
 
-\end{itemize}
+Correlation curves created by PyScanFCS can be processed using \texttt{PyCorrFit}\footnote{\url{http://pycorrfit.craban.de}} \cite{Mueller2014a}.
 
-Correlation curves created by PyScanFCS can be processed using \texttt{PyCorrFit}\footnote{\url{http://pycorrfit.craban.de}}.
-
+\newpage
 \section{Data acquisition modes}
-\begin{figure}[t]
+
+In order to achieve all possible measurement modes depicted in \hyref{figure}{fig:scanmodi}, the CLSM needs to be set up properly. The scan paths should be checked for straightness e.g. by bleaching a layer of eGFP\footnote{Often, hysteresis effects occur during high speed scanning and scan paths are not straight. Switching to slower bidirectional scanning or setting up a ``multitrack mode'' might solve these problems.}. In 2fSFCS, the distance between the lines can be determined in a similar fashion. For each measurement, it is vital to record approximate scanning time and channel assignment. PyScanFCS attempts to find the correct scanning cycle, but manual intervention will be necessary in case of a failure\footnote{In some cases, the microscope software (AIM, Zeiss) might also calculate a wrong scan cycle time.}.
+\begin{figure}[h]
 \centering
 \includegraphics[width=0.8\linewidth]{SFCSmodi.pdf}
  \mycaption{acquisition modes in PyScanFCS}{The six figures \textbf{a-f} show possible scenarios for scan path and excitation settings. The alignment of the scan paths (black) is shown for membrane of a giant unilamellar vesicle (red). The arrow tips define the different colors used for each scan (blue excitation, green excitation, or both at the same time). Multiple arrow tips indicate the sequential scanning of one line with two colors. The time necessary to perform a complete scan in each scanning mode is shown respective to ``one color – one focus'' on the top right corner of each figure.\label{fig:scanmodi}}
 \end{figure}
-In order to achieve all possible measurement modes depicted in \hyref{figure}{fig:scanmodi}, the CLSM needs to be set up properly. The scan paths should be checked for straightness e.g. by bleaching a layer of eGFP\footnote{Often, hysteresis effects occur during high speed scanning and scan paths are not straight. Switching to slower bidirectional scanning or setting up a ``multitrack mode'' might solve these problems.}. In 2fSFCS, the distance between the lines can be determined in a similar fashion. For each measurement, it is vital to record approximate scanning time and channel assignment. PyScanFCS attempts to find the correct scanning cycle, but manual intervention will be necessary in case of a failure\footnote{In some cases, the microscope software (AIM, Zeiss) might also calculate a wrong scan cycle time.}.
 \begin{figure}[]
 \centering
 % 2012-08-27-SFCS_DiO-DOPC-GUVs --> GUV5b
@@ -171,7 +164,7 @@ Possible correlations (2 foci): $AC_{A1}$, $AC_{B2}$, $CC_{A1B2}$, $CC_{B2A1}$
 \end{figure}
 \hyref{Figure}{fig:SFCSMain} shows the main user interface with the following content:
 \begin{itemize}
-\item The \textbf{menu bar} with standard operations, such as loading or saving a file. The \textbf{cache menu} is a convenience tool. It displays all previously binned \mytilde .dat files.
+\item The \textbf{menu bar} with standard operations, such as loading or saving a file. The \textbf{cache menu} displays all previously binned \mytilde .dat files. The file menu contains a method to create artificial \mytilde .dat files for testing.
 
 \item \textbf{Pre-binning}: This sets up all parameters that are used to bin a \mytilde .dat file:
 	\begin{itemize}

@@ -28,6 +28,7 @@ import platform
 import pyfits
 import scipy
 import sys
+
 try:
     import wx
 except:

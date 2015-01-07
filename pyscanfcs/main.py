@@ -20,6 +20,11 @@ u"""
     You should have received a copy of the GNU General Public License 
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+from __future__ import print_function
+# TODO (Python3): 
+# from __future__ import division
+# -> There is an integer division somewhere
+
 import csv
 import sys
 
@@ -28,8 +33,10 @@ import sys
 # http://stackoverflow.com/questions/5419/python-unicode-and-the-windows-console
 # and it helped (needs to be done before import of matplotlib):
 import platform
-reload(sys)
-sys.setdefaultencoding('utf-8')
+
+if sys.version_info[0] == 2:
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
 
 import os
 
@@ -262,7 +269,7 @@ maximum. \n The data achieved will automatically be updated within the main prog
                     timeweights.append(weighta/self.freq[idx+i+1])
                     timeweights.append(weightb/self.freq[idx-i-1])
                     Pie = Pie + weighta + weightb
-                    print sum(np.array(timeweights))/Pie, weighta, weightb
+                    print(sum(np.array(timeweights))/Pie, weighta, weightb)
 
                 timeweights = np.array(timeweights)
                 #print timeweights
@@ -1370,7 +1377,7 @@ class MyFrame(wx.Frame):
                     
             else:
                 # We should not be here.
-                print "No A.dat or A.fits file opened. Aborting."
+                print("No A.dat or A.fits file opened. Aborting.")
                 return
 
         # Start plotting?
@@ -2185,7 +2192,7 @@ def MyExceptionHook(etype, value, trace):
 version = doc.__version__
 __version__ = version
 
-print doc.info(version)
+print(doc.info(version))
 
 ## Start gui
 def Main():

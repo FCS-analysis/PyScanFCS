@@ -25,10 +25,19 @@
 """
 
 import multipletau
+import sys
+import warnings
 
 from . import doc
-from .main import Main
 from .SFCSnumeric import *
+
+try:
+    from .main import Main
+except ImportError:
+    print(sys.exc_info())
+    warnings.warn("Frontend of `pyscanfcs` will not be available."+\
+                  " Reason: {}.".format(sys.exc_info()[1]))
+
 
 __version__ = doc.__version__
 __author__ = "Paul Mueller"
