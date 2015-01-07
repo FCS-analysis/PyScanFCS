@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-""" 
+u""" 
     PyScanFCS
 
     Data processing for perpendicular line scanning FCS.
@@ -1182,11 +1182,11 @@ class MyFrame(wx.Frame):
         info.SetName('PyScanFCS')
         info.SetVersion(self.version)
         info.SetDescription(description)
-        info.SetCopyright('(C) 2012 Paul Müller')
+        info.SetCopyright(u'(C) 2012 Paul Müller')
         info.SetWebSite('http://pyscanfcs.craban.de')
         info.SetLicence(licence)
-        info.AddDeveloper('Paul Müller')
-        info.AddDocWriter('Paul Müller')
+        info.AddDeveloper(u'Paul Müller')
+        info.AddDocWriter(u'Paul Müller')
         wx.AboutBox(info)
 
 

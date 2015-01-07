@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
+u"""
     PyScanFCS
 
     Module doc
@@ -25,6 +25,7 @@ import multipletau
 import numpy
 import os
 import platform
+import pyfits
 import scipy
 import sys
 try:
@@ -42,24 +43,20 @@ except:
 from . import uilayer
 
 
-
-
-def GetLocationOfChangeLog(filename = "ChangeLog.txt"):
-    locations = list()
-    fname1 = os.path.realpath(__file__)
-    # Try one directory up
-    dir1 = os.path.dirname(fname1)+"/../"
-    locations.append(os.path.realpath(dir1))
-    # In case of distribution with .egg files (pip, easy_install)
-    dir2 = os.path.dirname(fname1)+"/../pyscanfcs_doc/"
-    locations.append(os.path.realpath(dir2))
+def GetLocationOfFile(filename):
+    dirname = os.path.dirname(os.path.abspath(__file__))
+    locations = [
+                    dirname+"/../",
+                    dirname+"/../pyscanfcs_doc/",
+                    dirname+"/../doc/",
+                ]
     ## freezed binaries:
     if hasattr(sys, 'frozen'):
         try:
-            dir2 = sys._MEIPASS + "/doc/"
+            adir = sys._MEIPASS + "/doc/"
         except:
-            dir2 = "./"
-        locations.append(os.path.realpath(dir2))
+            adir = "./"
+        locations.append(os.path.realpath(adir))
     for loc in locations:
         thechl = os.path.join(loc,filename)
         if os.path.exists(thechl):
@@ -69,31 +66,14 @@ def GetLocationOfChangeLog(filename = "ChangeLog.txt"):
     return None
 
 
+def GetLocationOfChangeLog(filename = "ChangeLog.txt"):
+    return GetLocationOfFile(filename)
+
+
 def GetLocationOfDocumentation(filename = "PyScanFCS_doc.pdf"):
     """ Returns the location of the documentation if there is any."""
-    ## running from source
-    locations = list()
-    fname1 = os.path.realpath(__file__)
-    # Documentation is usually one directory up
-    dir1 = os.path.dirname(fname1)+"/../"
-    locations.append(os.path.realpath(dir1))
-    # In case of distribution with .egg files (pip, easy_install)
-    dir2 = os.path.dirname(fname1)+"/../pyscanfcs_doc/"
-    locations.append(os.path.realpath(dir2))
-    ## freezed binaries:
-    if hasattr(sys, 'frozen'):
-        try:
-            dir2 = sys._MEIPASS + "/doc/"
-        except:
-            dir2 = "./"
-        locations.append(os.path.realpath(dir2))
-    for loc in locations:
-        thedoc = os.path.join(loc,filename)
-        if os.path.exists(thedoc):
-            return thedoc
-            break
-    # if this does not work:
-    return None
+    return GetLocationOfFile(filename)
+
 
 
 def description():
@@ -110,7 +90,7 @@ def info(version):
 
     Data processing for perpendicular line scanning FCS.
     """
-    textlin = """
+    textlin = u"""
     © 2011-2012 Paul Müller, Biotec - TU Dresden
 
     Data processing for perpendicular line scanning FCS.
@@ -162,6 +142,7 @@ def SoftwareUsed():
            "\n - matplotlib "+matplotlib.__version__+\
            "\n - multipletau "+multipletau.__version__+\
            "\n - NumPy "+numpy.__version__+\
+           "\n - PyFITS "+pyfits.__version__+\
            "\n - SciPy "+scipy.__version__+\
            "\n - uilayer "+uilayer.__version__+\
            "\n - wxPython "+wx.__version__
