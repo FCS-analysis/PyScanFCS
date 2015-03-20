@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
     When a membrane is scanned perpendicularly to its surface, the
@@ -40,6 +41,5 @@ except ImportError:
 
 
 __version__ = doc.__version__
-__author__ = "Paul Mueller"
-__email__ = "paul.mueller@biotec.tu-dresden.de"
+__author__ = u"Paul Müller"
 __license__ = "GPL v2"
