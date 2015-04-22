@@ -50,6 +50,8 @@ def GetLocationOfFile(filename):
                     dirname+"/../",
                     dirname+"/../pyscanfcs_doc/",
                     dirname+"/../doc/",
+                    # check /usr/lib64 -> /usr/lib
+                    dirname.replace("/usr/lib64", "/usr/lib", 1),
                 ]
     ## freezed binaries:
     if hasattr(sys, 'frozen'):
