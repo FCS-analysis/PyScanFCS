@@ -56,7 +56,6 @@ setup(
     license="GPL v2",
     description='Scientific tool for perpendicular line scanning FCS.',
     long_description=open(join(dirname(__file__), 'Readme.txt')).read(),
-    scripts=['bin/pyscanfcs'],
     cmdclass={"build_ext": build_ext},
     include_package_data=True,
     ext_modules=EXTENSIONS,
@@ -77,6 +76,9 @@ setup(
         'Topic :: Scientific/Engineering :: Visualization',
         'Intended Audience :: Science/Research'
                  ],
-    platforms=['ALL']
+    platforms=['ALL'],
+    entry_points={
+       "gui_scripts": ["{name:s}={name:s}:Main".format(**{"name":name})]
+       }
     )
 
