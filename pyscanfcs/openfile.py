@@ -68,12 +68,36 @@ def openFITS(fname, callback=None):
     return info
 
 
-
+def openLSM(fname, callback=None):
+    """ open LSM file using tifffile """
+    info = dict()
+    info["type"] = "binned"
+    
+    lsm = tifffile.TiffFile(fname)
+    
+    info["data_binned"] = lsm.asarray()[0]
+    info["system_clock"] = 1
+    info["total_time"] = None
+    
+    page = lsm.pages[0]
+    # pixel time in us
+    info["bin_time"] = page.cz_lsm_scan_information["tracks"][0]["pixel_time"]
+    
+    # line time in s
+    info["line_time"] = page.cz_lsm_time_stamps[1] - page.cz_lsm_time_stamps[0]
+    
+    info["bins_per_line"] = info["data_binned"].shape[1]
+    info["size"] = info["data_binned"].shape[0] * info["data_binned"].shape[1]
+    info["bin_shift"] = None
+    
+    return info
+    
+    
 
 methods_stream = {"dat": openDAT}
 
-methods_binned = {"fits": openFITS}
-#                  "lsm": openLSM,
+methods_binned = {"fits": openFITS,
+                  "lsm": openLSM}
 #                  "tif": openTIF}
 
 wx_dlg_wc_stream = ""
