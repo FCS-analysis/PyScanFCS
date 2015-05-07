@@ -1,4 +1,4 @@
-![PyScanFCS](https://raw.github.com/paulmueller/PyScanFCS/master/doc-src/Images/PyScanFCS_logo_dark.png)
+![PyScanFCS](https://raw.github.com/paulmueller/PyScanFCS/master/doc/Images/PyScanFCS_logo_dark.png)
 =========
 
 This repository contains the source code of PyScanFCS - a tool for data evaluation
