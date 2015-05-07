@@ -75,9 +75,10 @@ import zipfile
 
 
 # module import
+from . import doc      # Documentation/some texts
 from . import edclasses
 from . import misc
-from . import doc      # Documentation/some texts
+from . import openfile
 from . import SFCSnumeric
 from . import uilayer
 
@@ -985,9 +986,9 @@ class MyFrame(wx.Frame):
 
         # wx.ID_ABOUT and wx.ID_EXIT are standard IDs provided by wxWidgets.
         # filemenu
-        menuOpenDat = filemenu.Append(wx.ID_OPEN, "&Open photon events .dat file", 
- "Opens a correlator file (.dat) that contains photon arrival time differences")
-        menuOpenFits = filemenu.Append(wx.ID_ANY, "Open .&fits file", 
+        menuOpenDat = filemenu.Append(wx.ID_OPEN, "&Open photon events file", 
+ "Opens a correlator file (e.g. .dat) that contains photon arrival time differences")
+        menuOpenFits = filemenu.Append(wx.ID_ANY, "Open &binned data file", 
                               "Opens a previously binned intensity file (.fits)")
         self.menuSaveDat = filemenu.Append(wx.ID_ANY, "Save 32 bit .&dat file", 
               "Saves photon arrival time difference data in 32 bit file format")
@@ -1030,8 +1031,8 @@ class MyFrame(wx.Frame):
         ## Set events
         #File
         self.Bind(wx.EVT_MENU, self.OnMenuExit, menuExit)
-        self.Bind(wx.EVT_MENU, self.OnOpenDat, menuOpenDat)
-        self.Bind(wx.EVT_MENU, self.OnOpenFits, menuOpenFits)
+        self.Bind(wx.EVT_MENU, self.OnOpenStream, menuOpenDat)
+        self.Bind(wx.EVT_MENU, self.OnOpenBinned, menuOpenFits)
         self.Bind(wx.EVT_MENU, self.OnSaveDat, self.menuSaveDat)
         self.Bind(wx.EVT_MENU, self.OnSaveFits, self.menuSaveFits)
         self.Bind(wx.EVT_MENU, self.OnMenuTest, menuTest)
@@ -1574,15 +1575,13 @@ class MyFrame(wx.Frame):
                     openedfile.write(str(traces[i][j])+"\r\n")
 
         wx.EndBusyCursor()
-
           
 
-    def OnOpenFits(self,e):
+    def OnOpenBinned(self,e):
         # Open a data file
         """Import experimental data from a file."""
-        dlg = wx.FileDialog(self, "Choose a fits file", self.dirname, "", 
-              "FITS files (*.fits)|*.Fits;*.FITS;*.fits",
-              wx.OPEN)
+        dlg = wx.FileDialog(self, "Choose a binned data file", self.dirname, "", 
+                            openfile.wx_dlg_wc_binned, wx.OPEN)
         # user cannot do anything until he clicks "OK"
         if dlg.ShowModal() == wx.ID_OK:
         
@@ -1591,48 +1590,34 @@ class MyFrame(wx.Frame):
             #self.filename = dlg.GetFilename()
             #self.dirname = dlg.GetDirectory()
      
-            fits = pyfits.open(os.path.join(self.dirname, self.filename))
-            series = fits[0]
+            info = openfile.openAny(os.path.join(self.dirname, self.filename))
+     
             self.imgData = None
-            self.intData = series.data
+            self.intData = info["data_binned"]
             self.datData = None
 
 
             # Set all variables
-            head = series.header
+            self.system_clock = info['system_clock']
+            self.T_total = info["total_time"]
+            self.t_linescan = info["line_time"]
+            self.t_bin = info["bin_time"]
 
-            self.system_clock = head['SysClck']
-            try:
-                self.T_total = head['Total']
-            except KeyError:
-                self.T_total = None
-            try:
-                self.t_linescan = head['Tline']
-            except KeyError:
-                # Old "line scanning time" has new name: "scan cycle time"
-                self.t_linescan = head['Tcycle']
-            self.t_bin = head['Tbin']
-            try:
-                eb = head['Binshift']
-            except KeyError:
-                pass
-            else:
-                self.BoxPrebin[10].SetValue(eb)
+            if info["bin_shift"] is not None:
+                self.BoxPrebin[10].SetValue(info["bin_time"])                
 
-            self.bins_per_line = len(self.intData[0])
+            self.bins_per_line = info["bins_per_line"]
             self.prebpl.SetValue(self.bins_per_line)
 
             # Plot
             # Set proper 1D shape for intdata
-            length = self.intData.shape[0] * self.intData.shape[1]
+            length = info["size"]
             self.intData.shape = length
             self.Update()
             self.PlotImage()
 
-
-
     #Current
-    def OnOpenDat(self,e):
+    def OnOpenStream(self,e):
         # Open a data file
         """
         We open a .dat file as produced by the "Flex02-12D" correlator in photon
@@ -1660,9 +1645,8 @@ class MyFrame(wx.Frame):
 
         """
         # File Dialog
-        dlg = wx.FileDialog(self, "Choose a data file", self.dirname, "", 
-              "DAT files (*.dat)|*.dat;*.daT;*.dAt;*.dAT;*.Dat;*.DaT;*.DAt;*.DAT",
-              wx.OPEN)
+        dlg = wx.FileDialog(self, "Choose a photon stream file", self.dirname, "", 
+                            openfile.wx_dlg_wc_stream, wx.OPEN)
         # user cannot do anything until he clicks "OK"
         if dlg.ShowModal() == wx.ID_OK:
             # Workaround for Ubuntu 12.10 since 0.2.0
@@ -1672,9 +1656,11 @@ class MyFrame(wx.Frame):
             filename = os.path.join(self.dirname, self.filename)
             
             wxdlg = uilayer.wxdlg(parent=self, steps=3,
-                                  title="Importing dat file...")
-            self.system_clock, self.datData = SFCSnumeric.OpenDat(
-                                       filename, callback=wxdlg.Iterate)
+                                  title="Importing photon stream...")
+            info = openfile.openAny(filename, callback=wxdlg.Iterate)
+            self.system_clock = info["system_clock"]
+            self.datData = info["data_stream"]
+            
             wxdlg.Finalize()
             self.GetTotalTime()
             self.Update()
