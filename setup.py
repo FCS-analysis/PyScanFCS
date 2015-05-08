@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # To create a distribution package for pip or easy-install:
 # python setup.py sdist
-from setuptools import setup, find_packages, Extension
+from setuptools import setup, Extension
 from Cython.Distutils import build_ext
 import numpy as np
 
@@ -43,6 +43,7 @@ EXTENSIONS = [Extension("pyscanfcs.SFCSnumeric",
               ]
 
 name='pyscanfcs'
+
 
 setup(
     name=name,

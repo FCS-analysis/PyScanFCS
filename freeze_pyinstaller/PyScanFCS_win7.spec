@@ -32,12 +32,12 @@ nissfile.write(u"\ufeff")
 nissfile.writelines(iss)
 nissfile.close()
 
+hiddenimports = ["scipy.optimize",
+                 "scipy.special._ufuncs_cxx"]
 
 a = Analysis([ProgPy],
              pathex=[DIR],
-             hiddenimports=["sympy.assumptions.handlers", # sympy
-                            "sympy.assumptions.handlers.common",
-                            "scipy.special._ufuncs_cxx"],
+             hiddenimports=hiddenimports,
              hookspath=None)
 a.datas += [('doc\\ChangeLog.txt', ChLog, 'DATA'),
             ('doc\\PyScanFCS_doc.pdf', DocPDF, 'DATA')]

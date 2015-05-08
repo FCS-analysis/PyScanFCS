@@ -125,7 +125,7 @@ class base_ui():
         pass
 
 
-    def GetDir(self, dirname):
+    def SetDir(self, dirname):
         """ Sets the current working directory.
         """
         self._dirname = dirname
@@ -494,9 +494,9 @@ class wxdlg(base_ui):
         msg = msg.strip(" ,")
 
         if self._known_length:
-            (cont,skip) = self.dlg.Update(self._total_counter, msg)
+            cont = self.dlg.Update(self._total_counter, msg)[0]
         else:
-            (cont,skip) = self.dlg.UpdatePulse(newmsg=msg)
+            cont = self.dlg.UpdatePulse(newmsg=msg)[0]
 
         if cont is False:
             # On next iteration, algorithms can abort if they

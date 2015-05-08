@@ -3,8 +3,8 @@
 """
 from __future__ import division, print_function
 
-import numpy as np
-import os
+#import numpy as np
+#import os
 import tifffile
 import pyfits
 

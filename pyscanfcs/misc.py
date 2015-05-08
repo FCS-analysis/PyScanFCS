@@ -25,12 +25,10 @@ import codecs
 from distutils.version import LooseVersion # For version checking
 import numpy as np
 import os
-import platform
 import sys
 import tempfile
 import urllib2
 import webbrowser
-import wx                               # GUI interface wxPython
 import wx.html
 import wx.lib.delayedresult as delayedresult
 
@@ -209,8 +207,6 @@ def GenerateExpNoise(N, taud=20., variance=1., deltat=1.):
     # length of mean0 trace
     N_steps = N
     dt = deltat
-    # time trace
-    t = np.arange(N_steps)
     # AR-1 processes - what does that mean?
     # time constant (inverse of correlationtime taud)
     g = 1./taud
@@ -257,7 +253,6 @@ def MakeDat(linetime, noisearray, dtype, filename):
     NewFile.write(newclock)
     noisearray = dtype(noisearray)
     # Create matrix. Each line is a scan.
-    data = list()
     timeticks = linetime*newclock*1e6 # 60MHz
     half1 = np.ceil(timeticks/2)
     half2 = np.floor(timeticks/2)
@@ -281,12 +276,12 @@ def MakeDat(linetime, noisearray, dtype, filename):
 def removewrongUTF8(name):
     newname = u""
     for char in name:
-       try:
-           uchar = codecs.decode(char, "UTF-8")
-       except:
-           pass
-       else:
-           newname += char
+        try:
+            codecs.decode(char, "UTF-8")
+        except:
+            pass
+        else:
+            newname += char
     return newname
     
 
@@ -337,7 +332,7 @@ def _CreateWorker(args):
     # Create 32bit and 16bit binary .dat files
     # translate linetime in bins of taud
     ltbin = linetime / 1000
-    data = MakeDat(ltbin, noisearray, dtype, path)
+    MakeDat(ltbin, noisearray, dtype, path)
 
 
 

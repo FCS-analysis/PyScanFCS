@@ -1,6 +1,12 @@
 # -*- mode: python -*-
+
+hiddenimports = ["scipy.optimize",
+                 "scipy.special._ufuncs_cxx"]
+
+
 a = Analysis(['pyscanfcs/PyScanFCS.py'],
-             hookspath=None)
+              hiddenimports=hiddenimports,
+              hookspath=None)
 a.datas += [('doc/ChangeLog.txt', 'ChangeLog.txt', 'DATA'),
             ('doc/PyScanFCS_doc.pdf', 'doc/PyScanFCS_doc.pdf', 'DATA')]
 pyz = PYZ(a.pure)

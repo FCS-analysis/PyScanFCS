@@ -50,7 +50,7 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_wxagg import \
     FigureCanvasWxAgg as FigureCanvas, \
     NavigationToolbar2WxAgg as NavigationToolbar
-from matplotlib.widgets import RectangleSelector, Button
+from matplotlib.widgets import RectangleSelector
 from matplotlib.patches import Rectangle
 import matplotlib.pyplot as plt
 
@@ -60,10 +60,7 @@ import numpy as np                            # NumPy
 import pyfits
 from scipy.fftpack import fft
 from scipy.fftpack import fftfreq
-# SFCSnumeric needs scipy.optimize
-# We import it here, so that pyinstaller packs it into the executable.
-# Pyinstaller does not neccessarily know that SFCSnumeric needs it.
-from scipy import optimize
+
 import tempfile
 import traceback
 import webbrowser
@@ -307,12 +304,12 @@ maximum. \n The data achieved will automatically be updated within the main prog
 
 ########################################################################
 class MyFrame(wx.Frame):
-    def __init__(self, parent, id, version):
+    def __init__(self, parent, anid, version):
         # GUI exceptions
         sys.excepthook = MyExceptionHook
         
         self.version = version
-        wx.Frame.__init__(self, parent, id, "PyScanFCS " + self.version)
+        wx.Frame.__init__(self, parent, anid, "PyScanFCS " + self.version)
         self.CreateStatusBar() # A Statusbar in the bottom of the window
 
         ## Properties of the Frame
@@ -685,7 +682,7 @@ class MyFrame(wx.Frame):
 
                 #fig, ax = plt.figure()
                 #ax = plt.subplot(111)
-                fig, ax = plt.subplots()
+                plt.subplots()
                 plt.subplots_adjust(bottom=0.2)
                 plt.title(title + " - bleaching correction")
                 plt.xlabel("Measurement time t [s]")
@@ -1357,12 +1354,12 @@ class MyFrame(wx.Frame):
                         raise KeyError
                 except KeyError:
                     # Open B.dat and add to cache
-                    filenames = os.path.join(self.dirname, filename)
+                    path = os.path.join(self.dirname, filename)
 
                     wxdlg = uilayer.wxdlg(parent=self, steps=3,
                                           title="Importing dat file...")
-                    self.system_clock, self.datData = SFCSnumeric.OpenDat(
-                                         filename, callback=wxdlg.Iterate)
+                    datData2 = SFCSnumeric.OpenDat(
+                                         path, callback=wxdlg.Iterate)[1]
                     wxdlg.Finalize()
 
                     # Bin to obtain intData2
@@ -1380,7 +1377,7 @@ class MyFrame(wx.Frame):
         # Start plotting?
         if self.MenuVerbose.IsChecked():
             plt.figure(0)
-            axc = plt.subplot(111)
+            plt.subplot(111)
 
         # Create .zip archive
         Arc = zipfile.ZipFile(zipfilename, mode='w')
@@ -1571,7 +1568,6 @@ class MyFrame(wx.Frame):
                     openedfile.write(str(traces[i][j])+"\r\n")
 
         wx.EndBusyCursor()
-          
 
     def OnOpenBinned(self,e):
         # Open a data file
@@ -1981,9 +1977,9 @@ class MyFrame(wx.Frame):
         # to set the length of a line.
         if self.BoxPrebin[6].GetValue() == False:
             # from µs to system clock ticks
-            t_bin = self.BoxPrebin[4].GetValue() * self.system_clock
+            self.t_bin = self.BoxPrebin[4].GetValue() * self.system_clock
         else:
-            t_bin = self.t_linescan / self.bins_per_line
+            self.t_bin = self.t_linescan / self.bins_per_line
         # This is a fast way of slicing our 1D intData array to a shorter
         # plottable 2D array.
         if Nx > Ny:
@@ -1993,9 +1989,9 @@ class MyFrame(wx.Frame):
             plotdata = np.zeros((Ny,Ny))
             MAX = Nx*Ny
 
-            for bin in np.arange(Ny):
+            for abin in np.arange(Ny):
                 # Take every P'th element in Nx direction
-                plotdata[bin] = self.intData[bin:MAX+bin:Ny*P]
+                plotdata[abin] = self.intData[abin:MAX+abin:Ny*P]
         else:
             # We are lucky
             plotdata = self.intData[:Nx*Ny]
@@ -2167,7 +2163,7 @@ def MyExceptionHook(etype, value, trace):
     :param string `trace`: the traceback header, if any (otherwise, it prints the
      standard Python header: ``Traceback (most recent call last)``.
     """
-    frame = wx.GetApp().GetTopWindow()
+    wx.GetApp().GetTopWindow()
     tmp = traceback.format_exception(etype, value, trace)
     exception = "".join(tmp)
  
@@ -2187,7 +2183,7 @@ print(doc.info(version))
 ## Start gui
 def Main():
     app = wx.App(False)
-    frame = MyFrame(None, -1, version)
+    MyFrame(None, -1, version)
     app.MainLoop()
 
 
