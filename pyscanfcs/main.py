@@ -122,16 +122,12 @@ class plotarea(wx.Panel):
         self.vbox.Add(self.toolbar, 0, wx.EXPAND)
         self.SetSizer(self.vbox)
         self.vbox.Fit(self)
-        
         # Labels
         self.axes.set_ylabel("Scan cycle time [ms]",size=16)
         self.axes.set_xlabel("Measurement time [s]",size=16)
 
-        
-
     def OnSelectPlot(self, eclick, erelease):
         self.grandparent.OnSelectPlot(eclick, erelease)
-
     
     def UseLineSelector(self):
         lineprops = dict(color='red', linestyle='-',
@@ -1592,6 +1588,8 @@ class MyFrame(wx.Frame):
      
             info = openfile.openAny(os.path.join(self.dirname, self.filename))
      
+            print(info)
+            
             self.imgData = None
             self.intData = info["data_binned"]
             self.datData = None
@@ -1604,7 +1602,7 @@ class MyFrame(wx.Frame):
             self.t_bin = info["bin_time"]
 
             if info["bin_shift"] is not None:
-                self.BoxPrebin[10].SetValue(info["bin_time"])                
+                self.BoxPrebin[10].SetValue(info["bin_shift"])
 
             self.bins_per_line = info["bins_per_line"]
             self.prebpl.SetValue(self.bins_per_line)
@@ -1998,8 +1996,6 @@ class MyFrame(wx.Frame):
             for bin in np.arange(Ny):
                 # Take every P'th element in Nx direction
                 plotdata[bin] = self.intData[bin:MAX+bin:Ny*P]
-
-
         else:
             # We are lucky
             plotdata = self.intData[:Nx*Ny]
@@ -2008,9 +2004,17 @@ class MyFrame(wx.Frame):
 
 
         self.plotarea.image.set_data(plotdata)
-        # Set labels x [ms] and y[s]
+        # Set labels y [ms] and x [s]
         Ty = self.t_bin*Ny/1e3/self.system_clock
-        Tx = Ty*Nx/1e3
+        
+        # try line time for x-scale first
+        if self.t_linescan is not None:
+            Tx = Nx*self.t_linescan*1e-6/self.system_clock
+        else:
+            Tx = Ty*Nx/1e3
+        
+        
+        
         self.plotarea.image.set_extent((0, Tx, Ty, 0))
         # Make the square or else we would not see much
         self.plotarea.axes.set_aspect(1.*Tx/Ty)
@@ -2144,8 +2148,8 @@ class MyFrame(wx.Frame):
             self.BoxInfo[0].SetLabel("System clock [MHz]: "+str(self.system_clock))
             if self.T_total is not None:
                 # This means a file has been opened
-                self.BoxInfo[1].SetLabel("Total time [s]: "+
-                                 str(self.T_total*1e-6/self.system_clock)[0:10])
+                self.BoxInfo[1].SetLabel("Total time [s]: {:.5f}".format(
+                                    self.T_total*1e-6/self.system_clock))
         if self.t_linescan is not None:
             # This means a linetime has been found
             self.BoxInfo[2].SetValue(str(self.t_linescan*1e-3/self.system_clock))

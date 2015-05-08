@@ -61,6 +61,7 @@ setup(
     ext_modules=EXTENSIONS,
     install_requires=[
         "cython",
+        "tifffile",
         "matplotlib >= 1.1.0",
         "multipletau >= 0.1.4",
         "NumPy >= 1.5.1",

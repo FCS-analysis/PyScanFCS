@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """ PyScanFCS filetype definitions
 """
+from __future__ import division, print_function
 
 import numpy as np
 import os
@@ -8,7 +9,6 @@ import tifffile
 import pyfits
 
 from . import SFCSnumeric
-
 
 
 
@@ -69,22 +69,25 @@ def openFITS(fname, callback=None):
 
 
 def openLSM(fname, callback=None):
-    """ open LSM file using tifffile """
+    """ open LSM780 file using tifffile """
     info = dict()
     info["type"] = "binned"
     
     lsm = tifffile.TiffFile(fname)
     
+    # two channels 0, 1?        
     info["data_binned"] = lsm.asarray()[0]
     info["system_clock"] = 1
-    info["total_time"] = None
     
     page = lsm.pages[0]
     # pixel time in us
     info["bin_time"] = page.cz_lsm_scan_information["tracks"][0]["pixel_time"]
     
-    # line time in s
-    info["line_time"] = page.cz_lsm_time_stamps[1] - page.cz_lsm_time_stamps[0]
+    # line time in s -> us
+    info["line_time"] = (page.cz_lsm_time_stamps[1] - page.cz_lsm_time_stamps[0])*1e6
+    
+    # total time in s -> us
+    info["total_time"] = (page.cz_lsm_time_stamps[-1] - page.cz_lsm_time_stamps[0])*1e6
     
     info["bins_per_line"] = info["data_binned"].shape[1]
     info["size"] = info["data_binned"].shape[0] * info["data_binned"].shape[1]
@@ -100,18 +103,17 @@ methods_binned = {"fits": openFITS,
                   "lsm": openLSM}
 #                  "tif": openTIF}
 
-wx_dlg_wc_stream = ""
+wx_dlg_wc_stream = "stream format ("
+wx_dlg_wc_stream_end = ")|"
 for key in list(methods_stream.keys()):
-    wx_dlg_wc_stream += "{} files (*.{})|*.{}|".format(key, key, key)
-wx_dlg_wc_stream.strip("|")
+    wx_dlg_wc_stream += "*.{}, ".format(key)
+    wx_dlg_wc_stream_end += "*.{};".format(key)
+wx_dlg_wc_stream = wx_dlg_wc_stream.strip(" ,") + wx_dlg_wc_stream_end.strip(";")
 
 
-wx_dlg_wc_binned = ""
+wx_dlg_wc_binned = "binned format ("
+wx_dlg_wc_binned_end = ")|"
 for key in list(methods_binned.keys()):
-    wx_dlg_wc_binned += "{} files (*.{})|*.{}|".format(key, key, key)
-wx_dlg_wc_binned.strip("|")
-
-
-# photon stream files
-ext_stream = ["dat"]
-ext_binned = ["fits", "lsm", "tif"]
+    wx_dlg_wc_binned += "*.{}, ".format(key)
+    wx_dlg_wc_binned_end += "*.{};".format(key)
+wx_dlg_wc_binned = wx_dlg_wc_binned.strip(" ,") + wx_dlg_wc_binned_end.strip(";")
