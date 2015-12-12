@@ -8,5 +8,5 @@ These are functions that are either implemented somehow in PyScanFCS or that can
 - **setup.py**: compiles binningc.pyx using Cython
 
 Testing the PyScanFCS:
-- **MakeTestDat_SFCS.py**: create a exponentially correlated noise in a ~.dat file that can be loaded with [PyScanFCS](https://github.com/paulmueller/PyScanFCS) (http://fcstools.dyndns.org/pyscanfcs)
-- **ExampleFunc_Exp_correlated_noise.txt**: external model function for fitting of exponentially correlated noise using [PyCorrFit]https://github.com/paulmueller/PyCorrFit) (http://fcstools.dyndns.org/pycorrfit)
+- **MakeTestDat_SFCS.py**: create a exponentially correlated noise in a ~.dat file that can be loaded with [PyScanFCS](https://github.com/FCS-analysis/PyScanFCS) (http://fcstools.dyndns.org/pyscanfcs)
+- **ExampleFunc_Exp_correlated_noise.txt**: external model function for fitting of exponentially correlated noise using [PyCorrFit]https://github.com/FCS-analysis/PyCorrFit) (http://fcstools.dyndns.org/pycorrfit)

@@ -17,7 +17,7 @@ for scheme in INSTALL_SCHEMES.values():
 
 # Download documentation if it was not compiled
 Documentation = join(dirname(realpath(__file__)), "doc/PyScanFCS_doc.pdf")
-webdoc = "https://github.com/paulmueller/PyScanFCS/wiki/PyScanFCS_doc.pdf"
+webdoc = "https://github.com/FCS-analysis/PyScanFCS/wiki/PyScanFCS_doc.pdf"
 if not exists(Documentation):
     print "Downloading {} from {}".format(Documentation, webdoc)
     import urllib
@@ -49,7 +49,7 @@ setup(
     name=name,
     author='Paul Mueller',
     author_email='paul.mueller@biotec.tu-dresden.de',
-    url='https://github.com/paulmueller/PyScanFCS',
+    url='https://github.com/FCS-analysis/PyScanFCS',
     version=version,
     packages=[name],
     package_dir={name: name},

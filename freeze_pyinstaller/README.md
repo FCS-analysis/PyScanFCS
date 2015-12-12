@@ -19,4 +19,4 @@ Alternatively, there are ~.spec files and scripts for Windows / Mac / Debian  in
 Note
 -------------------
 
-For more details, consult [PyCorrFit/freeze_pyinstaller](https://github.com/paulmueller/PyCorrFit/tree/master/freeze_pyinstaller).
+For more details, consult [PyCorrFit/freeze_pyinstaller](https://github.com/FCS-analysis/PyCorrFit/tree/master/freeze_pyinstaller).

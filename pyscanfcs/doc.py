@@ -177,6 +177,6 @@ except:
 
 
 # Github homepage
-GitChLog = "https://raw.github.com/paulmueller/PyScanFCS/master/ChangeLog.txt"
-GitHome = "https://github.com/paulmueller/PyScanFCS"
-GitWiki = "https://github.com/paulmueller/PyScanFCS/wiki"
+GitChLog = "https://raw.github.com/FCS-analysis/PyScanFCS/master/ChangeLog.txt"
+GitHome = "https://github.com/FCS-analysis/PyScanFCS"
+GitWiki = "https://github.com/FCS-analysis/PyScanFCS/wiki"
