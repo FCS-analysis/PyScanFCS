@@ -60,3 +60,6 @@ nosetests.xml
 *.out
 *.synctex.gz
 *.pdf
+
+.env
+*.c

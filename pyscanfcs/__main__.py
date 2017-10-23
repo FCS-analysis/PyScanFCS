@@ -29,7 +29,7 @@ from . import main
 from . import uilayer
 from . import SFCSnumeric
 
-## VERSION
+# VERSION
 version = doc.__version__
 __version__ = version
 

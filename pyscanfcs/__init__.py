@@ -36,7 +36,7 @@ try:
     from .main import Main
 except ImportError:
     print(sys.exc_info())
-    warnings.warn("Frontend of `pyscanfcs` will not be available."+\
+    warnings.warn("Frontend of `pyscanfcs` will not be available." +
                   " Reason: {}.".format(sys.exc_info()[1]))
 
 

@@ -61,12 +61,12 @@ setup(
     include_package_data=True,
     ext_modules=EXTENSIONS,
     install_requires=[
+        "astropy",
         "cython",
         "tifffile",
         "matplotlib >= 1.1.0",
         "multipletau >= 0.1.4",
         "NumPy >= 1.5.1",
-        "pyfits",
         "SciPy >= 0.8.0",
         "wxPython >= 2.8.10.1"
         ],

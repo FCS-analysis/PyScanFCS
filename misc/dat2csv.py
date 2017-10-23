@@ -29,7 +29,7 @@ import multipletauc
 parser = argparse.ArgumentParser()
 parser.add_argument('-w', '--tbin', type=float,
                     help='Width of bins in us')
-parser.add_argument('input', metavar='INPUT', nargs='?', 
+parser.add_argument('input', metavar='INPUT', nargs='?',
                     type=str, help='Input .dat file')
 parser.add_argument('output', metavar='OUTPUT', nargs='?',
                     type=str, help='Output .csv file')
@@ -49,11 +49,11 @@ else:
 
 #system_clock = None
 # Also resets system_clock:
-a=time.time()
+a = time.time()
 system_clock, event_data = binningc.OpenDat(filename)
-print "Finding Events: "+str(time.time()-a)+"s"
+print "Finding Events: " + str(time.time() - a) + "s"
 
-print "System clock: "+str(system_clock)+" MHz"
+print "System clock: " + str(system_clock) + " MHz"
 
 if event_data is None:
     print "Problem acquiring data."
@@ -64,35 +64,35 @@ if p_tbin is None:
 else:
     t_bin = p_tbin
 
-bintime = 1.*t_bin*system_clock
+bintime = 1. * t_bin * system_clock
 
 
 # Creates binned file
-a=time.time()
+a = time.time()
 binningc.BinData(event_data, bintime, filename)
-print "binning time: "+str(time.time()-a)+"s"
+print "binning time: " + str(time.time() - a) + "s"
 
-## Perform multiple tau algorithm
+# Perform multiple tau algorithm
 # bintime from µs to s
-deltat = t_bin/1e6
+deltat = t_bin / 1e6
 
 # File created by BinData:
-newfilename = filename[:-4]+".int"
+newfilename = filename[:-4] + ".int"
 
 #trace = np.array(np.fromfile(newfilename, dtype="uint16", count=-1), dtype="float64")
 
 
 # Calculate autocorrelation
-a=time.time()
+a = time.time()
 G_list = multipletauc.ACFromFile(newfilename, deltat, m=128)
-print "multiple-tau time: "+str(time.time()-a)+"s"
+print "multiple-tau time: " + str(time.time() - a) + "s"
 Trace_list = multipletauc.BinTracesFromFile(newfilename, deltat, length=700)
 print "Got traces."
 
 if p_outfile is None:
-    zipfilename = filename[:-4]+".zip"
+    zipfilename = filename[:-4] + ".zip"
 else:
-    zipfilename = p_outfile.strip(".zip")+".zip"
+    zipfilename = p_outfile.strip(".zip") + ".zip"
 
 Arc = zipfile.ZipFile(zipfilename, mode='w')
 returnWD = os.getcwd()
@@ -104,40 +104,37 @@ for j in np.arange(len(G_list)):
     # Write G to file
     G = G_list[j]
     if p_outfile is None:
-        csvfile = filename[:-4]+"_"+str(j)+".csv"
+        csvfile = filename[:-4] + "_" + str(j) + ".csv"
     else:
-        csvfile = p_outfile.strip(".csv")+"_"+str(j)+".csv"
+        csvfile = p_outfile.strip(".csv") + "_" + str(j) + ".csv"
 
     openedfile = open(csvfile, 'wb')
     openedfile.write('# Created with dat2csv\r\n')
     openedfile.write('# Paul Mueller - BIOTEC, TU Dresden\r\n')
     openedfile.write('# Info:\r\n')
-    openedfile.write('#  Binning Time: '+str(deltat)+'s \r\n')
-    openedfile.write('#  Source file: '+filename+'\r\n')
-    openedfile.write('#  Source segment: '+str(j+1)+' of '+str(len(G_list))+'\r\n')
-    openedfile.write('# Channel (tau [s])'+" \t," 
-                                     'Correlation function'+" \r\n")
+    openedfile.write('#  Binning Time: ' + str(deltat) + 's \r\n')
+    openedfile.write('#  Source file: ' + filename + '\r\n')
+    openedfile.write('#  Source segment: ' + str(j + 1) +
+                     ' of ' + str(len(G_list)) + '\r\n')
+    openedfile.write('# Channel (tau [s])' + " \t,"
+                     'Correlation function' + " \r\n")
 
     dataWriter = csv.writer(openedfile, delimiter=',')
 
     for i in np.arange(len(G)):
-        dataWriter.writerow([str(G[i,0])+" \t", str(G[i,1])])
+        dataWriter.writerow([str(G[i, 0]) + " \t", str(G[i, 1])])
 
     # Write Trace
     T = Trace_list[j]
     openedfile.write('#\r\n# BEGIN TRACE\r\n#\r\n')
-    openedfile.write('# Trace time [s]'+" \t," 
-                                     'Intensity trace [kHz]'+" \r\n")
+    openedfile.write('# Trace time [s]' + " \t,"
+                     'Intensity trace [kHz]' + " \r\n")
 
     for i in np.arange(len(T)):
-        dataWriter.writerow([str(T[i,0])+" \t", str(T[i,1])])
+        dataWriter.writerow([str(T[i, 0]) + " \t", str(T[i, 1])])
 
     openedfile.close()
     Arc.write(csvfile)
     os.remove(csvfile)
 os.chdir(returnWD)
 os.removedirs(tempdir)
-
-
-
-

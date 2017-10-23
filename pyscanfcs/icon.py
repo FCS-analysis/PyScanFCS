@@ -188,4 +188,3 @@ getMainData = Main.GetData
 getMainImage = Main.GetImage
 getMainBitmap = Main.GetBitmap
 getMainIcon = Main.GetIcon
-

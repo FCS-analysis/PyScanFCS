@@ -11,6 +11,7 @@ import numpy as np
 import multipletau
 import csv
 
+
 def MakeDat(linetime, noisearray, dtype, filename):
     """ Create a .dat file (like Photon.exe).
         System clock is fixed to 60MHz.
@@ -30,24 +31,25 @@ def MakeDat(linetime, noisearray, dtype, filename):
     noisearray = dtype(noisearray)
     # Create matrix. Each line is a scan.
     data = list()
-    timeticks = linetime*newclock*1e6 # 60MHz
-    half1 = np.ceil(timeticks/2)
-    half2 = np.floor(timeticks/2)
+    timeticks = linetime * newclock * 1e6  # 60MHz
+    half1 = np.ceil(timeticks / 2)
+    half2 = np.floor(timeticks / 2)
     for i in np.arange(len(noisearray)):
         # Create a line
         N = noisearray[i]
         if N == 0:
-            line=np.zeros(1, dtype=dtype)
+            line = np.zeros(1, dtype=dtype)
             # Only one event at the far corner
             line[0] = timeticks
             line.tofile(NewFile)
         else:
-            line = np.ones(N+1, dtype=dtype)
+            line = np.ones(N + 1, dtype=dtype)
             # events are included between two far events
-            line[0] = half1-len(line)
+            line[0] = half1 - len(line)
             line[-1] = half2
             line.tofile(NewFile)
     NewFile.close()
+
 
 def OnSaveDat(filename, data):
     # Save the Data
@@ -85,28 +87,28 @@ def GenerateExpNoise(N, taud=20., variance=1., deltat=1.):
     t = np.arange(N_steps)
     # AR-1 processes - what does that mean?
     # time constant (inverse of correlationtime taud)
-    g = 1./taud
+    g = 1. / taud
     # variance
     s0 = variance
-    
+
     # normalization factor (memory of the trace)
-    exp_g = np.exp(-g*dt)
-    one_exp_g = 1-exp_g
-    z_norm_factor = np.sqrt(1-np.exp(-2*g*dt))/one_exp_g
-    
+    exp_g = np.exp(-g * dt)
+    one_exp_g = 1 - exp_g
+    z_norm_factor = np.sqrt(1 - np.exp(-2 * g * dt)) / one_exp_g
+
     # create random number array
     # generates random numbers in interval [0,1)
     randarray = np.random.random(N_steps)
     # make numbers random in interval [-1,1)
-    randarray = 2*(randarray-0.5)
-    
+    randarray = 2 * (randarray - 0.5)
+
     # simulate exponential random behavior
     z = np.zeros(N_steps)
-    z[0] = one_exp_g*randarray[0]
-    for i in np.arange(N_steps-1)+1:
-        z[i] = exp_g*z[i-1] + one_exp_g*randarray[i]
-        
-    z = z * z_norm_factor*s0
+    z[0] = one_exp_g * randarray[0]
+    for i in np.arange(N_steps - 1) + 1:
+        z[i] = exp_g * z[i - 1] + one_exp_g * randarray[i]
+
+    z = z * z_norm_factor * s0
     return z
 
 
@@ -114,8 +116,8 @@ def ReduceTrace(trace, deltat, length):
     """
         Given a `trace` of length `len(trace)`, compute a trace of
         length smaller than `length` by averaging. 
-        
-        
+
+
         Parameters
         ----------
         trace : ndarray, shape (N)
@@ -141,8 +143,8 @@ def ReduceTrace(trace, deltat, length):
         step += 1
     # Return 2d array with times
     T = np.zeros((len(trace), 2))
-    T[:,1] = trace/deltat/1e3 # in kHz
-    T[:,0] = np.arange(len(trace))*deltat*2**step
+    T[:, 1] = trace / deltat / 1e3  # in kHz
+    T[:, 0] = np.arange(len(trace)) * deltat * 2**step
     return T
 
 
@@ -154,40 +156,41 @@ def SaveCSV(G, trace, filename):
     csvfile = filename
     openedfile = open(csvfile, 'wb')
     openedfile.write('# This file was created using testmultipletau.py\r\n')
-    openedfile.write('# Channel (tau [s])'+" \t," 
-                                     'Correlation function'+" \r\n")
+    openedfile.write('# Channel (tau [s])' + " \t,"
+                     'Correlation function' + " \r\n")
     dataWriter = csv.writer(openedfile, delimiter=',')
     for i in np.arange(len(G)):
-        dataWriter.writerow([str(G[i,0])+" \t", str(G[i,1])])
+        dataWriter.writerow([str(G[i, 0]) + " \t", str(G[i, 1])])
 
     openedfile.write('# BEGIN TRACE \r\n')
-    openedfile.write('# Time ([s])'+" \t," 
-                                     'Intensity Trace [kHz]'+" \r\n")
-
+    openedfile.write('# Time ([s])' + " \t,"
+                     'Intensity Trace [kHz]' + " \r\n")
 
     for i in np.arange(len(trace)):
-        dataWriter.writerow([str(trace[i,0])+" \t", str(trace[i,1])])
-
+        dataWriter.writerow([str(trace[i, 0]) + " \t", str(trace[i, 1])])
 
     openedfile.close()
 
-# Line time to be found by SFCS analyzation software
-linetime = 0.714 # in ms
-# Time of exponentially correlated noise
-taudiff = 7. # in ms
 
-noisearray = GenerateExpNoise(200000, taud=taudiff/linetime)
+# Line time to be found by SFCS analyzation software
+linetime = 0.714  # in ms
+# Time of exponentially correlated noise
+taudiff = 7.  # in ms
+
+noisearray = GenerateExpNoise(200000, taud=taudiff / linetime)
 noisearray += np.abs(np.min(noisearray))
-noisearray *= 30./np.max(noisearray)
+noisearray *= 30. / np.max(noisearray)
 noisearray = np.uint32(noisearray)
 
 
 # Create 32bit and 16bit binary .dat files
-data = MakeDat(linetime/1000, noisearray, np.uint16, "test_"+str(taudiff)+"ms_16bit.dat")
-data = MakeDat(linetime/1000, noisearray, np.uint32, "test_"+str(taudiff)+"ms_32bit.dat")
+data = MakeDat(linetime / 1000, noisearray, np.uint16,
+               "test_" + str(taudiff) + "ms_16bit.dat")
+data = MakeDat(linetime / 1000, noisearray, np.uint32,
+               "test_" + str(taudiff) + "ms_32bit.dat")
 
 # Create reference .csv file to check results
-G = multipletau.autocorrelate(noisearray, deltat=linetime/1000, normalize=True)
+G = multipletau.autocorrelate(
+    noisearray, deltat=linetime / 1000, normalize=True)
 newtrace = ReduceTrace(noisearray, deltat=linetime, length=500)
-SaveCSV(G, newtrace, "test_"+str(taudiff)+"ms_reference.csv")
-
+SaveCSV(G, newtrace, "test_" + str(taudiff) + "ms_reference.csv")

@@ -23,15 +23,16 @@
 """
 import numpy as np
 from wx.lib.agw import floatspin        # Float numbers in spin fields
-import wx 
+import wx
+
 
 class FloatSpin(floatspin.FloatSpin):
     def __init__(self, parent, digits=10, increment=.01, value=1.0):
         floatspin.FloatSpin.__init__(self, parent, digits=digits,
-                                     increment = increment, value = value)
+                                     increment=increment, value=value)
         self.Bind(wx.EVT_SPINCTRL, self.increment)
         #self.Bind(wx.EVT_SPIN, self.increment)
-        #self.increment()
+        # self.increment()
 
     def increment(self, event=None):
         # Find significant digit
@@ -50,16 +51,16 @@ class ChoicesDialog(wx.Dialog):
         # parent is main frame
         self.parent = parent
 
-        super(ChoicesDialog, self).__init__(parent=parent, 
-            title=title)
+        super(ChoicesDialog, self).__init__(parent=parent,
+                                            title=title)
         # Get the window positioning correctly
         #pos = self.parent.GetPosition()
         #pos = (pos[0]+100, pos[1]+100)
-        #wx.Frame.__init__(self, parent=parent, title=title,
+        # wx.Frame.__init__(self, parent=parent, title=title,
         #         pos=pos, style=wx.DEFAULT_FRAME_STYLE|wx.FRAME_FLOAT_ON_PARENT)
 
         #self.Filename = None
-        ## Controls
+        # Controls
         panel = wx.Panel(self)
 
         # text1
@@ -69,7 +70,7 @@ class ChoicesDialog(wx.Dialog):
 
         # Dropdown
         self.dropdown = wx.ComboBox(panel, -1, "", (15, 30),
-              wx.DefaultSize, dropdownlist, wx.CB_DROPDOWN|wx.CB_READONLY)
+                                    wx.DefaultSize, dropdownlist, wx.CB_DROPDOWN | wx.CB_READONLY)
         self.dropdown.SetSelection(0)
         # Bindings
         self.Bind(wx.EVT_BUTTON, self.OnOK, btnok)
@@ -97,4 +98,3 @@ class ChoicesDialog(wx.Dialog):
 
     def OnAbort(self, event=None):
         self.EndModal(wx.ID_CANCEL)
-

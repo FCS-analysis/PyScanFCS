@@ -1,37 +1,34 @@
 # -*- coding: utf-8 -*-
 u"""
-    PyScanFCS
+PyScanFCS
 
-    Module doc
+Module doc
 
-    (C) 2012 Paul Müller
+(C) 2012 Paul Müller
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License 
-    along with this program. If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License 
+along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
+import os
+import platform
+import sys
+
 import matplotlib
 import multipletau
 import numpy
-import os
-import platform
-import pyfits
+import astropy
 import scipy
-import sys
-
-try:
-    import wx
-except:
-    pass
+import wx
 
 # The icon file was created with
 # img2py -i -n Main PyScanFCS_icon.png icon.py
@@ -39,17 +36,17 @@ try:
     from . import icon
 except:
     pass
-    
+
 from . import uilayer
 
 
 def GetLocationOfFile(filename):
     dirname = os.path.dirname(os.path.abspath(__file__))
     locations = [
-                    dirname+"/../",
-                    dirname+"/../pyscanfcs_doc/",
-                    dirname+"/../doc/",
-                ]
+        dirname + "/../",
+        dirname + "/../pyscanfcs_doc/",
+        dirname + "/../doc/",
+    ]
 
     for i in range(len(locations)):
         # check /usr/lib64/32 -> /usr/lib
@@ -57,7 +54,7 @@ def GetLocationOfFile(filename):
             if dirname.count(larch):
                 locations.append(locations[i].replace(larch, "lib", 1))
 
-    ## freezed binaries:
+    # freezed binaries:
     if hasattr(sys, 'frozen'):
         try:
             adir = sys._MEIPASS + "/doc/"
@@ -65,7 +62,7 @@ def GetLocationOfFile(filename):
             adir = "./"
         locations.append(os.path.realpath(adir))
     for loc in locations:
-        thechl = os.path.join(loc,filename)
+        thechl = os.path.join(loc, filename)
         if os.path.exists(thechl):
             return thechl
             break
@@ -73,14 +70,13 @@ def GetLocationOfFile(filename):
     return None
 
 
-def GetLocationOfChangeLog(filename = "ChangeLog.txt"):
+def GetLocationOfChangeLog(filename="ChangeLog.txt"):
     return GetLocationOfFile(filename)
 
 
-def GetLocationOfDocumentation(filename = "PyScanFCS_doc.pdf"):
+def GetLocationOfDocumentation(filename="PyScanFCS_doc.pdf"):
     """ Returns the location of the documentation if there is any."""
     return GetLocationOfFile(filename)
-
 
 
 def description():
@@ -106,10 +102,10 @@ def info(version):
         texta = textwin
     else:
         texta = textlin
-    one = "    PyScanFCS version "+version+"\n\n"
+    one = "    PyScanFCS version " + version + "\n\n"
     lizenz = ""
     for line in licence().splitlines():
-        lizenz += "    "+line+"\n"
+        lizenz += "    " + line + "\n"
     ret = one + lizenz + texta
     return ret
 
@@ -144,18 +140,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 def SoftwareUsed():
     """ Return some Information about the software used for this program """
-    text= "Python "+sys.version+\
-           "\n\nModules:"+\
-           "\n - matplotlib "+matplotlib.__version__+\
-           "\n - multipletau "+multipletau.__version__+\
-           "\n - NumPy "+numpy.__version__+\
-           "\n - PyFITS "+pyfits.__version__+\
-           "\n - SciPy "+scipy.__version__+\
-           "\n - uilayer "+uilayer.__version__+\
-           "\n - wxPython "+wx.__version__
+    text = "Python " + sys.version +\
+           "\n\nModules:" +\
+           "\n - Astropy " + astropy.__version__ +\
+           "\n - matplotlib " + matplotlib.__version__ +\
+           "\n - multipletau " + multipletau.__version__ +\
+           "\n - NumPy " + numpy.__version__ +\
+           "\n - SciPy " + scipy.__version__ +\
+           "\n - uilayer " + uilayer.__version__ +\
+           "\n - wxPython " + wx.__version__
     if hasattr(sys, 'frozen'):
         pyinst = "\n\nThis executable has been created using PyInstaller."
-        text = text+pyinst
+        text = text + pyinst
     return text
 
 
@@ -171,7 +167,7 @@ StaticChangeLog = GetLocationOfChangeLog(ChangeLog)
 try:
     clfile = open(StaticChangeLog, 'r')
     __version__ = clfile.readline().strip()
-    clfile.close()     
+    clfile.close()
 except:
     __version__ = "0.0.0-unknown"
 
