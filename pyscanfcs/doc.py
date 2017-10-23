@@ -38,7 +38,7 @@ except:
     pass
 
 from . import uilayer
-
+from ._version import version as __version__
 
 def GetLocationOfFile(filename):
     dirname = os.path.dirname(os.path.abspath(__file__))
@@ -161,15 +161,6 @@ HomePage = "http://pyscanfcs.craban.de/"
 # Changelog filename
 ChangeLog = "ChangeLog.txt"
 StaticChangeLog = GetLocationOfChangeLog(ChangeLog)
-
-
-# Check if we can extract the version
-try:
-    clfile = open(StaticChangeLog, 'r')
-    __version__ = clfile.readline().strip()
-    clfile.close()
-except:
-    __version__ = "0.0.0-unknown"
 
 
 # Github homepage

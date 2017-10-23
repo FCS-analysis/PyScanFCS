@@ -3,6 +3,8 @@
 # python setup.py sdist
 from setuptools import setup, Extension
 from Cython.Distutils import build_ext
+import sys
+
 import numpy as np
 
 from os.path import join, dirname, realpath, exists
@@ -24,17 +26,6 @@ if not exists(Documentation):
     #testfile = urllib.URLopener()
     urllib.urlretrieve(webdoc, Documentation)
 
-# Get the version of PyCorrFit from the Changelog.txt
-StaticChangeLog = join(dirname(realpath(__file__)), "ChangeLog.txt")
-try:
-    clfile = open(StaticChangeLog, 'r')
-    version = clfile.readline().strip()
-    clfile.close()     
-except:
-    warn("Could not find 'ChangeLog.txt'. PyScanFCS version is unknown.")
-    version = "0.0.0-unknown"
-
-
 EXTENSIONS = [Extension("pyscanfcs.SFCSnumeric",
                         ["pyscanfcs/SFCSnumeric.pyx"],
                         libraries=[],
@@ -43,7 +34,8 @@ EXTENSIONS = [Extension("pyscanfcs.SFCSnumeric",
               ]
 
 name='pyscanfcs'
-
+sys.path.insert(0, realpath(dirname(__file__))+"/"+name)
+from _version import version
 
 setup(
     name=name,

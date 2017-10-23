@@ -63,3 +63,4 @@ nosetests.xml
 
 .env
 *.c
+_version_save.py

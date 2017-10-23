@@ -31,6 +31,7 @@ import warnings
 
 from . import doc
 from .SFCSnumeric import *
+from ._version import version as __version__
 
 try:
     from .main import Main
@@ -39,7 +40,5 @@ except ImportError:
     warnings.warn("Frontend of `pyscanfcs` will not be available." +
                   " Reason: {}.".format(sys.exc_info()[1]))
 
-
-__version__ = doc.__version__
 __author__ = u"Paul Müller"
 __license__ = "GPL v2"

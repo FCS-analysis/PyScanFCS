@@ -24,13 +24,11 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 
-from . import doc
 from . import main
 from . import uilayer
 from . import SFCSnumeric
+from ._version import version
 
-# VERSION
-version = doc.__version__
 __version__ = version
 
 main.Main()
