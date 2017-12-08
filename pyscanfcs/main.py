@@ -500,10 +500,10 @@ class MyFrame(wx.Frame):
         [(x1, x2), (y1, y2)] = coords
 
         # Convert times to positions in 2D array
-        x1 = np.floor(x1 / self.t_linescan)
-        x2 = np.ceil(x2 / self.t_linescan)
-        y1 = np.floor(y1 / self.t_bin)
-        y2 = np.ceil(y2 / self.t_bin)
+        x1 = int(np.floor(x1 / self.t_linescan))
+        x2 = int(np.ceil(x2 / self.t_linescan))
+        y1 = int(np.floor(y1 / self.t_bin))
+        y2 = int(np.ceil(y2 / self.t_bin))
         bins_in_col = y2 - y1
         bins_in_row = x2 - x1
 

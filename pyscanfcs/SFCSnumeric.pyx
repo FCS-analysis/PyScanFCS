@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-""" Numerical algorithms for perpendicular line scanning FCS
-    
+"""Numerical algorithms for perpendicular line scanning FCS
+
 (C) 2012 Paul Müller
 
 This program is free software; you can redistribute it and/or modify
@@ -13,13 +13,13 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License 
+You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
 from __future__ import division
 import sys
-import numpy as np                  # NumPy
-from scipy import optimize as spopt # For least squares fit
+import numpy as np  # NumPy
+from scipy import optimize as spopt  # For least squares fit
 import tempfile
 import warnings
 
@@ -42,26 +42,21 @@ ctypedef np.uint16_t DTYPEuint16_t
 ctypedef np.float32_t DTYPEfloat32_t
 
 # Negative indices are checked for and handled correctly. The code is
-# explicitly coded so that it doesn’t use negative indices, and it (hopefully) 
-# always access within bounds. We can add a decorator to disable bounds checking:
+# explicitly coded so that it doesn’t use negative indices, and it (hopefully)
+# always access within bounds. We can add a decorator to disable bounds
+# checking:
 cimport cython
-#@cython.boundscheck(False) # turn of bounds-checking for entire function
-#def function():
-
-# Vector to use as a list
-#from libcpp.vector cimport vector
-
 
 __all__ = ["BinPhotonEvents", "FitExp", "FitGaussian", "OpenDat",
            "ReduceTrace"]
 
 
 @cython.cdivision(True)
-@cython.boundscheck(False) # turn of bounds-checking for entire function
+@cython.boundscheck(False)  # turn of bounds-checking for entire function
 def BinPhotonEvents(np.ndarray[DTYPEuint32_t] data, double t_bin,
                     binshift=None, outfile=None, outdtype=DTYPEuint16,
                     callback=None, cb_kwargs={}):
-    """ Convert photon arrival times to a binned trace
+    """Convert photon arrival times to a binned trace
 
     Parameters
     ----------
@@ -81,19 +76,19 @@ def BinPhotonEvents(np.ndarray[DTYPEuint32_t] data, double t_bin,
         Number of function calls: 100
     cb_kwargs : dict, optional
         Keyword arguments for `callback` (e.g. "pid" of process).
-    
-    
+
+
     Returns
     -------
     filename : str
         The filename of the binned data.
-        
-    Bin all photon arrival times in a numpy.uint32 array *data*, using 
+
+    Bin all photon arrival times in a numpy.uint32 array *data*, using
         the binning time float *t_bin* and saving the intensity trace as
-        the file *filename*. *dlg* is a python object that suports 
+        the file *filename*. *dlg* is a python object that supports
         dlg.Update, like a progress dialog.
-    
-    
+
+
     Notes
     -----
     The photon stram `data` is created by a program called `Photon.exe`
@@ -101,49 +96,49 @@ def BinPhotonEvents(np.ndarray[DTYPEuint32_t] data, double t_bin,
     """
     cdef int N = len(data)
     BinData = []
-    cdef double time_c = 0                 # time counter
-    cdef int phot_c = 0                        # photon counter
+    cdef double time_c = 0  # time counter
+    cdef int phot_c = 0  # photon counter
     cdef int maxphot = 0
     cdef int j, i, emptybins, bin
 
-    dtype=np.dtype(outdtype)
+    dtype = np.dtype(outdtype)
 
     if outfile is None:
         outfile = tempfile.mktemp(suffix=".bin")
 
-    #print("Creating file {} ({})".format(outfile, outdtype.__name__))
+    # print("Creating file {} ({})".format(outfile, outdtype.__name__))
 
     NewFile = open(outfile, 'wb')
-    
+
     # Add number of empty bins to beginning of file
     if binshift is not None:
         NewFile.write(outdtype(np.zeros(binshift)))
-        
+
     TempTrace = list()
 
-    Nperc = int(np.floor(N/100))
+    Nperc = int(np.floor(N / 100))
 
     for j in range(100):
         percent = str(j)
-        
+
         for i in range(Nperc):
-            i = i+Nperc*j
+            i = i + Nperc * j
             time_c += data[i]
 
             if time_c >= t_bin:
                 # Append counted photons and
                 # reset counters
-                #NewFile.write(outdtype(phot_c))
+                # NewFile.write(outdtype(phot_c))
                 TempTrace.append(phot_c)
-                time_c -=  t_bin
+                time_c -= t_bin
                 phot_c = 0
                 # Empty bins between this and next event:
-                emptybins = int(time_c/t_bin)
-                TempTrace += emptybins*[0]
-                time_c -=  emptybins*t_bin
+                emptybins = int(time_c / t_bin)
+                TempTrace += emptybins * [0]
+                time_c -= emptybins * t_bin
                 # Equivalent to:
                 # time_c = int(time_c)%int(t_bin)
-            phot_c +=  1
+            phot_c += 1
         NewFile.write(outdtype(TempTrace))
         TempTrace = list()
 
@@ -153,24 +148,23 @@ def BinPhotonEvents(np.ndarray[DTYPEuint32_t] data, double t_bin,
                 warnings.warn("Aborted by user.")
                 return outfile
 
-
     # Now write the rest:
-    for i in range(Nperc*100,N-1):
+    for i in range(Nperc * 100, N - 1):
         time_c += data[i]
         if time_c >= t_bin:
             # Append counted photons and
             # reset counters
-            #NewFile.write(outdtype(phot_c))
+            # NewFile.write(outdtype(phot_c))
             TempTrace.append(phot_c)
-            time_c -=  t_bin
+            time_c -= t_bin
             phot_c = 0
             # Empty bins between this and next event:
-            emptybins = int(time_c/t_bin)
-            TempTrace += emptybins*[0]
-            time_c -=  emptybins*t_bin
+            emptybins = int(time_c / t_bin)
+            TempTrace += emptybins * [0]
+            time_c -= emptybins * t_bin
             # Equivalent to:
             # time_c = int(time_c)%int(t_bin)
-        phot_c +=  1
+        phot_c += 1
     NewFile.write(outdtype(TempTrace))
     del TempTrace
     NewFile.close()
@@ -178,34 +172,35 @@ def BinPhotonEvents(np.ndarray[DTYPEuint32_t] data, double t_bin,
 
 
 def FitExp(times, trace):
-    """ Fit an exponential function to the given trace.
-    
-    
+    """Fit an exponential function to the given trace.
+
+
     Parameters
     ----------
     times : ndarray of length N
         x-values
-    
+
     trace : ndarray of length N
         y-values
-    
-    
+
+
     Returns
     -------
         parameters, function
     """
     # Set starting parameters for exponential fit
-    expfunc = lambda p, x: p[0]*np.exp(-x/p[1])
+    def expfunc(p, x): return p[0] * np.exp(-x / p[1])
     # parms = [ampl, decaytime]
     parms = np.zeros(2, dtype=np.float32)
     ltr = len(trace)
-    border = np.int(np.ceil(ltr/50.))
-    parms[0] = 1.*trace[:border].mean()
-    parms[1] = times[-1]/np.log(parms[0])
+    border = np.int(np.ceil(ltr / 50.))
+    parms[0] = 1. * trace[:border].mean()
+    parms[1] = times[-1] / np.log(parms[0])
     # Fit function is an exponential
     # Function to minimize via least squares
     # f_min = lambda p, x: expfunc(np.abs(p), x) - trace
-    def f_min(p,x):
+
+    def f_min(p, x):
         p = np.abs(p)
         return expfunc(np.abs(p), x) - trace
     # Least squares
@@ -219,22 +214,27 @@ def FitGaussian(amplitudes, frequencies,  argmax):
     parms = np.zeros(3, dtype=np.float32)
     parms[0] = frequencies[argmax]
     parms[1] = amplitudes[argmax]
-    parms[2] = abs(frequencies[1]-frequencies[2])*2
+    parms[2] = abs(frequencies[1] - frequencies[2]) * 2
     # Fit function is a gaussian
-    gauss = lambda p, x: np.exp(-((x-p[0])/p[2])**2 / 2) * p[1]/(p[2]*np.sqrt(2*np.pi))
+
+    def gauss(p, x):
+        expnt = np.exp(-((x - p[0]) / p[2]) ** 2 / 2)
+        norm = p[1] / (p[2] * np.sqrt(2 * np.pi))
+        return expnt * norm
+
     # Function to minimize via least squares
-    f_min = lambda p, x: gauss(p, x) - amplitudes
+    def f_min(p, x):
+        return gauss(p, x) - amplitudes
     # Least squares
     popt, chi = spopt.leastsq(f_min, parms[:], args=(frequencies))
     return np.abs(popt), gauss
 
 
-
 @cython.cdivision(True)
-@cython.boundscheck(False) # turn of bounds-checking for entire function
+@cython.boundscheck(False)  # turn of bounds-checking for entire function
 def OpenDat(filename, callback=None, cb_kwargs={}):
-    """ Load "Flex02-12D" correlator.com files
-    
+    """Load "Flex02-12D" correlator.com files
+
     We open a .dat file as produced by the "Flex02-12D" correlator in photon
     history recorder mode.
     The file contains the time differences between single photon events.
@@ -249,7 +249,7 @@ def OpenDat(filename, callback=None, cb_kwargs={}):
         Number of function calls: 3
     cb_kwargs : dict, optional
         Keyword arguments for `callback` (e.g. "pid" of process).
-    
+
     Returns
     -------
     system_clock, datData
@@ -266,11 +266,11 @@ def OpenDat(filename, callback=None, cb_kwargs={}):
      2. The first byte identifies the format of the file 8 : 8 bit, 16: 16 bit
      3. The second byte identifies the system clock. 60MHz.
      4. The time unit is 1/system clock.
-     5. 16 bit format. Each WORD (2 bytes) represents a photon event, 
-        time = WORD/system clock, unless the value is 0xFFFF, in which case, 
+     5. 16 bit format. Each WORD (2 bytes) represents a photon event,
+        time = WORD/system clock, unless the value is 0xFFFF, in which case,
         the following four bytes represent a photon event.
-     6. 8 bit format: Each BYTE represents a photon event unless the value is 
-        0xFF, in which case, the BYTE means 255 clock ticks passed without a 
+     6. 8 bit format: Each BYTE represents a photon event unless the value is
+        0xFF, in which case, the BYTE means 255 clock ticks passed without a
         photon event. For example 0A 0B FF 08 means there are three
         photon events. The time series are 0x0A+1, 0x0B+1, 0xFF+8+1.
 
@@ -294,7 +294,7 @@ def OpenDat(filename, callback=None, cb_kwargs={}):
         # (There is an utility to convert data to 32bit)
         datData = np.fromfile(File, dtype="uint32", count=-1)
         File.close()
-        return  system_clock, datData
+        return system_clock, datData
     elif fformat == 16:
         pass
     else:
@@ -315,17 +315,18 @@ def OpenDat(filename, callback=None, cb_kwargs={}):
         if ret is not None:
             return None, None
 
-    occurences = np.where(Data == 65535)[0]
-    N = len(occurences)
-    
+    occurrences = np.where(Data == 65535)[0]
+    N = len(occurrences)
+
     if callback is not None:
         ret = callback(**cb_kwargs)
         if ret is not None:
             return None, None
-            
+
     # Make a 32 bit array
     datData = np.uint32(Data)
-    datData[occurences] = np.uint32(Data[occurences+1]) + np.uint32(Data[occurences+2])*65536
+    datData[occurrences] = np.uint32(
+        Data[occurrences + 1]) + np.uint32(Data[occurrences + 2]) * 65536
 
     if callback is not None:
         ret = callback(**cb_kwargs)
@@ -333,10 +334,10 @@ def OpenDat(filename, callback=None, cb_kwargs={}):
             return None, None
 
     # Now delete the zeros
-    zeroids = np.zeros(N*2)
-    zeroids[::2] = occurences + 1
-    zeroids[1::2] = occurences + 2
-    
+    zeroids = np.zeros(N * 2)
+    zeroids[::2] = occurrences + 1
+    zeroids[1::2] = occurrences + 2
+
     datData = np.delete(datData, zeroids)
 
     del Data
@@ -344,12 +345,12 @@ def OpenDat(filename, callback=None, cb_kwargs={}):
 
 
 def ReduceTrace(trace, deltat, length):
-    """ Shorten an array by averaging.
-    
+    """Shorten an array by averaging.
+
     Given a `trace` of length `len(trace)`, compute a trace of
-    length smaller than `length` by averaging. 
-    
-    
+    length smaller than `length` by averaging.
+
+
     Parameters
     ----------
     trace : ndarray, shape (N)
@@ -375,9 +376,6 @@ def ReduceTrace(trace, deltat, length):
         step += 1
     # Return 2d array with times
     T = np.zeros((len(trace), 2))
-    T[:,1] = trace/deltat/1e3 # in kHz
-    T[:,0] = np.arange(len(trace))*deltat*2**step
+    T[:, 1] = trace / deltat / 1e3  # in kHz
+    T[:, 0] = np.arange(len(trace)) * deltat * 2**step
     return T
-
-
-

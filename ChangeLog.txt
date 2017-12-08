@@ -1,5 +1,8 @@
 0.2.4
  - move from deprecated pyfits to astropy (#10)
+ - support numpy 1.13
+ - fix two spelling mistakes (#11)
+ - Cython code cleanup using flake8
 0.2.3
  - New tool to create artificial .dat files for testing
  - A couple of minor bug fixes
