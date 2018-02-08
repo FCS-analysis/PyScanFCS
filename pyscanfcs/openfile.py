@@ -3,10 +3,8 @@
 """
 from __future__ import division, print_function
 
-#import numpy as np
-#import os
+import astropy.io.fits
 import tifffile
-import pyfits
 
 from . import sfcs_alg
 
@@ -34,7 +32,7 @@ def openFITS(fname, callback=None):
     """ load .fits files """
     info = dict()
 
-    fits = pyfits.open(fname)
+    fits = astropy.io.fits.open(fname)
     series = fits[0]
     head = series.header
 
