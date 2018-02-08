@@ -1,0 +1,81 @@
+clone_depth: 256
+build: off
+notifications:
+  - provider: Email
+    on_build_success: false
+    on_build_failure: false
+    on_build_status_changed: false
+environment:
+  matrix:
+    - PYTHON: "C:\\Python27"
+      PYTHON_VERSION: "2.7.x"
+      PYTHON_ARCH: "32"
+    - PYTHON: "C:\\Python27-x64"
+      PYTHON_VERSION: "2.7.x"
+      PYTHON_ARCH: "64"
+
+
+init:
+  - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
+
+install:
+  # Install InnoSetup and add to path
+  # Copied from
+  # https://github.com/Phonations/Joker/blob/master/appveyor.yml
+  - appveyor-retry choco install -y InnoSetup
+
+  # Determine platform
+  - '%PYTHON%/python -c "import platform; print platform.uname()"'
+  - '%PYTHON%/python -c "import sys; print sys.maxint"'
+  - '%PYTHON%/python -c "import sys; print sys.version"'
+
+  # Prepend newly installed Python to the PATH of this build (this cannot be
+  # done from inside the powershell script as it would require to restart
+  # the parent CMD process).
+  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+
+  # Check that we have the expected version and architecture for Python
+  - "python --version"
+  - "pip install ."
+  - "pip install pyinstaller==3.3.1"
+
+  # Show the installed packages
+  - "pip freeze"
+
+build: off
+
+test_script:
+  - "pip install coverage"
+  - "pip install codecov"
+  - "coverage run --source=pyscanfcs ./setup.py test"
+  - "coverage report -m"
+  - "codecov || exit 0"
+
+after_test:
+  # If tests are successful, create a whl package for the project.
+  - "python setup.py bdist_wheel"
+  - ps: "ls dist"
+  # Run pyinstaller
+  # This will create the "win7_innosetup.iss" file
+  - "pyinstaller -y --log-level=WARN .appveyor\\PyScanFCS_win7.spec"
+  # Create InnoSetup installers
+  # Set InnoSetup path here, because Cython complained about it.
+  - set PATH=%PATH%;"C:\\Program Files (x86)\\Inno Setup 5"
+  - iscc /Q win7_innosetup.iss
+
+artifacts:
+  # Archive the generated wheel package in the ci.appveyor.com build report.
+  - path: dist\*
+  # InnoSetup files
+  - path: Output\*
+
+deploy:
+  provider: GitHub
+  auth_token:
+    secure: TODO_not_set_yet
+  artifact: /.*\.exe/, /.*\.whl/
+  draft: true
+  prerelease: true
+  on:
+    branch: master                 # release from master branch only
+    appveyor_repo_tag: true        # deploy on tag push only
