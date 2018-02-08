@@ -76,10 +76,7 @@ setup(
         "SciPy >= 0.8.0",
         ],
     setup_requires=['cython', 'numpy', 'pytest-runner'],
-    tests_require=[
-        "pathlib",
-        "pytest",
-        ],
+    tests_require=["pathlib", "pytest"],
     keywords=["fcs", "fluorescence correlation spectroscopy",
               "perpendicular line scanning", "multiple-tau"],
     classifiers= [

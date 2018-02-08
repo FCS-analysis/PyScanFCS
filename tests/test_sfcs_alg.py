@@ -9,7 +9,6 @@ import numpy as np
 from pyscanfcs import sfcs_alg
 
 
-
 def test_open_dat():
     here = pathlib.Path(__file__).parent
     f16 = here / "data/n2000_7.0ms_16bit.dat"
@@ -19,7 +18,7 @@ def test_open_dat():
     assert r16 == 60
     assert r32 == 60
     assert np.all(d16==d32)
-    assert np.all(d16[-5:] == np.array([    1,     1, 21420, 21418, 21420]))
+    assert np.all(d16[-5:] == np.array([1, 1, 21420, 21418, 21420]))
 
 
 if __name__ == "__main__":

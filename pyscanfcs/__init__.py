@@ -24,13 +24,11 @@
     You should have received a copy of the GNU General Public License 
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 """
-
-import multipletau
 import sys
 import warnings
 
-from . import doc
-from .sfcs_alg import *
+from . import sfcs_alg
+from . import openfile
 from ._version import version as __version__
 
 try:
