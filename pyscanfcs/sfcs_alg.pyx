@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Numerical algorithms for perpendicular line scanning FCS
+"""Algorithms for perpendicular line scanning FCS
 
 (C) 2012 Paul Müller
 

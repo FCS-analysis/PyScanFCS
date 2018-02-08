@@ -76,7 +76,7 @@ from . import doc      # Documentation/some texts
 from . import edclasses
 from . import misc
 from . import openfile
-from . import SFCSnumeric
+from . import sfcs_alg
 from . import uilayer
 
 
@@ -279,7 +279,7 @@ maximum. \n The data achieved will automatically be updated within the main prog
                 # Get gaussian function and optimal parameters
                 ## popt = [freq, ampl, sigma]
                 ## gauss(popt, frequencies)
-                #popt, gauss = SFCSnumeric.FitGaussian(amplitudes, frequencies, argmax)
+                #popt, gauss = sfcs_alg.FitGaussian(amplitudes, frequencies, argmax)
                 #self.pnt.t_linescan = 1./popt[0]
                 #lenplot = 1000
                 #ids_plot = np.linspace(start,stop,lenplot, endpoint=False)
@@ -421,7 +421,7 @@ class MyFrame(wx.Frame):
 
         print("Creating file {} ({})".format(outfile, outdtype.__name__))
 
-        SFCSnumeric.BinPhotonEvents(Data, t_bin, binshift=eb,
+        sfcs_alg.BinPhotonEvents(Data, t_bin, binshift=eb,
                                     outfile=outfile,
                                     outdtype=outdtype,
                                     callback=wxdlg.Iterate)
@@ -456,7 +456,7 @@ class MyFrame(wx.Frame):
 
         print("Creating file {} ({})".format(outfile, outdtype.__name__))
 
-        SFCSnumeric.BinPhotonEvents(Data, t_bin, binshift=eb,
+        sfcs_alg.BinPhotonEvents(Data, t_bin, binshift=eb,
                                     outfile=outfile,
                                     outdtype=outdtype,
                                     callback=wxdlg.Iterate)
@@ -551,7 +551,7 @@ class MyFrame(wx.Frame):
 
             # Countrate correction:
             x = np.linspace(-num_next_max, +num_next_max, len(detprof))
-            popt, gauss = SFCSnumeric.FitGaussian(
+            popt, gauss = sfcs_alg.FitGaussian(
                 detprof, x, np.argmax(detprof))
             # Time in bins, that the focus effectively was inside the membrane:
             # Go two sigmas in each direction. This way we have an averaged
@@ -603,11 +603,11 @@ class MyFrame(wx.Frame):
             # F_c = F_i/(f_0*exp(-ti/(2*t_0))) + f_0*(1-f_0*exp(-t_i/(2*t_0)))
             # We don't want to subtract an offset from the trace?
             # The offset is actually background signal.
-            popt, expfunc = SFCSnumeric.FitExp(np.arange(len(traceData)),
+            popt, expfunc = sfcs_alg.FitExp(np.arange(len(traceData)),
                                                traceData)
             [f_0, t_0] = popt
 
-            newtrace = SFCSnumeric.ReduceTrace(traceData, bintime,
+            newtrace = sfcs_alg.ReduceTrace(traceData, bintime,
                                                length=500)
 
             # Full trace:
@@ -618,11 +618,11 @@ class MyFrame(wx.Frame):
 
             # TODO:
             # Does this do anything?
-            newtracecorr = SFCSnumeric.ReduceTrace(traceData, bintime,
+            newtracecorr = sfcs_alg.ReduceTrace(traceData, bintime,
                                                    length=500)
 
             fitfuncdata = expfunc(popt, np.arange(ltrb))
-            newtracefit = SFCSnumeric.ReduceTrace(fitfuncdata,
+            newtracefit = sfcs_alg.ReduceTrace(fitfuncdata,
                                                   bintime, length=500)
 
             # Bleaching profile to temporary file
@@ -1227,7 +1227,7 @@ class MyFrame(wx.Frame):
                 # self.TraceCorrectionFactor is 1.0, if the user
                 # did not check the "countrate filter"
                 usedTrace = usedTrace * self.TraceCorrectionFactor
-                trace = SFCSnumeric.ReduceTrace(usedTrace,
+                trace = sfcs_alg.ReduceTrace(usedTrace,
                                                 bintime, length=700)
                 # Save Correlation function
                 csvfile = filenamedummy + "_" + \
@@ -1255,9 +1255,9 @@ class MyFrame(wx.Frame):
                 # did not check the "countrate filter"
                 usedTa = usedTa * self.TraceCorrectionFactor
                 usedTb = usedTb * self.TraceCorrectionFactor
-                tra = SFCSnumeric.ReduceTrace(usedTa,
+                tra = sfcs_alg.ReduceTrace(usedTa,
                                               bintime, length=700)
-                trb = SFCSnumeric.ReduceTrace(usedTb,
+                trb = sfcs_alg.ReduceTrace(usedTb,
                                               bintime, length=700)
                 # In order to keep trace1 trace1 and trace2 trace2, we
                 # need to swap here:
@@ -1329,7 +1329,7 @@ class MyFrame(wx.Frame):
 
                     wxdlg = uilayer.wxdlg(parent=self, steps=3,
                                           title="Importing dat file...")
-                    datData2 = SFCSnumeric.OpenDat(
+                    datData2 = sfcs_alg.OpenDat(
                         path, callback=wxdlg.Iterate)[1]
                     wxdlg.Finalize()
 
@@ -1761,7 +1761,7 @@ class MyFrame(wx.Frame):
 
         wxdlg = uilayer.wxdlg(parent=self, steps=3,
                               title="Importing dat file...")
-        self.system_clock, self.datData = SFCSnumeric.OpenDat(
+        self.system_clock, self.datData = sfcs_alg.OpenDat(
             filename, callback=wxdlg.Iterate)
         wxdlg.Finalize()
 

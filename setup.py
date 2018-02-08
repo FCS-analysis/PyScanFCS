@@ -1,57 +1,72 @@
 #!/usr/bin/env python
-# To create a distribution package for pip or easy-install:
-# python setup.py sdist
-from setuptools import setup, Extension
-from Cython.Distutils import build_ext
+# -*- coding: utf-8 -*-
+from __future__ import print_function
+from setuptools import setup, Extension, find_packages
 import sys
 
-import numpy as np
-
 from os.path import join, dirname, realpath, exists
-from warnings import warn
 
 # The next three lines are necessary for setup.py install to include
-# ChangeLog and Documentation of PyCorrFit
+# ChangeLog and Documentation of PyScanFCS
 from distutils.command.install import INSTALL_SCHEMES
 for scheme in INSTALL_SCHEMES.values():
     scheme['data'] = scheme['purelib']
 
+# We don't need cython if a .whl package is available.
+# Try to import cython and throw a warning if it does not work.
+try:
+    import numpy as np
+except ImportError:
+    print("NumPy not available. Building extensions "+
+          "with this setup script will not work:", sys.exc_info())
+    extensions = []
+else:
+    extensions = [Extension("pyscanfcs.sfcs_alg",
+                            sources=["pyscanfcs/sfcs_alg.pyx"],
+                            include_dirs=[np.get_include()]
+                            )
+                 ]
 
-# Download documentation if it was not compiled
-Documentation = join(dirname(realpath(__file__)), "doc/PyScanFCS_doc.pdf")
-webdoc = "https://github.com/FCS-analysis/PyScanFCS/wiki/PyScanFCS_doc.pdf"
-if not exists(Documentation):
-    print "Downloading {} from {}".format(Documentation, webdoc)
+try:
     import urllib
-    #testfile = urllib.URLopener()
-    urllib.urlretrieve(webdoc, Documentation)
+except ImportError:
+    pass
+else:
+    # Download documentation if it was not compiled
+    Documentation = join(dirname(realpath(__file__)), "doc/PyScanFCS_doc.pdf")
+    webdoc = "https://github.com/FCS-analysis/PyScanFCS/wiki/PyScanFCS_doc.pdf"
+    if not exists(Documentation):
+        print("Downloading {} from {}".format(Documentation, webdoc))
+        import urllib
+        #testfile = urllib.URLopener()
+        urllib.urlretrieve(webdoc, Documentation)
 
-EXTENSIONS = [Extension("pyscanfcs.SFCSnumeric",
-                        ["pyscanfcs/SFCSnumeric.pyx"],
-                        libraries=[],
-                        include_dirs=[np.get_include()]
-                        )
-              ]
 
+author = u"Paul Müller"
+authors = [author]
+description = 'Scientific tool for perpendicular line scanning FCS.'
 name='pyscanfcs'
+year = "2012"
+
 sys.path.insert(0, realpath(dirname(__file__))+"/"+name)
-from _version import version
+try:
+    from _version import version
+except:
+    version = "unknown"
 
 setup(
     name=name,
-    author='Paul Mueller',
-    author_email='paul.mueller@biotec.tu-dresden.de',
+    author=author,
+    author_email='dev@craban.de',
     url='https://github.com/FCS-analysis/PyScanFCS',
     version=version,
-    packages=[name],
+    packages=find_packages(include=(name+"*",)),
     package_dir={name: name},
-    data_files=[('pyscanfcs_doc', ['ChangeLog.txt', 'doc/PyScanFCS_doc.pdf'])],
     license="GPL v2",
-    description='Scientific tool for perpendicular line scanning FCS.',
-    long_description=open(join(dirname(__file__), 'Readme.txt')).read(),
-    cmdclass={"build_ext": build_ext},
+    description=description,
+    long_description=open('README.rst').read() if exists('README.rst') else '',
     include_package_data=True,
-    ext_modules=EXTENSIONS,
+    ext_modules = extensions,
     install_requires=[
         "astropy",
         "cython",
@@ -75,4 +90,3 @@ setup(
        "gui_scripts": ["{name:s}={name:s}:Main".format(**{"name":name})]
        }
     )
-

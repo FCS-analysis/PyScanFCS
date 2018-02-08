@@ -8,7 +8,7 @@ from __future__ import division, print_function
 import tifffile
 import pyfits
 
-from . import SFCSnumeric
+from . import sfcs_alg
 
 
 def openAny(fname, callback=None):
@@ -22,7 +22,7 @@ def openAny(fname, callback=None):
 
 
 def openDAT(fname, callback=None):
-    system_clock, intensity_data = SFCSnumeric.OpenDat(fname, callback)
+    system_clock, intensity_data = sfcs_alg.OpenDat(fname, callback)
     info = dict()
     info["data_stream"] = intensity_data
     info["system_clock"] = system_clock

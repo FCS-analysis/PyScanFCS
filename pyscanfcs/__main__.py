@@ -25,8 +25,6 @@
 """
 
 from . import main
-from . import uilayer
-from . import SFCSnumeric
 from ._version import version
 
 __version__ = version
