@@ -42,8 +42,6 @@ install:
   # Show the installed packages
   - "pip freeze"
 
-build: off
-
 test_script:
   - "pip install coverage"
   - "pip install codecov"
