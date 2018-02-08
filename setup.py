@@ -69,16 +69,19 @@ setup(
     ext_modules = extensions,
     install_requires=[
         "astropy",
-        "cython",
         "tifffile",
         "matplotlib >= 1.1.0",
         "multipletau >= 0.1.4",
         "NumPy >= 1.5.1",
         "SciPy >= 0.8.0",
-        "wxPython >= 2.8.10.1"
         ],
-    keywords=["fcs", "fluorescence", "correlation", "spectroscopy",
-              "perpendicular", "scanning", "multiple", "tau"],
+    setup_requires=['cython', 'numpy', 'pytest-runner'],
+    tests_require=[
+        "pathlib",
+        "pytest",
+        ],
+    keywords=["fcs", "fluorescence correlation spectroscopy",
+              "perpendicular line scanning", "multiple-tau"],
     classifiers= [
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 2.7',
