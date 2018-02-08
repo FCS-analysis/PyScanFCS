@@ -69,11 +69,12 @@ setup(
     ext_modules = extensions,
     install_requires=[
         "astropy",
-        "tifffile",
         "matplotlib >= 1.1.0",
         "multipletau >= 0.1.4",
-        "NumPy >= 1.5.1",
-        "SciPy >= 0.8.0",
+        "numpy >= 1.5.1",
+        "scikit-image>=0.13.1",
+        "scipy >= 0.8.0",
+        # "wxpython",  # wxPython is not on PyPI
         ],
     setup_requires=['cython', 'numpy', 'pytest-runner'],
     tests_require=["pathlib", "pytest"],

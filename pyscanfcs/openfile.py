@@ -4,7 +4,7 @@
 from __future__ import division, print_function
 
 import astropy.io.fits
-import tifffile
+from skimage.external import tifffile
 
 from . import sfcs_alg
 
