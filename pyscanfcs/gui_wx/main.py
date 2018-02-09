@@ -20,7 +20,6 @@ if sys.version_info[0] == 2:
 
 import matplotlib
 matplotlib.use('WXAgg')
-
 import matplotlib.cm as cm              # Color maps for plotting
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_wxagg import \
@@ -30,30 +29,24 @@ from matplotlib.widgets import RectangleSelector
 from matplotlib.patches import Rectangle
 import matplotlib.pyplot as plt
 
-import multipletau
-
-import numpy as np                            # NumPy
 import astropy.io.fits as pyfits
+import multipletau
+import numpy as np
 from scipy.fftpack import fft
 from scipy.fftpack import fftfreq
-
-
-import wx                               # GUI interface wxPython
-from wx.lib.agw import floatspin        # Float numbers in spin fields
+import wx
+from wx.lib.agw import floatspin
 from wx.lib.scrolledpanel import ScrolledPanel
 
+from .. import fitting
+from .. import openfile
+from .. import sfcs_alg
+from .. import util
 
-
-
-# module import
-from . import doc      # Documentation/some texts
+from . import doc
 from . import edclasses
-from . import fitting
 from . import misc
-from . import openfile
-from . import sfcs_alg
 from . import uilayer
-from . import util
 
 
 

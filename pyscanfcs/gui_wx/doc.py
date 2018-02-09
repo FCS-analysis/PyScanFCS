@@ -38,7 +38,7 @@ except:
     pass
 
 from . import uilayer
-from ._version import version as __version__
+from .._version import version as __version__
 
 def GetLocationOfFile(filename):
     dirname = os.path.dirname(os.path.abspath(__file__))

@@ -23,12 +23,13 @@ from __future__ import print_function, division
 
 import codecs
 from distutils.version import LooseVersion  # For version checking
-import numpy as np
 import os
 import sys
 import tempfile
 import urllib2
 import webbrowser
+
+import numpy as np
 import wx.html
 import wx.lib.delayedresult as delayedresult
 
@@ -38,6 +39,7 @@ from . import doc                          # Documentation/some texts
 # img2py -i -n Main PyScanFCS_icon.png icon.py
 from . import icon                         # Contains the program icon
 from . import edclasses
+
 
 
 class UpdateDlg(wx.Frame):
