@@ -10,7 +10,7 @@ originating from the membrane itself must be separated from the signal of the
 surrounding medium for an FCS analysis. PyScanFCS interactively extracts the
 fluctuating fluorescence signal from such measurements and applies a multiple-tau
 algorithm. The obtained correlation curves can be evaluated using
-[PyCorrFit](https://github.com/FCS-analysis/PyCorrFit).
+`PyCorrFit <https://github.com/FCS-analysis/PyCorrFit>`__.
 
 Getting started
 ===============
