@@ -36,9 +36,9 @@ install:
 
   # Check that we have the expected version and architecture for Python
   - "python --version"
-  - "pip install ."
+  - "pip install cython"
   - "pip install pyinstaller==3.3.1"
-
+  - "pip install ."
   # Show the installed packages
   - "pip freeze"
 
