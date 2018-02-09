@@ -1,27 +1,10 @@
 # -*- coding: utf-8 -*-
-"""Algorithms for perpendicular line scanning FCS
-
-(C) 2012 Paul Müller
-
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program. If not, see <http://www.gnu.org/licenses/>.
-"""
 from __future__ import division
-import sys
-import numpy as np  # NumPy
-from scipy import optimize as spopt  # For least squares fit
+
 import tempfile
 import warnings
+
+import numpy as np
 
 # See cython documentation for following stuff
 # "cimport" is used to import special compile-time information
@@ -47,16 +30,20 @@ ctypedef np.float32_t DTYPEfloat32_t
 # checking:
 cimport cython
 
-__all__ = ["BinPhotonEvents", "FitExp", "FitGaussian", "OpenDat",
-           "ReduceTrace"]
+__all__ = ["bin_photon_events", "open_dat"]
 
 
 @cython.cdivision(True)
 @cython.boundscheck(False)  # turn of bounds-checking for entire function
-def BinPhotonEvents(np.ndarray[DTYPEuint32_t] data, double t_bin,
+def bin_photon_events(np.ndarray[DTYPEuint32_t] data, double t_bin,
                     binshift=None, outfile=None, outdtype=DTYPEuint16,
                     callback=None, cb_kwargs={}):
     """Convert photon arrival times to a binned trace
+
+    Bin all photon arrival times in a numpy.uint32 array *data*, using
+    the binning time float *t_bin* and saving the intensity trace as
+    the file *filename*. *dlg* is a python object that supports
+    dlg.Update, like a progress dialog.
 
     Parameters
     ----------
@@ -77,21 +64,14 @@ def BinPhotonEvents(np.ndarray[DTYPEuint32_t] data, double t_bin,
     cb_kwargs : dict, optional
         Keyword arguments for `callback` (e.g. "pid" of process).
 
-
     Returns
     -------
     filename : str
         The filename of the binned data.
 
-    Bin all photon arrival times in a numpy.uint32 array *data*, using
-        the binning time float *t_bin* and saving the intensity trace as
-        the file *filename*. *dlg* is a python object that supports
-        dlg.Update, like a progress dialog.
-
-
     Notes
     -----
-    The photon stram `data` is created by a program called `Photon.exe`
+    The photon stream `data` is created by a program called `Photon.exe`
     from correlator.com.
     """
     cdef int N = len(data)
@@ -114,7 +94,7 @@ def BinPhotonEvents(np.ndarray[DTYPEuint32_t] data, double t_bin,
     if binshift is not None:
         NewFile.write(outdtype(np.zeros(binshift)))
 
-    TempTrace = list()
+    TempTrace = []
 
     Nperc = int(np.floor(N / 100))
 
@@ -140,7 +120,7 @@ def BinPhotonEvents(np.ndarray[DTYPEuint32_t] data, double t_bin,
                 # time_c = int(time_c)%int(t_bin)
             phot_c += 1
         NewFile.write(outdtype(TempTrace))
-        TempTrace = list()
+        TempTrace = []
 
         if callback is not None:
             ret = callback(**cb_kwargs)
@@ -149,7 +129,7 @@ def BinPhotonEvents(np.ndarray[DTYPEuint32_t] data, double t_bin,
                 return outfile
 
     # Now write the rest:
-    for i in range(Nperc * 100, N - 1):
+    for i in range(Nperc * 100, N):
         time_c += data[i]
         if time_c >= t_bin:
             # Append counted photons and
@@ -165,74 +145,18 @@ def BinPhotonEvents(np.ndarray[DTYPEuint32_t] data, double t_bin,
             # Equivalent to:
             # time_c = int(time_c)%int(t_bin)
         phot_c += 1
+    # final photons
+    TempTrace.append(phot_c)
+    
     NewFile.write(outdtype(TempTrace))
     del TempTrace
     NewFile.close()
     return outfile
 
 
-def FitExp(times, trace):
-    """Fit an exponential function to the given trace.
-
-
-    Parameters
-    ----------
-    times : ndarray of length N
-        x-values
-
-    trace : ndarray of length N
-        y-values
-
-
-    Returns
-    -------
-        parameters, function
-    """
-    # Set starting parameters for exponential fit
-    def expfunc(p, x): return p[0] * np.exp(-x / p[1])
-    # parms = [ampl, decaytime]
-    parms = np.zeros(2, dtype=np.float32)
-    ltr = len(trace)
-    border = np.int(np.ceil(ltr / 50.))
-    parms[0] = 1. * trace[:border].mean()
-    parms[1] = times[-1] / np.log(parms[0])
-    # Fit function is an exponential
-    # Function to minimize via least squares
-    # f_min = lambda p, x: expfunc(np.abs(p), x) - trace
-
-    def f_min(p, x):
-        p = np.abs(p)
-        return expfunc(np.abs(p), x) - trace
-    # Least squares
-    popt, chi = spopt.leastsq(f_min, parms[:], args=(times))
-    return np.abs(popt), expfunc
-
-
-def FitGaussian(amplitudes, frequencies,  argmax):
-    # Set starting parameters for gaussian fit
-    # parms = [freq, ampl, sigma]
-    parms = np.zeros(3, dtype=np.float32)
-    parms[0] = frequencies[argmax]
-    parms[1] = amplitudes[argmax]
-    parms[2] = abs(frequencies[1] - frequencies[2]) * 2
-    # Fit function is a gaussian
-
-    def gauss(p, x):
-        expnt = np.exp(-((x - p[0]) / p[2]) ** 2 / 2)
-        norm = p[1] / (p[2] * np.sqrt(2 * np.pi))
-        return expnt * norm
-
-    # Function to minimize via least squares
-    def f_min(p, x):
-        return gauss(p, x) - amplitudes
-    # Least squares
-    popt, chi = spopt.leastsq(f_min, parms[:], args=(frequencies))
-    return np.abs(popt), gauss
-
-
 @cython.cdivision(True)
 @cython.boundscheck(False)  # turn of bounds-checking for entire function
-def OpenDat(filename, callback=None, cb_kwargs={}):
+def open_dat(filename, callback=None, cb_kwargs={}):
     """Load "Flex02-12D" correlator.com files
 
     We open a .dat file as produced by the "Flex02-12D" correlator in photon
@@ -342,40 +266,3 @@ def OpenDat(filename, callback=None, cb_kwargs={}):
 
     del Data
     return system_clock, datData
-
-
-def ReduceTrace(trace, deltat, length):
-    """Shorten an array by averaging.
-
-    Given a `trace` of length `len(trace)`, compute a trace of
-    length smaller than `length` by averaging.
-
-
-    Parameters
-    ----------
-    trace : ndarray, shape (N)
-        Input trace that is to be averaged.
-    deltat : float
-        Time difference between bins in trace.
-    length : int
-        Maximum length of the new trace.
-
-
-    Returns
-    -------
-    newtrace : ndarray, shape (N,2)
-        New trace (axis 1) with timepoints (axis 0).
-
-    """
-    step = 0
-    while len(trace) > length:
-        N = len(trace)
-        if N % 2 != 0:
-            N -= 1
-        trace = (trace[0:N:2] + trace[1:N:2]) / 2
-        step += 1
-    # Return 2d array with times
-    T = np.zeros((len(trace), 2))
-    T[:, 1] = trace / deltat / 1e3  # in kHz
-    T[:, 0] = np.arange(len(trace)) * deltat * 2**step
-    return T

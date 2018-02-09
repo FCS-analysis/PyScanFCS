@@ -1,46 +1,22 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-u""" 
-PyScanFCS
-
-Data processing for perpendicular line scanning FCS.
-
-(C) 2012 Paul Müller
-
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License 
-along with this program. If not, see <http://www.gnu.org/licenses/>.
-"""
 from __future__ import print_function
 # TODO (Python3):
 # from __future__ import division
 # -> There is an integer division somewhere
 
 import csv
-import sys
-
-# On Windows XP I had problems with the unicode Characters.
-# I found this at
-# http://stackoverflow.com/questions/5419/python-unicode-and-the-windows-console
-# and it helped (needs to be done before import of matplotlib):
+import os
 import platform
+import sys
+import tempfile
+import traceback
+import webbrowser
+import zipfile
 
 if sys.version_info[0] == 2:
     reload(sys)
     sys.setdefaultencoding('utf-8')
-
-import os
-
-# import wx.lib.agw.pyprogress as PBusy   # Busy Dialog
 
 import matplotlib
 matplotlib.use('WXAgg')
@@ -61,23 +37,24 @@ import astropy.io.fits as pyfits
 from scipy.fftpack import fft
 from scipy.fftpack import fftfreq
 
-import tempfile
-import traceback
-import webbrowser
+
 import wx                               # GUI interface wxPython
 from wx.lib.agw import floatspin        # Float numbers in spin fields
 from wx.lib.scrolledpanel import ScrolledPanel
 
-import zipfile
+
 
 
 # module import
 from . import doc      # Documentation/some texts
 from . import edclasses
+from . import fitting
 from . import misc
 from . import openfile
 from . import sfcs_alg
 from . import uilayer
+from . import util
+
 
 
 ########################################################################
@@ -103,7 +80,7 @@ class plotarea(wx.Panel):
         self.pdata = np.linspace(0, 100, 100)
         self.pdata.shape = (10, 10)
         self.image = self.axes.imshow(self.pdata, interpolation='nearest',
-                                      cmap=cm.gray, vmin=0, vmax=100)
+                                      cmap="gray", vmin=0, vmax=100)
         self.colorbar = self.figure.colorbar(self.image)
         # self.colorbar.set_ticks(np.arange(np.max(self.pdata)+1))
         self.colorbar.set_label("Photon events", size=16)
@@ -421,10 +398,10 @@ class MyFrame(wx.Frame):
 
         print("Creating file {} ({})".format(outfile, outdtype.__name__))
 
-        sfcs_alg.BinPhotonEvents(Data, t_bin, binshift=eb,
-                                    outfile=outfile,
-                                    outdtype=outdtype,
-                                    callback=wxdlg.Iterate)
+        sfcs_alg.bin_photon_events(Data, t_bin, binshift=eb,
+                                   outfile=outfile,
+                                   outdtype=outdtype,
+                                   callback=wxdlg.Iterate)
         wxdlg.Finalize()
 
         binneddata = np.fromfile(outfile, dtype=outdtype)
@@ -456,10 +433,10 @@ class MyFrame(wx.Frame):
 
         print("Creating file {} ({})".format(outfile, outdtype.__name__))
 
-        sfcs_alg.BinPhotonEvents(Data, t_bin, binshift=eb,
-                                    outfile=outfile,
-                                    outdtype=outdtype,
-                                    callback=wxdlg.Iterate)
+        sfcs_alg.bin_photon_events(Data, t_bin, binshift=eb,
+                                   outfile=outfile,
+                                   outdtype=outdtype,
+                                   callback=wxdlg.Iterate)
         wxdlg.Finalize()
 
         binneddata = np.fromfile(outfile, dtype=outdtype)
@@ -551,7 +528,7 @@ class MyFrame(wx.Frame):
 
             # Countrate correction:
             x = np.linspace(-num_next_max, +num_next_max, len(detprof))
-            popt, gauss = sfcs_alg.FitGaussian(
+            popt, gauss = fitting.fit_gauss(
                 detprof, x, np.argmax(detprof))
             # Time in bins, that the focus effectively was inside the membrane:
             # Go two sigmas in each direction. This way we have an averaged
@@ -603,11 +580,11 @@ class MyFrame(wx.Frame):
             # F_c = F_i/(f_0*exp(-ti/(2*t_0))) + f_0*(1-f_0*exp(-t_i/(2*t_0)))
             # We don't want to subtract an offset from the trace?
             # The offset is actually background signal.
-            popt, expfunc = sfcs_alg.FitExp(np.arange(len(traceData)),
-                                               traceData)
+            popt, expfunc = fitting.fit_exp(np.arange(len(traceData)),
+                                            traceData)
             [f_0, t_0] = popt
 
-            newtrace = sfcs_alg.ReduceTrace(traceData, bintime,
+            newtrace = util.reduce_trace(traceData, bintime,
                                                length=500)
 
             # Full trace:
@@ -618,12 +595,10 @@ class MyFrame(wx.Frame):
 
             # TODO:
             # Does this do anything?
-            newtracecorr = sfcs_alg.ReduceTrace(traceData, bintime,
-                                                   length=500)
+            newtracecorr = util.reduce_trace(traceData, bintime, length=500)
 
             fitfuncdata = expfunc(popt, np.arange(ltrb))
-            newtracefit = sfcs_alg.ReduceTrace(fitfuncdata,
-                                                  bintime, length=500)
+            newtracefit = util.reduce_trace(fitfuncdata, bintime, length=500)
 
             # Bleaching profile to temporary file
             # Create a temporary file and open it
@@ -1227,8 +1202,7 @@ class MyFrame(wx.Frame):
                 # self.TraceCorrectionFactor is 1.0, if the user
                 # did not check the "countrate filter"
                 usedTrace = usedTrace * self.TraceCorrectionFactor
-                trace = sfcs_alg.ReduceTrace(usedTrace,
-                                                bintime, length=700)
+                trace = util.reduce_trace(usedTrace, bintime, length=700)
                 # Save Correlation function
                 csvfile = filenamedummy + "_" + \
                     Gtype + "_" + str(i + 1) + ".csv"
@@ -1255,10 +1229,8 @@ class MyFrame(wx.Frame):
                 # did not check the "countrate filter"
                 usedTa = usedTa * self.TraceCorrectionFactor
                 usedTb = usedTb * self.TraceCorrectionFactor
-                tra = sfcs_alg.ReduceTrace(usedTa,
-                                              bintime, length=700)
-                trb = sfcs_alg.ReduceTrace(usedTb,
-                                              bintime, length=700)
+                tra = util.reduce_trace(usedTa, bintime, length=700)
+                trb = util.reduce_trace(usedTb, bintime, length=700)
                 # In order to keep trace1 trace1 and trace2 trace2, we
                 # need to swap here:
                 if swaptraces == True:
@@ -1329,7 +1301,7 @@ class MyFrame(wx.Frame):
 
                     wxdlg = uilayer.wxdlg(parent=self, steps=3,
                                           title="Importing dat file...")
-                    datData2 = sfcs_alg.OpenDat(
+                    datData2 = sfcs_alg.open_dat(
                         path, callback=wxdlg.Iterate)[1]
                     wxdlg.Finalize()
 
@@ -1761,7 +1733,7 @@ class MyFrame(wx.Frame):
 
         wxdlg = uilayer.wxdlg(parent=self, steps=3,
                               title="Importing dat file...")
-        self.system_clock, self.datData = sfcs_alg.OpenDat(
+        self.system_clock, self.datData = sfcs_alg.open_dat(
             filename, callback=wxdlg.Iterate)
         wxdlg.Finalize()
 

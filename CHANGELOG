@@ -3,6 +3,7 @@
  - support numpy 1.13
  - fix two spelling mistakes (#11)
  - Cython code cleanup using flake8
+ - Bugfix: trailing photon events were not used (<1% of input data)
 0.2.3
  - New tool to create artificial .dat files for testing
  - A couple of minor bug fixes

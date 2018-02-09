@@ -5,3 +5,4 @@ include pyscanfcs/*.pyx
 include doc/Images/*
 include README.rst
 include CHANGELOG
+recursive-include tests *.py *.md *.dat

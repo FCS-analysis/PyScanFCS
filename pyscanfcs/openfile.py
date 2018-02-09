@@ -20,7 +20,7 @@ def openAny(fname, callback=None):
 
 
 def openDAT(fname, callback=None):
-    system_clock, intensity_data = sfcs_alg.OpenDat(fname, callback)
+    system_clock, intensity_data = sfcs_alg.open_dat(fname, callback)
     info = dict()
     info["data_stream"] = intensity_data
     info["system_clock"] = system_clock
