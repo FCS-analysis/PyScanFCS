@@ -5,6 +5,13 @@
 
 A tool for data evaluation in perpendicular line scanning fluorescence correlation spectroscopy (FCS)
 
+When a membrane is scanned perpendicularly to its surface, the fluorescence signal
+originating from the membrane itself must be separated from the signal of the
+surrounding medium for an FCS analysis. PyScanFCS interactively extracts the
+fluctuating fluorescence signal from such measurements and applies a multiple-tau
+algorithm. The obtained correlation curves can be evaluated using
+[PyCorrFit](https://github.com/FCS-analysis/PyCorrFit).
+
 Getting started
 ===============
 
