@@ -1,7 +1,7 @@
 |PyScanFCS|
 ===========
 
-|PyPI Version| |Build Status Win| |Build Status Travis| |Coverage Status|
+|PyPI Version| |Build Status Win| |Build Status Travis| |Coverage Status| |Docs Status|
 
 A tool for data evaluation in perpendicular line scanning fluorescence correlation spectroscopy (FCS)
 
@@ -35,3 +35,5 @@ functions is available as a `PDF file <https://github.com/FCS-analysis/PyScanFCS
    :target: https://travis-ci.org/FCS-analysis/PyScanFCS
 .. |Coverage Status| image:: https://img.shields.io/codecov/c/github/FCS-analysis/PyScanFCS/master.svg
    :target: https://codecov.io/gh/FCS-analysis/PyScanFCS
+.. |Docs Status| image:: https://readthedocs.org/projects/pyscanfcs/badge/?version=latest
+   :target: https://readthedocs.org/projects/pyscanfcs/builds/
