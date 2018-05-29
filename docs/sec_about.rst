@@ -24,5 +24,5 @@ Müller, P., Schwille, P., and Weidemann, T.
 Fluorescence Spectroscopy and Microscopy, chapter: *Scanning Fluorescence
 Correlation Spectroscopy (SFCS) with a Scan Path Perpendicular to the Membrane
 Plane*. Methods in Molecular Biology, Humana Press, Springer, New York. 2014,
-635-651. DOI:`10.1007/978-1-62703-649-8_29 <http://dx.doi.org/10.1007/978-1-62703-649-8_29>`_ - 
+635-651. doi:`10.1007/978-1-62703-649-8_29 <http://dx.doi.org/10.1007/978-1-62703-649-8_29>`_ - 
 `download author’s manuscript <https://github.com/FCS-analysis/PyScanFCS/wiki/Mueller,Weidemann_PerpLSFCS_FlSpecMicr_AuthorsManuscript_2015-01.pdf>`_.

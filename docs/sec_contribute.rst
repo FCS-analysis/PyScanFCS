@@ -26,7 +26,9 @@ PyScanFCS) in numerous ways:
    familiar with reStrucuredText or LaTeX, you might be able to help
    out with the online documentation.
 
-5. Please cite: Müller et al. Bioinformatics 30(17): 2532–2533, 2014
+5. Please cite: Müller et al. Methods in Molecular Biology, Humana Press,
+   Springer, New York. 2014, 635-651.
+   doi:`10.1007/978-1-62703-649-8_29 <http://dx.doi.org/10.1007/978-1-62703-649-8_29>`_
 
 If you are planning to contribute to PyScanFCS, please contact me via
 the PyScanFCS issue page on GitHub such that we may coordinate a pull
