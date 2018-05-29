@@ -5,8 +5,8 @@ notifications:
   email: false
 install:
 # wxPython is not on PyPI for Linux
-- travis_retry pip install astropy matplotlib multipletau numpy scikit-image scipy cython
-- travis_retry pip install . --no-deps
+- sed -i 's/"wxpython/#"wxpython/g' setup.py
+- travis_retry pip install -e .
 # coverage packages
 - travis_retry pip install codecov coverage
 - pip freeze
