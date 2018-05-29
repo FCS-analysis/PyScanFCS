@@ -7,13 +7,9 @@ notifications:
     on_build_status_changed: false
 environment:
   matrix:
-    - PYTHON: "C:\\Python27"
-      PYTHON_VERSION: "2.7.x"
-      PYTHON_ARCH: "32"
-    - PYTHON: "C:\\Python27-x64"
-      PYTHON_VERSION: "2.7.x"
+    - PYTHON: "C:\\Miniconda36-x64"
+      PYTHON_VERSION: "3.6"
       PYTHON_ARCH: "64"
-
 
 init:
   - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
@@ -34,11 +30,15 @@ install:
   # the parent CMD process).
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
 
+  # CONDA installs
+  # Pinned versions are defined in .appveyor\pinned
+  - xcopy .appveyor\pinned %PYTHON%\conda-meta\ /Y
+  - "appveyor-retry conda install --yes --quiet matplotlib numpy pip scipy wxpython"
   # Check that we have the expected version and architecture for Python
   - "python --version"
-  - "pip install cython"
+  - "pip install cython wheel"
   - "pip install pyinstaller==3.3.1"
-  - "pip install ."
+  - "pip install -e ."
   # Show the installed packages
   - "pip freeze"
 

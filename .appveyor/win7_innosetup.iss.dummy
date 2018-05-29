@@ -6,7 +6,8 @@
 #define MyAppPublisher "Paul Müller"
 #define MyAppURL "http://pyscanfcs.craban.de"
 #define MyAppExeName "PyScanFCS.exe"
-#define MyAppDir = "C:\Users\Paul\Desktop\PyScanFCS\dist\PyScanFCS\"
+#define MyAppPlatform "win32"
+#define MyAppDir = SourcePath + "\dist\PyScanFCS\"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
