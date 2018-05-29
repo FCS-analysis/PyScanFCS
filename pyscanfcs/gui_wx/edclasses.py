@@ -1,28 +1,6 @@
-# -*- coding: utf-8 -*-
-"""
-    PyScanFCS
-
-    Module edclasses
-    Contains classes that we edited.
-    Makes these classes more useful for us.
-
-    (C) 2012 Paul Müller
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License 
-    along with this program. If not, see <http://www.gnu.org/licenses/>.
-"""
+"""Edited classes"""
 import numpy as np
-from wx.lib.agw import floatspin        # Float numbers in spin fields
+from wx.lib.agw import floatspin
 import wx
 
 
@@ -31,8 +9,6 @@ class FloatSpin(floatspin.FloatSpin):
         floatspin.FloatSpin.__init__(self, parent, digits=digits,
                                      increment=increment, value=value)
         self.Bind(wx.EVT_SPINCTRL, self.increment)
-        #self.Bind(wx.EVT_SPIN, self.increment)
-        # self.increment()
 
     def increment(self, event=None):
         # Find significant digit

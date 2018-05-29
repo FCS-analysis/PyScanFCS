@@ -1,14 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+"""uilayer
+
+python user interface layer to monitor progress of long-running
+algorithms
 """
-    uilayer
-
-    python user interface layer to monitor progress of long-running
-    algorithms
-"""
-
-from __future__ import division
-
 import os
 import sys
 import warnings
@@ -21,12 +15,6 @@ except:
     pass
 else:
     __all__ += ["wxdlg"]
-
-
-if sys.version < '3':
-    integer_types = (int, long,)
-else:
-    integer_types = (int,)
 
 
 class base_ui():
@@ -178,7 +166,7 @@ class base_ui():
             self._known_length = False
         elif (pids is None and steps is not None and progress is None):
             self._known_length = True
-            if isinstance(steps, integer_types + (float, complex)):
+            if isinstance(steps, (int, float, complex)):
                 # 4. Only one process of known length
                 self._single_progress = True
                 pids = 0
@@ -193,15 +181,15 @@ class base_ui():
             raise NameError("Your set of parameters is invalid.")
 
         # Convert input to list
-        if isinstance(pids, integer_types + (float, complex)):
+        if isinstance(pids, (int, float, complex)):
             # Only one progress
             self._single_progress = True
             pids = [pids]
-        if isinstance(steps, integer_types + (float, complex)):
+        if isinstance(steps, (int, float, complex)):
             steps = [steps]
-        if isinstance(progress, integer_types + (float, complex)):
+        if isinstance(progress, (int, float, complex)):
             progress = [progress]
-        if isinstance(subpids, integer_types + (float, complex)):
+        if isinstance(subpids, (int, float, complex)):
             subpids = [subpids]
 
         self._pids = pids
@@ -408,7 +396,7 @@ class wxdlg(base_ui):
         wcstring = fname + front + rear
 
         if mode == "r":
-            wxmode = wx.OPEN
+            wxmode = wx.FD_OPEN
         else:
             raise NotImplementedError(
                 "Mode '{}' not supported".format(mode))
@@ -547,9 +535,3 @@ def get_terminal_width(fd=1):
         width = 999
 
     return width
-
-
-__version__ = "0.1.4"
-__author__ = "Paul Mueller"
-__email__ = "paul.mueller@biotec.tu-dresden.de"
-__license__ = "BSD (3-Clause)"

@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-u"""
+"""
 PyScanFCS
 
 Module doc
@@ -23,21 +22,15 @@ import os
 import platform
 import sys
 
+import astropy
 import matplotlib
 import multipletau
 import numpy
-import astropy
 import scipy
+import skimage
 import wx
 
-# The icon file was created with
-# img2py -i -n Main PyScanFCS_icon.png icon.py
-try:
-    from . import icon
-except:
-    pass
 
-from . import uilayer
 from .._version import version as __version__
 
 def GetLocationOfFile(filename):
@@ -70,7 +63,7 @@ def GetLocationOfFile(filename):
     return None
 
 
-def GetLocationOfChangeLog(filename="ChangeLog.txt"):
+def GetLocationOfChangeLog(filename="CHANGELOG"):
     return GetLocationOfFile(filename)
 
 
@@ -110,18 +103,6 @@ def info(version):
     return ret
 
 
-def getMainIcon(pxlength=32):
-    """ *pxlength* is the side length in pixels of the icon """
-    # Set window icon
-    iconBMP = icon.getMainBitmap()
-    # scale
-    image = wx.ImageFromBitmap(iconBMP)
-    image = image.Scale(pxlength, pxlength, wx.IMAGE_QUALITY_HIGH)
-    iconBMP = wx.BitmapFromImage(image)
-    iconICO = wx.IconFromBitmap(iconBMP)
-    return iconICO
-
-
 def licence():
     return u"""PyScanFCS is free software: you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published 
@@ -146,8 +127,8 @@ def SoftwareUsed():
            "\n - matplotlib " + matplotlib.__version__ +\
            "\n - multipletau " + multipletau.__version__ +\
            "\n - NumPy " + numpy.__version__ +\
+           "\n - scikit-image " + skimage.__version__ +\
            "\n - SciPy " + scipy.__version__ +\
-           "\n - uilayer " + uilayer.__version__ +\
            "\n - wxPython " + wx.__version__
     if hasattr(sys, 'frozen'):
         pyinst = "\n\nThis executable has been created using PyInstaller."
@@ -159,11 +140,11 @@ def SoftwareUsed():
 HomePage = "http://pyscanfcs.craban.de/"
 
 # Changelog filename
-ChangeLog = "ChangeLog.txt"
+ChangeLog = "CHANGELOG"
 StaticChangeLog = GetLocationOfChangeLog(ChangeLog)
 
 
 # Github homepage
-GitChLog = "https://raw.github.com/FCS-analysis/PyScanFCS/master/ChangeLog.txt"
+GitChLog = "https://raw.github.com/FCS-analysis/PyScanFCS/master/CHANGELOG"
 GitHome = "https://github.com/FCS-analysis/PyScanFCS"
 GitWiki = "https://github.com/FCS-analysis/PyScanFCS/wiki"

@@ -28,18 +28,18 @@ else:
                  ]
 
 try:
-    import urllib
+    import urllib.request
 except ImportError:
     pass
 else:
     # Download documentation if it was not compiled
-    Documentation = join(dirname(realpath(__file__)), "doc/PyScanFCS_doc.pdf")
+    pdfdoc = join(dirname(realpath(__file__)), "doc/PyScanFCS_doc.pdf")
     webdoc = "https://github.com/FCS-analysis/PyScanFCS/wiki/PyScanFCS_doc.pdf"
-    if not exists(Documentation):
-        print("Downloading {} from {}".format(Documentation, webdoc))
+    if not exists(pdfdoc):
+        print("Downloading {} from {}".format(pdfdoc, webdoc))
         import urllib
         #testfile = urllib.URLopener()
-        urllib.urlretrieve(webdoc, Documentation)
+        urllib.request.urlretrieve(webdoc, pdfdoc)
 
 
 author = u"Paul Müller"
@@ -61,7 +61,6 @@ setup(
     url='https://github.com/FCS-analysis/PyScanFCS',
     version=version,
     packages=find_packages(include=(name+"*",)),
-    package_dir={name: name},
     license="GPL v2",
     description=description,
     long_description=open('README.rst').read() if exists('README.rst') else '',
@@ -69,20 +68,21 @@ setup(
     ext_modules = extensions,
     install_requires=[
         "astropy",
-        "matplotlib >= 1.1.0",
-        "multipletau >= 0.1.4",
-        "numpy >= 1.5.1",
+        "matplotlib>=1.1.0",
+        "multipletau>=0.1.4",
+        "numpy>=1.5.1",
         "scikit-image>=0.13.1",
-        "scipy >= 0.8.0",
-        # "wxpython",  # wxPython is not on PyPI
+        "scipy>=0.8.0",
+        "wxpython>=4.0.1",
         ],
     setup_requires=['cython', 'numpy', 'pytest-runner'],
     tests_require=["pathlib", "pytest"],
+    python_requires='>=3.4, <4',
     keywords=["fcs", "fluorescence correlation spectroscopy",
               "perpendicular line scanning", "multiple-tau"],
     classifiers= [
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Scientific/Engineering :: Visualization',
         'Intended Audience :: Science/Research'
                  ],

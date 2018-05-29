@@ -1,10 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-from __future__ import print_function
-# TODO (Python3):
-# from __future__ import division
-# -> There is an integer division somewhere
-
 import csv
 import os
 import platform
@@ -14,13 +7,8 @@ import traceback
 import webbrowser
 import zipfile
 
-if sys.version_info[0] == 2:
-    reload(sys)
-    sys.setdefaultencoding('utf-8')
-
 import matplotlib
 matplotlib.use('WXAgg')
-import matplotlib.cm as cm              # Color maps for plotting
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_wxagg import \
     FigureCanvasWxAgg as FigureCanvas, \
@@ -34,7 +22,7 @@ import multipletau
 import numpy as np
 from scipy.fftpack import fft
 from scipy.fftpack import fftfreq
-import wx
+import wx.adv
 from wx.lib.agw import floatspin
 from wx.lib.scrolledpanel import ScrolledPanel
 
@@ -169,7 +157,7 @@ maximum. \n The data achieved will automatically be updated within the main prog
 
         # Set window icon
         try:
-            self.MainIcon = doc.getMainIcon()
+            self.MainIcon = misc.getMainIcon()
             wx.Frame.SetIcon(self, self.MainIcon)
         except:
             self.MainIcon = None
@@ -353,13 +341,13 @@ class MyFrame(wx.Frame):
         self.Update()
         # Set window icon
         try:
-            self.MainIcon = doc.getMainIcon()
+            self.MainIcon = misc.getMainIcon()
             wx.Frame.SetIcon(self, self.MainIcon)
         except:
             self.MainIcon = None
 
     def AddToCache(self, Data, cachename, background=False):
-        if self.cache.keys().count(cachename) == 0:
+        if list(self.cache.keys()).count(cachename) == 0:
             # Add the menu entry
             menu = self.cachemenu.Append(
                 wx.ID_ANY, cachename, kind=wx.ITEM_RADIO)
@@ -598,29 +586,29 @@ class MyFrame(wx.Frame):
             filename = tempfile.mktemp(".csv",
                                        "PyScanFCS_bleach_profile_{}_".format(
                                            title.replace(" ", "_")))
-            outfile = open(filename, 'wb')
-            outfile.write("# This is not correlation data.\r\n")
-            outfile.write("# {} - bleaching correction\r\n".format(title))
-            outfile.write(
-                "# I = ({:.2e})*exp[-t / (2*({:.2e})) ]\r\n".format(f_0, t_0))
-            outfile.write("# {}\t{}\t{}\t{}\r\n".format(u"Time t [s]",
-                                                        u"Measured trace [kHz]", u"Exponential fit I [kHz]",
-                                                        u"Corrected trace [kHz]"))
-            dataWriter = csv.writer(outfile, delimiter='\t')
-            # we will write
-            xexp = newtrace[:, 0]
-            yexp = newtrace[:, 1] * self.TraceCorrectionFactor
-            yfit = newtracefit[:, 1] * self.TraceCorrectionFactor
-            ycorr = newtracecorr[:, 1] * self.TraceCorrectionFactor
-            data = [xexp, yexp, yfit, ycorr]
-            for i in np.arange(len(data[0])):
-                # row-wise, data may have more than two elements per row
-                datarow = list()
-                for j in np.arange(len(data)):
-                    rowcoli = str("%.10e") % data[j][i]
-                    datarow.append(rowcoli)
-                dataWriter.writerow(datarow)
-            outfile.close()
+            with open(filename, 'w') as fd:
+                fd.write("# This is not correlation data.\r\n")
+                fd.write("# {} - bleaching correction\r\n".format(title))
+                fd.write(
+                    "# I = ({:.2e})*exp[-t / (2*({:.2e})) ]\r\n".format(f_0, t_0))
+                fd.write("# {}\t{}\t{}\t{}\r\n".format(u"Time t [s]",
+                                                            u"Measured trace [kHz]", u"Exponential fit I [kHz]",
+                                                            u"Corrected trace [kHz]"))
+                dataWriter = csv.writer(fd, delimiter='\t')
+                # we will write
+                xexp = newtrace[:, 0]
+                yexp = newtrace[:, 1] * self.TraceCorrectionFactor
+                yfit = newtracefit[:, 1] * self.TraceCorrectionFactor
+                ycorr = newtracecorr[:, 1] * self.TraceCorrectionFactor
+                data = [xexp, yexp, yfit, ycorr]
+                for i in np.arange(len(data[0])):
+                    # row-wise, data may have more than two elements per row
+                    datarow = list()
+                    for j in np.arange(len(data)):
+                        rowcoli = str("%.10e") % data[j][i]
+                        datarow.append(rowcoli)
+                    dataWriter.writerow(datarow)
+
             self.file_bleach_profile.append(filename)
 
             if self.MenuVerbose.IsChecked():
@@ -951,9 +939,6 @@ class MyFrame(wx.Frame):
                                    "PyCorrFit documentation")
         menuWiki = helpmenu.Append(wx.ID_ANY, "&Wiki",
                                    "PyCorrFit wiki pages by users for users (online)")
-        menuUpdate = helpmenu.Append(wx.ID_ANY, "&Update",
-                                     "Check for new version" +
-                                     " (Web access required)")
         helpmenu.AppendSeparator()
         menuSoftw = helpmenu.Append(wx.ID_ANY, "&Software used",
                                     "Information about software used by this program")
@@ -982,7 +967,6 @@ class MyFrame(wx.Frame):
 
         # Help
         self.Bind(wx.EVT_MENU, self.OnMenuAbout, menuAbout)
-        self.Bind(wx.EVT_MENU, self.OnMenuUpdate, menuUpdate)
         self.Bind(wx.EVT_MENU, self.OnMenuSoftware, menuSoftw)
         self.Bind(wx.EVT_MENU, self.OnMenuDocumentation, menuDocu)
         self.Bind(wx.EVT_MENU, self.OnMenuWiki, menuWiki)
@@ -1044,12 +1028,12 @@ class MyFrame(wx.Frame):
         cnData = fft(self.intData)
         N = len(cnData)
         # We only need positive/negative frequencies
-        amplitude = np.abs(cnData[0:N / 2] * np.conjugate(cnData[0:N / 2]))
+        amplitude = np.abs(cnData[0:N // 2] * np.conjugate(cnData[0:N // 2]))
         #n_bins = len(self.intData)
 
         # Calculate the correct frequencies
         rate = 1. / self.t_bin
-        frequency = fftfreq(N)[0:N / 2] * rate
+        frequency = fftfreq(N)[0:N // 2] * rate
 
         if self.BoxLineScan[1].GetValue() == True:
             # Find it automagically
@@ -1120,7 +1104,7 @@ class MyFrame(wx.Frame):
         # Show About Information
         description = doc.description()
         licence = doc.licence()
-        info = wx.AboutDialogInfo()
+        info = wx.adv.AboutDialogInfo()
         #info.SetIcon(wx.Icon('hunter.png', wx.BITMAP_TYPE_PNG))
         info.SetName('PyScanFCS')
         info.SetVersion(self.version)
@@ -1130,7 +1114,7 @@ class MyFrame(wx.Frame):
         info.SetLicence(licence)
         info.AddDeveloper(u'Paul Müller')
         info.AddDocWriter(u'Paul Müller')
-        wx.AboutBox(info)
+        wx.adv.AboutBox(info)
 
     def OnMenuDocumentation(self, e=None):
         """ Get the documentation and view it with browser"""
@@ -1161,9 +1145,6 @@ class MyFrame(wx.Frame):
 
     def OnMenuTest(self, e=None):
         misc.ArtificialDataDlg(self)
-
-    def OnMenuUpdate(self, event):
-        misc.Update(self)
 
     def OnMenuWiki(self, e=None):
         """ Go to the GitHub Wiki page"""
@@ -1509,7 +1490,7 @@ class MyFrame(wx.Frame):
         # Open a data file
         """Import experimental data from a file."""
         dlg = wx.FileDialog(self, "Choose a binned data file", self.dirname, "",
-                            openfile.wx_dlg_wc_binned, wx.OPEN)
+                            openfile.wx_dlg_wc_binned, wx.FD_OPEN)
         # user cannot do anything until he clicks "OK"
         if dlg.ShowModal() == wx.ID_OK:
 
@@ -1575,7 +1556,7 @@ class MyFrame(wx.Frame):
         """
         # File Dialog
         dlg = wx.FileDialog(self, "Choose a photon stream file", self.dirname, "",
-                            openfile.wx_dlg_wc_stream, wx.OPEN)
+                            openfile.wx_dlg_wc_stream, wx.FD_OPEN)
         # user cannot do anything until he clicks "OK"
         if dlg.ShowModal() == wx.ID_OK:
             # Workaround for Ubuntu 12.10 since 0.2.0
@@ -1611,7 +1592,7 @@ class MyFrame(wx.Frame):
             newfilename = ""
         dlg = wx.FileDialog(self, "Choose a data file", self.dirname, newfilename,
                             "FITS files (*.fits)|*.Fits;*.FITS;*.fits",
-                            wx.SAVE | wx.FD_OVERWRITE_PROMPT)
+                            wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
         # user cannot do anything until he clicks "OK"
         if dlg.ShowModal() == wx.ID_OK:
             # Workaround for Ubuntu 12.10 since 0.2.0
@@ -1685,7 +1666,7 @@ class MyFrame(wx.Frame):
             newfilename = self.filename[:-4] + "_32bit.dat"
         dlg = wx.FileDialog(self, "Choose a data file", self.dirname, newfilename,
                             "DAT files (*.dat)|*.dat;*.daT;*.dAt;*.dAT;*.Dat;*.DaT;*.DAt;*.DAT",
-                            wx.SAVE | wx.FD_OVERWRITE_PROMPT)
+                            wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
         # user cannot do anything until he clicks "OK"
         if dlg.ShowModal() == wx.ID_OK:
             # Workaround for Ubuntu 12.10 since 0.2.0
@@ -1907,7 +1888,7 @@ class MyFrame(wx.Frame):
         # plottable 2D array.
         if Nx > Ny:
             # Number of lines we have to jump over
-            P = Nx / Ny
+            P = Nx // Ny
             Nx = P * Ny
             plotdata = np.zeros((Ny, Ny))
             MAX = Nx * Ny
@@ -1950,36 +1931,34 @@ class MyFrame(wx.Frame):
     def SaveCSVFile(self, G, trace, csvfile, num=1, num_traces=1, Type="AC",
                     secondtrace=None):
 
-        openedfile = open(csvfile, 'wb')
-        openedfile.write('# This file was created using PyScanFCS v.' +
-                         self.version + "\r\n")
-        openedfile.write("# Source file \t" + self.filename + "\r\n")
-        openedfile.write("# Source slice \t" + str(num) +
-                         " of " + str(num_traces) + "\r\n")
-        openedfile.write('# Channel (tau [s]) \t Correlation function \r\n')
-        if Type[:2] == "CC":
-            openedfile.write(
-                "# Type AC/CC \t Cross-Correlation " + Type[2:] + "\r\n")
-        else:
-            openedfile.write(
-                "# Type AC/CC \t Autocorrelation " + Type[2:] + "\r\n")
-        dataWriter = csv.writer(openedfile, delimiter='\t')
-        for i in np.arange(len(G)):
-            dataWriter.writerow([str(G[i, 0]) + " \t", str(G[i, 1])])
-        openedfile.write('# BEGIN TRACE \r\n')
-        openedfile.write('# Time ([s]) \t Intensity Trace [kHz] \r\n')
-        for i in np.arange(len(trace)):
-            dataWriter.writerow(
-                [str("%.10e") % trace[i, 0], str("%.10e") % trace[i, 1]])
-
-        if secondtrace is not None:
-            openedfile.write('#\r\n# BEGIN SECOND TRACE \r\n')
-            openedfile.write('# Time ([s]) \t Intensity Trace [kHz] \r\n')
+        with open(csvfile, 'w') as fd:
+            fd.write('# This file was created using PyScanFCS v.' +
+                             self.version + "\r\n")
+            fd.write("# Source file \t" + self.filename + "\r\n")
+            fd.write("# Source slice \t" + str(num) +
+                             " of " + str(num_traces) + "\r\n")
+            fd.write('# Channel (tau [s]) \t Correlation function \r\n')
+            if Type[:2] == "CC":
+                fd.write(
+                    "# Type AC/CC \t Cross-Correlation " + Type[2:] + "\r\n")
+            else:
+                fd.write(
+                    "# Type AC/CC \t Autocorrelation " + Type[2:] + "\r\n")
+            dataWriter = csv.writer(fd, delimiter='\t')
+            for i in np.arange(len(G)):
+                dataWriter.writerow([str(G[i, 0]) + " \t", str(G[i, 1])])
+            fd.write('# BEGIN TRACE \r\n')
+            fd.write('# Time ([s]) \t Intensity Trace [kHz] \r\n')
             for i in np.arange(len(trace)):
-                dataWriter.writerow([str("%.10e") % secondtrace[i, 0],
-                                     str("%.10e") % secondtrace[i, 1]])
-
-        openedfile.close()
+                dataWriter.writerow(
+                    [str("%.10e") % trace[i, 0], str("%.10e") % trace[i, 1]])
+    
+            if secondtrace is not None:
+                fd.write('#\r\n# BEGIN SECOND TRACE \r\n')
+                fd.write('# Time ([s]) \t Intensity Trace [kHz] \r\n')
+                for i in np.arange(len(trace)):
+                    dataWriter.writerow([str("%.10e") % secondtrace[i, 0],
+                                         str("%.10e") % secondtrace[i, 1]])
 
     def Update(self, e=None):
         self.UpdateInfo()

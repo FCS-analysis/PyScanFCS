@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from . import fitting
 from . import openfile
 from . import sfcs_alg

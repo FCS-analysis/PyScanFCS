@@ -1,12 +1,10 @@
-#!/usr/bin/python
 """
-    This program creates a .dat file with photon arrival times as
-    it is produced by the FLEX correlators from correlator.com
-    in photon history recorder mode by "Photon.exe".
-    The generated files can be used to test multiple tau algorithm and
-    workflow of SFCS analyzation programs.
+This program creates a .dat file with photon arrival times as
+it is produced by the FLEX correlators from correlator.com
+in photon history recorder mode by "Photon.exe".
+The generated files can be used to test multiple tau algorithm and
+workflow of SFCS analyzation programs.
 """
-
 import numpy as np
 import multipletau
 import csv
@@ -30,7 +28,6 @@ def MakeDat(linetime, noisearray, dtype, filename):
     NewFile.write(newclock)
     noisearray = dtype(noisearray)
     # Create matrix. Each line is a scan.
-    data = list()
     timeticks = linetime * newclock * 1e6  # 60MHz
     half1 = np.ceil(timeticks / 2)
     half2 = np.floor(timeticks / 2)
@@ -83,8 +80,6 @@ def GenerateExpNoise(N, taud=20., variance=1., deltat=1.):
     # length of mean0 trace
     N_steps = N
     dt = deltat
-    # time trace
-    t = np.arange(N_steps)
     # AR-1 processes - what does that mean?
     # time constant (inverse of correlationtime taud)
     g = 1. / taud
@@ -150,26 +145,23 @@ def ReduceTrace(trace, deltat, length):
 
 def SaveCSV(G, trace, filename):
     """ Save correlation and trace tuple array G and trace to a .csv file
-        that can be opened with FCSfit.
+        that can be opened with PyCorrFit.
     """
     # Save Correlation function
-    csvfile = filename
-    openedfile = open(csvfile, 'wb')
-    openedfile.write('# This file was created using testmultipletau.py\r\n')
-    openedfile.write('# Channel (tau [s])' + " \t,"
-                     'Correlation function' + " \r\n")
-    dataWriter = csv.writer(openedfile, delimiter=',')
-    for i in np.arange(len(G)):
-        dataWriter.writerow([str(G[i, 0]) + " \t", str(G[i, 1])])
-
-    openedfile.write('# BEGIN TRACE \r\n')
-    openedfile.write('# Time ([s])' + " \t,"
-                     'Intensity Trace [kHz]' + " \r\n")
-
-    for i in np.arange(len(trace)):
-        dataWriter.writerow([str(trace[i, 0]) + " \t", str(trace[i, 1])])
-
-    openedfile.close()
+    with open(filename, 'w') as fd:
+        fd.write('# This file was created using testmultipletau.py\r\n')
+        fd.write('# Channel (tau [s])' + " \t,"
+                 'Correlation function' + " \r\n")
+        dataWriter = csv.writer(fd, delimiter=',')
+        for i in np.arange(len(G)):
+            dataWriter.writerow([str(G[i, 0]) + " \t", str(G[i, 1])])
+    
+        fd.write('# BEGIN TRACE \r\n')
+        fd.write('# Time ([s])' + " \t,"
+                 'Intensity Trace [kHz]' + " \r\n")
+    
+        for i in np.arange(len(trace)):
+            dataWriter.writerow([str(trace[i, 0]) + " \t", str(trace[i, 1])])
 
 
 # Line time to be found by SFCS analyzation software

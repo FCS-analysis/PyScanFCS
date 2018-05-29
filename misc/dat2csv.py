@@ -1,22 +1,18 @@
-# -*- coding: utf-8 -*-
-""" Binning Data and performing Multiple Tau Algorithm
-    Paul Müller, Biotec - TU Dresden
+"""Binning Data and performing Multiple Tau Algorithm
 
-    As fast as you can get with python, binning the photon arrival times
-    created by Photon.exe from correlator.com.
+Paul Müller, Biotec - TU Dresden
 
-    See at the end of the file, which .dat file will be opened.
-    In console, we ask for binning time in µs and an .int file
-    is created.
+As fast as you can get with python, binning the photon arrival times
+created by Photon.exe from correlator.com.
+
+See at the end of the file, which .dat file will be opened.
+In console, we ask for binning time in µs and an .int file
+is created.
 """
-
-#import codecs, sys, win32console
 import argparse
 import csv
-import sys
 import numpy as np                  # NumPy
 import os
-import struct
 import tempfile
 import time
 import zipfile

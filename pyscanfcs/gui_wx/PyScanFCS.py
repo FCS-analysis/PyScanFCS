@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-""" PyScanFCS loader
-"""
+"""PyScanFCS loader"""
 from os.path import dirname, abspath
 import warnings
 

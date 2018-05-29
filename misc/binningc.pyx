@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Binning Data for Multiple Tau Algorithm
 
 As fast as you can get with python, binning the photon arrival times

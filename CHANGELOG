@@ -1,4 +1,6 @@
-0.2.4
+0.3.0
+ - move from Python 2 to Python 3 (#12)
+ - move to wxPython 4.0.1 (#12)
  - move from deprecated pyfits to astropy (#10)
  - support numpy 1.13
  - fix two spelling mistakes (#11)

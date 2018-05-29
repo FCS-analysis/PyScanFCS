@@ -1,8 +1,4 @@
-# -*- coding: utf-8 -*-
-""" PyScanFCS filetype definitions
-"""
-from __future__ import division, print_function
-
+"""filetype definitions"""
 import astropy.io.fits
 from skimage.external import tifffile
 

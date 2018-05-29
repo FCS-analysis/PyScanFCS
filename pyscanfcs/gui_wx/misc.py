@@ -1,92 +1,17 @@
-# -*- coding: utf-8 -*-
-"""
-    PyScanFCS
-
-    Module misc
-
-    (C) 2012 Paul Müller
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License 
-    along with this program. If not, see <http://www.gnu.org/licenses/>.
-"""
-from __future__ import print_function, division
-
+"""Miscellaneous classes"""
 import codecs
-from distutils.version import LooseVersion  # For version checking
 import os
 import sys
-import tempfile
-import urllib2
-import webbrowser
 
 import numpy as np
-import wx.html
+import wx
 import wx.lib.delayedresult as delayedresult
 
 
-from . import doc                          # Documentation/some texts
 # The icon file was created with
 # img2py -i -n Main PyScanFCS_icon.png icon.py
-from . import icon                         # Contains the program icon
+from . import icon
 from . import edclasses
-
-
-
-class UpdateDlg(wx.Frame):
-    def __init__(self, parent, valuedict):
-
-        description = valuedict["Description"]
-        homepage = valuedict["Homepage"]
-        githome = valuedict["Homepage_GIT"]
-        changelog = valuedict["Changelog"]
-        pos = parent.GetPosition()
-        pos = (pos[0] + 100, pos[1] + 100)
-        wx.Frame.__init__(self, parent, wx.ID_ANY, title="Update",
-                          size=(250, 180), pos=pos)
-        self.changelog = changelog
-        # Fill html content
-        html = wxHTML(self)
-        string = '' +\
-            "<b> PyScanFCS <br></b>" +\
-            "Your version: " + description[0] + "<br>" +\
-            "Latest version: " + description[1] + "<br>" +\
-            "(" + description[2] + ")<br><p><b>"
-        if len(homepage) != 0:
-            string = string + '<a href="' + homepage + '">Homepage</a><br>'
-        if len(githome) != 0:
-            string = string + '<a href="' + githome + '">Repository</a><br>'
-
-        if len(changelog) != 0:
-            string = string + \
-                '<a href="' + changelog + '">Change Log</a>'
-        string = string + '</b></p>'
-        html.SetPage(string)
-        self.Bind(wx.EVT_CLOSE, self.Close)
-        # Set window icon
-        ico = getMainIcon()
-        wx.Frame.SetIcon(self, ico)
-
-    def Close(self, event):
-        if len(self.changelog) != 0:
-            # Cleanup downloaded file, if it was downloaded
-            if self.changelog != doc.StaticChangeLog:
-                os.remove(self.changelog)
-        self.Destroy()
-
-
-class wxHTML(wx.html.HtmlWindow):
-    def OnLinkClicked(self, link):
-        webbrowser.open(link.GetHref())
 
 
 class ArtificialDataDlg(wx.Frame):
@@ -109,25 +34,23 @@ class ArtificialDataDlg(wx.Frame):
                                    label="Create artificial test data\n" +
                                    "with exponentially correlated noise.\n"))
 
-        colsizer = wx.FlexGridSizer(4, 2)
+        colsizer = wx.FlexGridSizer(4, 2, 20)
 
         # decay time
         colsizer.Add(wx.StaticText(self.panel,
-                                   label=u"Correlation time [ms]: "))
-        self.WXDecay = edclasses.FloatSpin(self.panel,
-                                           value="100")
+                                   label="Correlation time [ms]: "))
+        self.WXDecay = edclasses.FloatSpin(self.panel, value="100")
         colsizer.Add(self.WXDecay)
 
         # line scanning time
         colsizer.Add(wx.StaticText(self.panel,
-                                   label=u"Scan cycle time [ms]: "))
-        self.WXLine = edclasses.FloatSpin(self.panel,
-                                          value="0.714")
+                                   label="Scan cycle time [ms]: "))
+        self.WXLine = edclasses.FloatSpin(self.panel, value="0.714")
         colsizer.Add(self.WXLine)
 
         # number of samples
         colsizer.Add(wx.StaticText(self.panel,
-                                   label=u"Number of samples: "))
+                                   label="Number of samples: "))
         self.WXNumber = wx.SpinCtrl(self.panel, -1, min=10000,
                                     max=500000000, value="500000")
         colsizer.Add(self.WXNumber)
@@ -180,7 +103,7 @@ class ArtificialDataDlg(wx.Frame):
 
         dlg = wx.FileDialog(self, "Save as .dat file", "./", filename,
                             "DAT files (*.dat)|*.dat;*.daT;*.dAt;*.dAT;*.Dat;*.DaT;*.DAt;*.DAT",
-                            wx.SAVE | wx.FD_OVERWRITE_PROMPT)
+                            wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
         # user cannot do anything until he clicks "OK"
         if dlg.ShowModal() == wx.ID_OK:
             # Workaround for Ubuntu 12.10 since 0.2.0
@@ -285,10 +208,10 @@ def getMainIcon(pxlength=32):
     # Set window icon
     iconBMP = icon.getMainBitmap()
     # scale
-    image = wx.ImageFromBitmap(iconBMP)
+    image = wx.Bitmap.ConvertToImage(iconBMP)
     image = image.Scale(pxlength, pxlength, wx.IMAGE_QUALITY_HIGH)
-    iconBMP = wx.BitmapFromImage(image)
-    iconICO = wx.IconFromBitmap(iconBMP)
+    iconBMP = wx.Bitmap(image)
+    iconICO = wx.Icon(iconBMP)
     return iconICO
 
 
@@ -328,88 +251,3 @@ def _CreateWorker(args):
     # translate linetime in bins of taud
     ltbin = linetime / 1000
     MakeDat(ltbin, noisearray, dtype, path)
-
-
-def Update(parent):
-    """ This is a thread for _Update """
-    parent.StatusBar.SetStatusText("Connecting to server...")
-    delayedresult.startWorker(_UpdateConsumer, _UpdateWorker,
-                              wargs=(parent,), cargs=(parent,))
-
-
-def _UpdateConsumer(delayedresult, parent):
-    results = delayedresult.get()
-    dlg = UpdateDlg(parent, results)
-    dlg.Show()
-    parent.StatusBar.SetStatusText(
-        "...update status: " + results["Description"][2])
-
-
-def _UpdateWorker(parent):
-    changelog = ""
-    hpversion = None
-    # I created this TXT record to keep track of the current web presence.
-    try:
-        urlopener = urllib2.urlopen(doc.HomePage, timeout=2)
-        homepage = urlopener.geturl()
-    except:
-        homepage = doc.HomePage
-    try:
-        urlopener2 = urllib2.urlopen(doc.GitHome, timeout=2)
-        githome = urlopener2.geturl()
-    except:
-        githome = ""
-    # Find the changelog file
-    try:
-        responseCL = urllib2.urlopen(homepage + doc.ChangeLog, timeout=2)
-    except:
-        CLfile = doc.GitChLog
-    else:
-        fileresponse = responseCL.read()
-        CLlines = fileresponse.splitlines()
-        # We have a transition between ChangeLog.txt on the homepage
-        # containing the actual changelog or containing a link to
-        # the ChangeLog file.
-        if len(CLlines) == 1:
-            CLfile = CLlines[0]
-        else:
-            hpversion = CLlines[0]
-            CLfile = doc.GitChLog
-    # Continue version comparison if True
-    continuecomp = False
-    try:
-        responseVer = urllib2.urlopen(CLfile, timeout=2)
-    except:
-        if hpversion == None:
-            newversion = "unknown"
-            action = "cannot connect to server"
-        else:
-            newversion = hpversion
-            continuecomp = True
-    else:
-        continuecomp = True
-        changelog = responseVer.read()
-        newversion = changelog.splitlines()[0]
-    if continuecomp:
-        new = LooseVersion(newversion)
-        old = LooseVersion(parent.version)
-        if new > old:
-            action = "update available"
-        elif new < old:
-            action = "whoop you rock!"
-        else:
-            action = "state of the art"
-    description = [parent.version, newversion, action]
-    if len(changelog) != 0:
-        changelogfile = tempfile.mktemp() + "_PyScanFCS_ChangeLog" + ".txt"
-        clfile = open(changelogfile, 'wb')
-        clfile.write(changelog)
-        clfile.close()
-    else:
-        changelogfile = doc.StaticChangeLog
-    results = dict()
-    results["Description"] = description
-    results["Homepage"] = homepage
-    results["Homepage_GIT"] = githome
-    results["Changelog"] = changelogfile
-    return results
