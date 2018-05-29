@@ -345,6 +345,10 @@ class MyFrame(wx.Frame):
             wx.Frame.SetIcon(self, self.MainIcon)
         except:
             self.MainIcon = None
+        
+        if hasattr(sys, "frozen"):
+            self.OnMenuSupport()
+
 
     def AddToCache(self, Data, cachename, background=False):
         if list(self.cache.keys()).count(cachename) == 0:
@@ -935,6 +939,8 @@ class MyFrame(wx.Frame):
         # Check by default
         self.MenuVerbose.Check()
 
+        menuSupport = helpmenu.Append(wx.ID_ANY, "&Support",
+                                   "Contributing and getting support")
         menuDocu = helpmenu.Append(wx.ID_ANY, "&Documentation",
                                    "PyCorrFit documentation")
         menuWiki = helpmenu.Append(wx.ID_ANY, "&Wiki",
@@ -966,6 +972,7 @@ class MyFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnMenuTest, menuTest)
 
         # Help
+        self.Bind(wx.EVT_MENU, self.OnMenuSupport, menuSupport)
         self.Bind(wx.EVT_MENU, self.OnMenuAbout, menuAbout)
         self.Bind(wx.EVT_MENU, self.OnMenuSoftware, menuSoftw)
         self.Bind(wx.EVT_MENU, self.OnMenuDocumentation, menuDocu)
@@ -1142,6 +1149,11 @@ class MyFrame(wx.Frame):
         # Show About Information
         text = doc.SoftwareUsed()
         wx.MessageBox(text, 'Software', wx.OK | wx.ICON_INFORMATION)
+
+    def OnMenuSupport(self, event):
+        # Show About Information
+        text = doc.support
+        wx.MessageBox(text, 'Support', wx.OK | wx.ICON_INFORMATION)
 
     def OnMenuTest(self, e=None):
         misc.ArtificialDataDlg(self)

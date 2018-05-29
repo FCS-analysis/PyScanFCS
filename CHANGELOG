@@ -1,11 +1,12 @@
 0.3.0
- - move from Python 2 to Python 3 (#12)
- - move to wxPython 4.0.1 (#12)
- - move from deprecated pyfits to astropy (#10)
- - support numpy 1.13
- - fix two spelling mistakes (#11)
+ - Move from Python 2 to Python 3 (#12)
+ - Move to wxPython 4.0.1 (#12)
+ - Move from deprecated pyfits to astropy (#10)
+ - Support numpy 1.13
+ - Fix two spelling mistakes (#11)
  - Cython code cleanup using flake8
  - Bugfix: trailing photon events were not used (<1% of input data)
+ - Remove manual update checker
 0.2.3
  - New tool to create artificial .dat files for testing
  - A couple of minor bug fixes

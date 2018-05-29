@@ -5,8 +5,8 @@ PyScanFCS documentation
 
 .. image:: _static/PyScanFCS_logo_dark.png
 
-Welcome to the documentation of PyScanFCS (version |release|), a data analysis software for
-fluorescence correlation spectroscopy (FCS).
+Welcome to the documentation of PyScanFCS (version |release|), a data analysis
+software for perpendicular line scanning fluorescence correlation spectroscopy.
 
 
 .. toctree::
