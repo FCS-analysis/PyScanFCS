@@ -4,7 +4,9 @@ Getting started
 
 Installation
 ------------
-- Installers for PyScanFCS are available at the `release page <https://github.com/FCS-analysis/PyScanFCS/releases>`_.
+- Windows installers for PyScanFCS are available at the `release page <https://github.com/FCS-analysis/PyScanFCS/releases>`_.
+  Note: The installer is currently broken because astropy cannot be frozen, see https://github.com/astropy/astropy/issues/7052.
+- On Debian-based systems, install via ``apt-get install pyscanfcs``.
 - If you have Python 3.6 installed, you may install PyScanFCS via ``pip install pyscanfcs[GUI]``.
   After the installation, type ``pyscanfcs`` in a command shell to start PyScanFCS.
 

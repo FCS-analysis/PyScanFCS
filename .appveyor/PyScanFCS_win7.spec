@@ -73,7 +73,7 @@ exe = EXE(pyz,
           strip=None,
           upx=True,
           icon=ICO,
-          console=True )
+          console=True)
 
 coll = COLLECT(exe,
                a.binaries,

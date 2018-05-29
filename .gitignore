@@ -68,3 +68,4 @@ _version_save.py
 htmlcov
 .eggs
 .cache
+.pytest_cache
