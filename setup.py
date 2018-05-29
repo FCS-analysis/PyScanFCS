@@ -73,13 +73,13 @@ setup(
         "wxpython>=4.0.1",
         ],
     setup_requires=['cython', 'numpy', 'pytest-runner'],
-    tests_require=["pathlib", "pytest"],
+    tests_require=["pytest"],
     python_requires='>=3.4, <4',
     keywords=["fcs", "fluorescence correlation spectroscopy",
               "perpendicular line scanning", "multiple-tau"],
     classifiers= [
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3',
         'Topic :: Scientific/Engineering :: Visualization',
         'Intended Audience :: Science/Research'
                  ],
