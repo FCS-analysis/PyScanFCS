@@ -83,6 +83,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'PyScanFCS'
+github_project = 'FCS-analysis/' + project
 copyright = '2012, Paul Müller'
 author = 'Paul Müller'
 
