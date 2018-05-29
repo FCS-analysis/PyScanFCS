@@ -1,6 +1,7 @@
 # -*- mode: python -*-
 import codecs
 import os
+import platform
 import sys
 
 sys.setrecursionlimit(5000)
