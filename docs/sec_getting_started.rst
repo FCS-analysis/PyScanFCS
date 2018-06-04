@@ -15,7 +15,7 @@ Documentation
 -------------
 The documentation is in the process of being transferred entirely to
 readthedocs.org. Currently, the it is scattered across several
-places and it is most-likely outdated:
+places and it might be outdated:
 
-- Original LaTeX-based PDF file (outdated): https://github.com/FCS-analysis/PyScanFCS/wiki/PyScanFCS_doc.pdf
-- Wiki pages: https://github.com/FCS-analysis/PyScanFCS/wiki
+- Original LaTeX-based PDF file: https://github.com/FCS-analysis/PyScanFCS/wiki/PyScanFCS_doc.pdf
+- Book chapter in *Methods in Molecular Biology* (2013) on perpendicular line scanning FCS: https://arxiv.org/abs/1806.00070
