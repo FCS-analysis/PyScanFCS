@@ -14,4 +14,12 @@ script:
 - coverage run --source=pyscanfcs setup.py test
 - coverage report -m
 - codecov
-
+deploy:
+  provider: pypi
+  user: "ci_fcs"
+  password:
+    secure: "Kjnz7nDzyQUsBcjK+EgZBwz20qGVMpJgRUXWB4GkdbNJIu8EBVvGv49TixL/T1rRI9J7bYNIMaZP59F0IbYT1o/H9fOKsj+FkLK8wMei7/8XzVpNNbsWBOm9wbgT03pycetUhm8AqZCbhJ3vlhDBDCM+bCjqH1DbMDQ5vuweQnA="
+  on:
+    tags: true
+  skip_cleanup: true
+  skip_existing: true

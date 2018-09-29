@@ -1,6 +1,7 @@
 0.3.1
  - fix: console script entry point broken
- - Update documentation
+ - automate distribution to PyPI
+ - update documentation
 0.3.0
  - Move from Python 2 to Python 3 (#12)
  - Move to wxPython 4.0.1 (#12)
