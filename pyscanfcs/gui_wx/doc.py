@@ -139,7 +139,8 @@ PyScanFCS) in numerous ways:
    \tfamiliar with reStrucuredText or LaTeX, you might be able to help
    \tout with the online documentation.
 
-5. \tPlease cite: Müller et al. Bioinformatics 30(17): 2532–2533, 2014
+5. \tPlease cite: Müller et al. Methods in Molecular Biology, 1076,
+   \t(635–51), 2014.
 
 If you are planning to contribute to PyScanFCS, please contact me via
 the PyScanFCS issue page on GitHub such that we may coordinate a pull
