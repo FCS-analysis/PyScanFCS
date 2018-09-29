@@ -85,6 +85,6 @@ setup(
                  ],
     platforms=['ALL'],
     entry_points={
-       "gui_scripts": ["{name:s}={name:s}:Main".format(**{"name":name})]
+       "gui_scripts": ["pyscanfcs=pyscanfcs.gui_wx.main:Main"]
        }
     )
