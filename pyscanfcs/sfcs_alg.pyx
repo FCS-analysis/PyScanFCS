@@ -146,7 +146,6 @@ def bin_photon_events(np.ndarray[DTYPEuint32_t] data, double t_bin,
     TempTrace.append(phot_c)
     
     NewFile.write(outdtype(TempTrace))
-    del TempTrace
     NewFile.close()
     return outfile
 
@@ -203,9 +202,9 @@ def open_dat(filename, callback=None, cb_kwargs={}):
     File = open(filename, 'rb')
     # 1st byte: get file format
     # should be 16 - for 16 bit
-    fformat = int(np.fromfile(File, dtype="uint8", count=1))
+    fformat = int(np.fromfile(File, dtype="<u1", count=1))
     # 2nd byte: read system clock
-    system_clock = int(np.fromfile(File, dtype="uint8", count=1))
+    system_clock = int(np.fromfile(File, dtype="<u1", count=1))
     if fformat == 8:
         # No 8 bit format supported
         warnings.warn('8 bit format not supported.')
@@ -213,7 +212,7 @@ def open_dat(filename, callback=None, cb_kwargs={}):
         return system_clock, None
     elif fformat == 32:
         # (There is an utility to convert data to 32bit)
-        datData = np.fromfile(File, dtype="uint32", count=-1)
+        datData = np.fromfile(File, dtype="<u4", count=-1)
         File.close()
         return system_clock, datData
     elif fformat == 16:
@@ -225,9 +224,8 @@ def open_dat(filename, callback=None, cb_kwargs={}):
     # In case of 16 bit file format (assumed), read the rest of the file in
     # 16 bit format.
     # Load bunch of Data
-    Data = np.fromfile(File, dtype="uint16", count=-1)
+    Data = np.fromfile(File, dtype="<u2", count=-1)
     File.close()
-
     # Now we need to check if there are any 0xFFFF values which would
     # mean, that we do not yet have the true data in our array.
     # There is 32 bit data after a 0xFFFF = 65535
@@ -261,5 +259,4 @@ def open_dat(filename, callback=None, cb_kwargs={}):
 
     datData = np.delete(datData, zeroids)
 
-    del Data
     return system_clock, datData
