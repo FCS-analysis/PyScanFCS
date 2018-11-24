@@ -253,7 +253,7 @@ def open_dat(filename, callback=None, cb_kwargs={}):
             return None, None
 
     # Now delete the zeros
-    zeroids = np.zeros(N * 2)
+    zeroids = np.zeros(N * 2, dtype=int)
     zeroids[::2] = occurrences + 1
     zeroids[1::2] = occurrences + 2
 
