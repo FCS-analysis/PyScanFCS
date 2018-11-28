@@ -34,9 +34,10 @@ def openDAT(path, callback=None, cb_kwargs={}):
 
     Returns
     -------
-    system_clock, datData
-        The system clock in MHz and the photon time event stream.
-        Returns (None, None) if the progress was aborted through the
+    info: dict
+        Dictionary containing the "system_clock" in MHz and the
+        "data_stream" (photon arrival time event stream).
+        Returns `None` if the progress was aborted through the
         callback function.
 
 
@@ -99,7 +100,7 @@ def openDAT(path, callback=None, cb_kwargs={}):
         if callback is not None:
             ret = callback(**cb_kwargs)
             if ret is not None:
-                return None, None
+                return None
 
         # Now delete the zeros
         zeroids = np.zeros(N * 2, dtype=int)

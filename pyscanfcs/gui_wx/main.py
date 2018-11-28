@@ -368,9 +368,9 @@ class MyFrame(wx.Frame):
         print("Creating file {} ({})".format(outfile, outdtype.__name__))
 
         bin_pe.bin_photon_events(Data, t_bin, binshift=eb,
-                                   outfile=outfile,
-                                   outdtype=outdtype,
-                                   callback=wxdlg.Iterate)
+                                 outfile=outfile,
+                                 outdtype=outdtype,
+                                 callback=wxdlg.Iterate)
         wxdlg.Finalize()
 
         binneddata = np.fromfile(outfile, dtype=outdtype)
