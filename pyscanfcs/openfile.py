@@ -1,25 +1,118 @@
 """filetype definitions"""
 import astropy.io.fits
+import numpy as np
 from skimage.external import tifffile
 
-from . import sfcs_alg
 
-
-def openAny(fname, callback=None):
-    """ load any supported file type"""
+def openAny(path, callback=None):
+    """load any supported file type"""
     methods = methods_binned.copy()
     methods.update(methods_stream)
 
     for key in list(methods.keys()):
-        if fname.endswith(key):
-            return methods[key](fname, callback)
+        if path.endswith(key):
+            return methods[key](path, callback)
 
 
-def openDAT(fname, callback=None):
-    system_clock, intensity_data = sfcs_alg.open_dat(fname, callback)
-    info = dict()
-    info["data_stream"] = intensity_data
-    info["system_clock"] = system_clock
+def openDAT(path, callback=None, cb_kwargs={}):
+    """Load "Flex02-12D" correlator.com files
+
+    We open a .dat file as produced by the "Flex02-12D" correlator in photon
+    history recorder mode.
+    The file contains the time differences between single photon events.
+
+    Parameters
+    ----------
+    path : str
+        Path to file
+    callback : callable or None
+        Callback function to be called throughout the algorithm. If the
+        return value of `callback` is not None, the function will abort.
+        Number of function calls: 3
+    cb_kwargs : dict, optional
+        Keyword arguments for `callback` (e.g. "pid" of process).
+
+    Returns
+    -------
+    system_clock, datData
+        The system clock in MHz and the photon time event stream.
+        Returns (None, None) if the progress was aborted through the
+        callback function.
+
+
+    Notes
+    -----
+    Raw data file format (taken from manual):
+     1. The file records the difference in system clock ticks (1/60 us)
+        between photon event.
+     2. The first byte identifies the format of the file 8 : 8 bit, 16: 16 bit
+     3. The second byte identifies the system clock. 60MHz.
+     4. The time unit is 1/system clock.
+     5. 16 bit format. Each WORD (2 bytes) represents a photon event,
+        time = WORD/system clock, unless the value is 0xFFFF, in which case,
+        the following four bytes represent a photon event.
+     6. 8 bit format: Each BYTE represents a photon event unless the value is
+        0xFF, in which case, the BYTE means 255 clock ticks passed without a
+        photon event. For example 0A 0B FF 08 means there are three
+        photon events. The time series are 0x0A+1, 0x0B+1, 0xFF+8+1.
+
+    """
+    # open file
+    filed = open(path, 'rb')
+    # 1st byte: get file format
+    # should be 16 - for 16 bit
+    fformat = int(np.fromfile(filed, dtype="<u1", count=1))
+    # 2nd byte: read system clock
+    system_clock = int(np.fromfile(filed, dtype="<u1", count=1))
+    if fformat == 8:
+        # No 8 bit format supported
+        raise ValueError("8 bit format not supported!")
+    elif fformat == 32:
+        # (There is an utility to convert data to 32bit)
+        data = np.fromfile(filed, dtype="<u4", count=-1)
+    elif fformat == 16:
+        # convert 16bit to 32bit
+        # Read the rest of the file in 16 bit format.
+        # Load bunch of Data
+        data16 = np.fromfile(filed, dtype="<u2", count=-1)
+        # Now we need to check if there are any 0xFFFF values which would
+        # mean, that we do not yet have the true data in our array.
+        # There is 32 bit data after a 0xFFFF = 65535
+        if callback is not None:
+            ret = callback(**cb_kwargs)
+            if ret is not None:
+                return
+
+        # occurences of large values
+        occ = np.where(data16 == 65535)[0]
+        N = len(occ)
+
+        if callback is not None:
+            ret = callback(**cb_kwargs)
+            if ret is not None:
+                return
+
+        # Make a 32 bit array
+        data = np.uint32(data16)
+        data[occ] = data16[occ + 1] + data16[occ + 2] * 65536
+
+        if callback is not None:
+            ret = callback(**cb_kwargs)
+            if ret is not None:
+                return None, None
+
+        # Now delete the zeros
+        zeroids = np.zeros(N * 2, dtype=int)
+        zeroids[::2] = occ + 1
+        zeroids[1::2] = occ + 2
+        data = np.delete(data, zeroids)
+    else:
+        raise ValueError("Unknown format: {} bit".format(fformat))
+    filed.close()
+
+    info = {"data_stream": data,
+            "system_clock": system_clock
+            }
 
     return info
 

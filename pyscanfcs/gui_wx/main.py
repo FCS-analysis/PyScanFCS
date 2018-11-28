@@ -28,7 +28,7 @@ from wx.lib.scrolledpanel import ScrolledPanel
 
 from .. import fitting
 from .. import openfile
-from .. import sfcs_alg
+from .. import bin_pe
 from .. import util
 
 from . import doc
@@ -230,22 +230,6 @@ maximum. \n The data achieved will automatically be updated within the main prog
                 self.redline = self.axes.vlines(
                     ltime, self.ymin, self.ymax, color='red')
 
-                # Tried with gaussian fit
-                #amplitudes = self.ampl[start:stop]
-                #frequencies = self.freq[start:stop]
-                #argmax = np.argmax(amplitudes)
-                # Get gaussian function and optimal parameters
-                ## popt = [freq, ampl, sigma]
-                ## gauss(popt, frequencies)
-                #popt, gauss = sfcs_alg.FitGaussian(amplitudes, frequencies, argmax)
-                #self.pnt.t_linescan = 1./popt[0]
-                #lenplot = 1000
-                #ids_plot = np.linspace(start,stop,lenplot, endpoint=False)
-                #freq_plot = np.linspace(frequencies[0],frequencies[-1],lenplot, endpoint=False)
-                #a = np.argmax(gauss(popt, freq_plot))
-                #self.pnt.t_linescan = 1./freq_plot[a]
-                #self.redline =  self.axes.plot(ids_plot, gauss(popt, freq_plot), '-', color='red')
-
                 self.canvas.draw()
                 # Plot the results
                 # Set check box to True: "use cycle time"
@@ -383,7 +367,7 @@ class MyFrame(wx.Frame):
 
         print("Creating file {} ({})".format(outfile, outdtype.__name__))
 
-        sfcs_alg.bin_photon_events(Data, t_bin, binshift=eb,
+        bin_pe.bin_photon_events(Data, t_bin, binshift=eb,
                                    outfile=outfile,
                                    outdtype=outdtype,
                                    callback=wxdlg.Iterate)
@@ -418,7 +402,7 @@ class MyFrame(wx.Frame):
 
         print("Creating file {} ({})".format(outfile, outdtype.__name__))
 
-        sfcs_alg.bin_photon_events(Data, t_bin, binshift=eb,
+        bin_pe.bin_photon_events(Data, t_bin, binshift=eb,
                                    outfile=outfile,
                                    outdtype=outdtype,
                                    callback=wxdlg.Iterate)
@@ -1287,8 +1271,8 @@ class MyFrame(wx.Frame):
 
                     wxdlg = uilayer.wxdlg(parent=self, steps=3,
                                           title="Importing dat file...")
-                    datData2 = sfcs_alg.open_dat(
-                        path, callback=wxdlg.Iterate)[1]
+                    datData2 = openfile.openDAT(
+                        path, callback=wxdlg.Iterate)["data_stream"]
                     wxdlg.Finalize()
 
                     # Bin to obtain intData2
@@ -1719,8 +1703,9 @@ class MyFrame(wx.Frame):
 
         wxdlg = uilayer.wxdlg(parent=self, steps=3,
                               title="Importing dat file...")
-        self.system_clock, self.datData = sfcs_alg.open_dat(
-            filename, callback=wxdlg.Iterate)
+        info = openfile.openDAT(filename, callback=wxdlg.Iterate)
+        self.system_clock = info["system_clock"]
+        self.datData = info["data_stream"]
         wxdlg.Finalize()
 
         self.GetTotalTime()

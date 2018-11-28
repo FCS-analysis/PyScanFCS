@@ -1,3 +1,7 @@
+0.3.2
+ - fix: refactor code for opening .dat files; moved from a Cython
+   module to a pure Python module due to errors on big-endian
+   systems (#17)
 0.3.1
  - fix: console script entry point broken (#16)
  - automate distribution to PyPI

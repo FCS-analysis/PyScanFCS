@@ -18,8 +18,8 @@ except ImportError:
           "with this setup script will not work:", sys.exc_info())
     extensions = []
 else:
-    extensions = [Extension("pyscanfcs.sfcs_alg",
-                            sources=["pyscanfcs/sfcs_alg.pyx"],
+    extensions = [Extension("pyscanfcs.bin_pe",
+                            sources=["pyscanfcs/bin_pe.pyx"],
                             include_dirs=[np.get_include()]
                             )
                  ]
