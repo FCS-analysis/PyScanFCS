@@ -27,7 +27,7 @@ functions is available as a `PDF file <https://github.com/FCS-analysis/PyScanFCS
 
 
 .. |PyScanFCS| image:: https://raw.github.com/FCS-analysis/PyScanFCS/master/doc/Images/PyScanFCS_logo_dark.png
-.. |PyPI Version| image:: http://img.shields.io/pypi/v/PyScanFCS.svg
+.. |PyPI Version| image:: https://img.shields.io/pypi/v/PyScanFCS.svg
    :target: https://pypi.python.org/pypi/pyscanfcs
 .. |Build Status Win| image:: https://img.shields.io/appveyor/ci/paulmueller/PyScanFCS/master.svg?label=win
    :target: https://ci.appveyor.com/project/paulmueller/pyscanfcs
