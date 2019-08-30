@@ -32,7 +32,7 @@ install:
   # Check that we have the expected version and architecture for Python
   - "python --version"
   - "pip install cython wheel"
-  - "pip install pyinstaller==3.3.1"
+  - "pip install pyinstaller==3.5"
   - "pip install -e ."
   # Show the installed packages
   - "pip freeze"
