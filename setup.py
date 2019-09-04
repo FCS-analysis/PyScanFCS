@@ -70,7 +70,7 @@ setup(
         "numpy>=1.5.1",
         "scikit-image>=0.13.1",
         "scipy>=0.8.0",
-        "wxpython>=4.0.1",
+        "wxpython>=4.0.3",
         ],
     setup_requires=['cython', 'numpy', 'pytest-runner'],
     tests_require=["pytest"],
