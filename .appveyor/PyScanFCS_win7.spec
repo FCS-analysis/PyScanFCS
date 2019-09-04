@@ -6,6 +6,9 @@ import sys
 
 sys.setrecursionlimit(5000)
 
+if not os.path.exists(".appveyor"):
+    raise Exception("Please go to `PyScanFCS` directory.")
+
 ## Patch matplotlibrc
 # This patch is required so matplotlib does not try to start with
 # the "TkAgg" backend, resulting in import errors.
@@ -19,8 +22,11 @@ for ii, l in enumerate(data):
 with open(mplrc, "w") as fd:
     fd.writelines(data)
 
-if not os.path.exists(".appveyor"):
-    raise Exception("Please go to `PyScanFCS` directory.")
+# Add astropy manually
+# (https://github.com/astropy/astropy/issues/7052)
+import astropy
+astropy_path, = astropy.__path__
+
 
 name = "PyScanFCS"
 DIR = os.path.realpath(".")
@@ -54,14 +60,24 @@ hiddenimports = ["scipy.optimize",
                  "scipy._lib.messagestream",
                  "scipy.special._ufuncs_cxx",
                  "scipy.sparse.csgraph",
-                 "scipy.sparse.csgraph._validation",]
+                 "scipy.sparse.csgraph._validation",
+                 "shelve",  # astropy
+                 "csv",  # astropy
+                 ]
 
 a = Analysis([ProgPy],
              pathex=[DIR],
              hiddenimports=hiddenimports,
-             hookspath=None)
+             hookspath=[],
+             runtime_hooks=[],
+             excludes=['astropy'],
+             win_no_prefer_redirects=False,
+             win_private_assemblies=False,
+             )
 a.datas += [('doc\\CHANGELOG', ChLog, 'DATA'),
-            ('doc\\PyScanFCS_doc.pdf', DocPDF, 'DATA')]
+            ('doc\\PyScanFCS_doc.pdf', DocPDF, 'DATA'),
+            (astropy_path, 'astropy'),  # astropy
+            ]
 
 pyz = PYZ(a.pure)
 
