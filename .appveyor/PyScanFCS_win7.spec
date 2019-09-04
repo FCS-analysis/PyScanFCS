@@ -70,13 +70,13 @@ a = Analysis([ProgPy],
              hiddenimports=hiddenimports,
              hookspath=[],
              runtime_hooks=[],
+             datas=[(astropy_path, 'astropy')],  # astropy
              excludes=['astropy'],
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
              )
 a.datas += [('doc\\CHANGELOG', ChLog, 'DATA'),
             ('doc\\PyScanFCS_doc.pdf', DocPDF, 'DATA'),
-            (astropy_path, 'astropy'),  # astropy
             ]
 
 pyz = PYZ(a.pure)
