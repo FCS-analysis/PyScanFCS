@@ -1,11 +1,15 @@
 clone_depth: 256
-build: off
+
 notifications:
   - provider: Email
     on_build_success: false
     on_build_failure: false
     on_build_status_changed: false
+
 environment:
+  PYPI_USR: ci_fcs
+  PYPI_PWD:
+    secure: 4SIAE2AzZLvjiPvgPpU8VYI0pSksE+PZ5CrG3Wz0moMShiFtjXZSkQMe0RrgLvYp
   matrix:
     - PYTHON: "C:\\Miniconda36-x64"
       PYTHON_VERSION: "3.6"
@@ -46,8 +50,14 @@ test_script:
 
 after_test:
   # If tests are successful, create a whl package for the project.
+  - "appveyor-retry pip install twine wheel"
   - "python setup.py bdist_wheel"
+  - "python setup.py sdist"
   - ps: "ls dist"
+  # Setup PyPI credentials
+  - cmd: "echo [pypi] > %USERPROFILE%\\.pypirc"
+  - cmd: "echo username: %PYPI_USR% >> %USERPROFILE%\\.pypirc"
+  - cmd: "echo password: %PYPI_PWD% >> %USERPROFILE%\\.pypirc"
   # Run pyinstaller
   # This will create the "win7_innosetup.iss" file
   - "pyinstaller -y --log-level=WARN .appveyor\\PyScanFCS_win7.spec"
@@ -62,13 +72,16 @@ artifacts:
   # InnoSetup files
   - path: Output\*
 
+on_success:
+  - cmd: "if [%APPVEYOR_REPO_TAG%]==[true] twine upload --skip-existing dist\\*.whl"
+  - cmd: "if [%APPVEYOR_REPO_TAG%]==[true] twine upload --skip-existing dist\\*.tar.gz"
+
 deploy:
   provider: GitHub
   auth_token:
-    secure: TODO_not_set_yet
-  artifact: /.*\.exe/, /.*\.whl/
+    secure: /b5SfmYssAfLaWi0qkPhxR5CruSVBZUurSQLEL3RAaRlHn6HTPrkIqvrLDk/8JxB
+  artifact: /.*\.exe/
   draft: true
   prerelease: true
   on:
-    branch: master                 # release from master branch only
     appveyor_repo_tag: true        # deploy on tag push only
