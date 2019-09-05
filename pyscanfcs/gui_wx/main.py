@@ -962,7 +962,7 @@ class MyFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnMenuDocumentation, menuDocu)
         self.Bind(wx.EVT_MENU, self.OnMenuWiki, menuWiki)
 
-    def OnBinning_Prebin(self, event=None):
+    def OnBinning_Prebin(self, e=None):
         """ Do prebinngin using *Bin_Photon_Events()* """
         n_events = self.BoxPrebin[2].GetValue()
         if self.BoxPrebin[6].GetValue() == False:
@@ -987,7 +987,7 @@ class MyFrame(wx.Frame):
         self.Update()
         self.PlotImage()
 
-    def OnBinning_Total(self, event=None):
+    def OnBinning_Total(self, e=None):
         if self.BoxPrebin[6].GetValue() == False:
             # from µs to system clock ticks
             t_bin = self.BoxPrebin[4].GetValue() * self.system_clock
@@ -1010,7 +1010,7 @@ class MyFrame(wx.Frame):
         # Then Plot the data somehow
         self.PlotImage()
 
-    def OnFindLineScanTime(self, event):
+    def OnFindLineScanTime(self, e=None):
         """
         Find the time that the confocal microscope uses to capture a line
         of data. This is done via FFT.
@@ -1091,7 +1091,7 @@ class MyFrame(wx.Frame):
         self.BoxPrebin[6].Enable()
         # self.Update()
 
-    def OnMenuAbout(self, event):
+    def OnMenuAbout(self, e=None):
         # Show About Information
         description = doc.description()
         licence = doc.licence()
@@ -1125,16 +1125,16 @@ class MyFrame(wx.Frame):
                 # defaults to linux style:
                 os.system("xdg-open " + filename + " &")
 
-    def OnMenuExit(self, e):
+    def OnMenuExit(self, e=None):
         # Exit the Program
         self.Close(True)  # Close the frame.
 
-    def OnMenuSoftware(self, event):
+    def OnMenuSoftware(self, e=None):
         # Show About Information
         text = doc.SoftwareUsed()
         wx.MessageBox(text, 'Software', wx.OK | wx.ICON_INFORMATION)
 
-    def OnMenuSupport(self, event):
+    def OnMenuSupport(self, e=None):
         # Show About Information
         text = doc.support
         wx.MessageBox(text, 'Support', wx.OK | wx.ICON_INFORMATION)
@@ -1482,7 +1482,7 @@ class MyFrame(wx.Frame):
 
         wx.EndBusyCursor()
 
-    def OnOpenBinned(self, e):
+    def OnOpenBinned(self, e=None):
         # Open a data file
         """Import experimental data from a file."""
         dlg = wx.FileDialog(self, "Choose a binned data file", self.dirname, "",
@@ -1523,7 +1523,7 @@ class MyFrame(wx.Frame):
             self.PlotImage()
 
     # Current
-    def OnOpenStream(self, e):
+    def OnOpenStream(self, e=None):
         # Open a data file
         """
         We open a .dat file as produced by the "Flex02-12D" correlator in photon
@@ -1579,7 +1579,7 @@ class MyFrame(wx.Frame):
             self.plotarea.UseRectangleSelector()
         self.Update()
 
-    def OnSaveFits(self, e):
+    def OnSaveFits(self, e=None):
         # Save the Data
         """ Save binned data as a 2d array (image) """
         if self.filename[-4:] == ".dat":
@@ -1639,7 +1639,7 @@ class MyFrame(wx.Frame):
             hdulist.writeto(os.path.join(
                 self.dirname, newfilename), clobber=True)
 
-    def OnSaveDat(self, e):
+    def OnSaveDat(self, e=None):
         # Save the Data
         """
         Save experimental data as 32bit format.
