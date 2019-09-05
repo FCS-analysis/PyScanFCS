@@ -1,3 +1,6 @@
+0.3.3
+ - setup: Windows installers are available again
+   (https://github.com/astropy/astropy/issues/7052)
 0.3.2
  - fix: refactor code for opening .dat files; moved from a Cython
    module to a pure Python module due to errors on big-endian

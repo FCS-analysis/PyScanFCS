@@ -12,12 +12,15 @@ fluctuating fluorescence signal from such measurements and applies a multiple-ta
 algorithm. The obtained correlation curves can be evaluated using
 `PyCorrFit <https://github.com/FCS-analysis/PyCorrFit>`__.
 
+
 Getting started
 ===============
 
 Installation
 ------------
 Installers for PyScanFCS are available at the `release page <https://github.com/FCS-analysis/PyScanFCS/releases>`__.
+Alternatively, install with ``pip install pyscanfcs``.
+
 
 Documentation
 -------------
