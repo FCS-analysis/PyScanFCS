@@ -36,7 +36,10 @@ install:
   # Check that we have the expected version and architecture for Python
   - "python --version"
   - "pip install cython wheel"
-  - "pip install pyinstaller==3.5"
+  # install the latest version of astropy and pyinstaller (2020-05-04)
+  # as per https://github.com/astropy/astropy/issues/7052#issuecomment-623553724
+  - "pip install git+git://github.com/pyinstaller/pyinstaller.git@80d5078081ca211769bf54760e96ede7436a6b95"
+  - "pip install git+git://github.com/astropy/astropy.git@8e19d39293261d9fbc1ff8cc173fc95f99c1ccca"
   - "pip install -e ."
   # Show the installed packages
   - "pip freeze"

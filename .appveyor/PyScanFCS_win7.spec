@@ -22,12 +22,6 @@ for ii, l in enumerate(data):
 with open(mplrc, "w") as fd:
     fd.writelines(data)
 
-# Add astropy manually
-# (https://github.com/astropy/astropy/issues/7052)
-import astropy
-astropy_path, = astropy.__path__
-
-
 name = "PyScanFCS"
 DIR = os.path.realpath(".")
 PyInstDir = os.path.join(DIR, ".appveyor")
@@ -61,20 +55,15 @@ hiddenimports = ["scipy.optimize",
                  "scipy.special._ufuncs_cxx",
                  "scipy.sparse.csgraph",
                  "scipy.sparse.csgraph._validation",
-                 "shelve",  # astropy
-                 "csv",  # astropy
                  ]
 
 a = Analysis([ProgPy],
              pathex=[DIR],
              hiddenimports=hiddenimports,
-             hookspath=[],
-             runtime_hooks=[],
-             datas=[(astropy_path, 'astropy')],  # astropy
-             excludes=['astropy'],
-             win_no_prefer_redirects=False,
-             win_private_assemblies=False,
+             hookspath=[PyInstDir],
+             runtime_hooks=None,
              )
+
 a.datas += [('doc\\CHANGELOG', ChLog, 'DATA'),
             ('doc\\PyScanFCS_doc.pdf', DocPDF, 'DATA'),
             ]
