@@ -8,7 +8,7 @@ import matplotlib
 import multipletau
 import numpy
 import scipy
-import skimage
+import tifffile
 import wx
 
 
@@ -108,8 +108,8 @@ def SoftwareUsed():
            "\n - matplotlib " + matplotlib.__version__ +\
            "\n - multipletau " + multipletau.__version__ +\
            "\n - NumPy " + numpy.__version__ +\
-           "\n - scikit-image " + skimage.__version__ +\
            "\n - SciPy " + scipy.__version__ +\
+           "\n - tifffile " + tifffile.__version__ +\
            "\n - wxPython " + wx.__version__
     if hasattr(sys, 'frozen'):
         pyinst = "\n\nThis executable has been created using PyInstaller."

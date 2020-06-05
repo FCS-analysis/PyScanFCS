@@ -1,7 +1,7 @@
 """filetype definitions"""
 import astropy.io.fits
 import numpy as np
-from skimage.external import tifffile
+import tifffile
 
 
 def openAny(path, callback=None):
