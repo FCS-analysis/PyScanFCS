@@ -35,7 +35,7 @@ functions is available as a `PDF file <https://github.com/FCS-analysis/PyScanFCS
 .. |Build Status Win| image:: https://img.shields.io/appveyor/ci/paulmueller/PyScanFCS/master.svg?label=win
    :target: https://ci.appveyor.com/project/paulmueller/pyscanfcs
 .. |Build Status Travis| image:: https://img.shields.io/travis/FCS-analysis/PyScanFCS/master.svg?label=linux_osx
-   :target: https://travis-ci.org/FCS-analysis/PyScanFCS
+   :target: https://travis-ci.com/FCS-analysis/PyScanFCS
 .. |Coverage Status| image:: https://img.shields.io/codecov/c/github/FCS-analysis/PyScanFCS/master.svg
    :target: https://codecov.io/gh/FCS-analysis/PyScanFCS
 .. |Docs Status| image:: https://readthedocs.org/projects/pyscanfcs/badge/?version=latest
