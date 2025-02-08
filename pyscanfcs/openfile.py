@@ -95,7 +95,7 @@ def openDAT(path, callback=None, cb_kwargs={}):
 
         # Make a 32 bit array
         data = np.uint32(data16)
-        data[occ] = data16[occ + 1] + data16[occ + 2] * 65536
+        data[occ] = data[occ + 1] + data[occ + 2] * 65536
 
         if callback is not None:
             ret = callback(**cb_kwargs)
